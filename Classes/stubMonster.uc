@@ -1,0 +1,1 @@
+class stubMonster extends KFMonster;
