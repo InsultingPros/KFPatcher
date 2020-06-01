@@ -10,52 +10,51 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
 // DO NOT Force slomo for a longer period of time when the boss dies
 function DoBossDeath()
 {
-    local Controller C;
-    local Controller nextC;
-    local int num;
+  local Controller C;
+  local Controller nextC;
+  local int num;
 
-    // bZEDTimeActive =  true;
-    // bSpeedingBackUp = false;
-    // LastZedTimeEvent = Level.TimeSeconds;
-    // CurrentZEDTimeDuration = ZEDTimeDuration*2;
-    // SetGameSpeed(ZedTimeSlomoScale);
+  // bZEDTimeActive =  true;
+  // bSpeedingBackUp = false;
+  // LastZedTimeEvent = Level.TimeSeconds;
+  // CurrentZEDTimeDuration = ZEDTimeDuration*2;
+  // SetGameSpeed(ZedTimeSlomoScale);
 
-    num = NumMonsters;
+  num = NumMonsters;
+  c = Level.ControllerList;
 
-    c = Level.ControllerList;
-
-    // turn off all the other zeds so they don't attack the player
-    while (c != none && num > 0)
+  // turn off all the other zeds so they don't attack the player
+  while (c != none && num > 0)
+  {
+    nextC = c.NextController;
+    if (KFMonsterController(C)!=None)
     {
-        nextC = c.NextController;
-        if (KFMonsterController(C)!=None)
-        {
-            C.GotoState('GameEnded');
-            --num;
-        }
-        c = nextC;
+      C.GotoState('GameEnded');
+      --num;
     }
+    c = nextC;
+  }
 }
 
 
 // remove latejoiner shit, GameInfo code
 event PreLogin( string Options, string Address, string PlayerID, out string Error, out string FailCode )
 {
-    super(GameInfo).PreLogin( Options, Address, PlayerID, Error, FailCode );
+  super(GameInfo).PreLogin( Options, Address, PlayerID, Error, FailCode );
 }
 
 
 function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
 {
-    local Controller P;
-    local PlayerController Player;
-    local bool bSetAchievement;
-    local string MapName;
+  local Controller P;
+  local PlayerController Player;
+  local bool bSetAchievement;
+  local string MapName;
 
-    EndTime = Level.TimeSeconds + EndTimeDelay;
+  EndTime = Level.TimeSeconds + EndTimeDelay;
 
-    if ( WaveNum > FinalWave )
-    {
+  if ( WaveNum > FinalWave )
+  {
     GameReplicationInfo.Winner = Teams[0];
     KFGameReplicationInfo(GameReplicationInfo).EndGameType = 2;
 
@@ -66,17 +65,18 @@ function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
       //Get the MapName out of the URL
       MapName = GetCurrentMapName(Level);
     }
-    }
-    else
-        KFGameReplicationInfo(GameReplicationInfo).EndGameType = 1;
+  }
+  else
+    KFGameReplicationInfo(GameReplicationInfo).EndGameType = 1;
 
-    if ( (GameRulesModifiers != None) && !GameRulesModifiers.CheckEndGame(Winner, Reason) ) 
-    {
-        KFGameReplicationInfo(GameReplicationInfo).EndGameType = 0;
-        return false;
-    }
-    for ( P = Level.ControllerList; P != none; P = P.nextController )
-    {
+  if ( (GameRulesModifiers != None) && !GameRulesModifiers.CheckEndGame(Winner, Reason) ) 
+  {
+    KFGameReplicationInfo(GameReplicationInfo).EndGameType = 0;
+    return false;
+  }
+
+  for ( P = Level.ControllerList; P != none; P = P.nextController )
+  {
     Player = PlayerController(P);
     if ( Player != none )
     {
@@ -87,9 +87,9 @@ function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
         KFSteamStatsAndAchievements(Player.SteamStatsAndAchievements).WonGame(MapName, GameDifficulty, KFGameLength == GL_Long);
     }
     //P.GameHasEnded(); //and this
-    }
-    if ( CurrentGameProfile != none )
-        CurrentGameProfile.bWonMatch = false;
+  }
+  if ( CurrentGameProfile != none )
+    CurrentGameProfile.bWonMatch = false;
 
-    return true;
+  return true;
 }

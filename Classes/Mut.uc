@@ -64,6 +64,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector mo
   //   super(KFMonster).TakeDamage(Damage, instigatedBy, hitLocation, momentum, DamType);
 }
 
+
 // ReplaceFunction("Core.Object.ReplaceText", "KFPatcher.Mut.ReplaceTextHook");
 // ReplaceFunction("Core.Object.ReplaceText", "KFPatcher.stubPC.ReplaceTextHook");
 // ReplaceFunction("Engine.PlayerController.ServerSay", "KFPatcher.Mut.ReplaceTextHook");

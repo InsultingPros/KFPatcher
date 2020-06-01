@@ -24,58 +24,59 @@ class stubModelSelect extends KFModelSelect;
 
 function RefreshCharacterList(string ExcludedChars, optional string Race)
 {
-    local int i, j;
-    local array<string> Excluded;
+  local int i, j;
+  local array<string> Excluded;
 
-    // Prevent list from calling OnChange events
-    CharList.List.bNotify = False;
-    CharList.Clear();
+  // Prevent list from calling OnChange events
+  CharList.List.bNotify = False;
+  CharList.Clear();
 
-    Split(ExcludedChars, ";", Excluded);
-    for ( i = 0; i < PlayerList.Length; i++ )
+  Split(ExcludedChars, ";", Excluded);
+  for ( i = 0; i < PlayerList.Length; i++ )
+  {
+    // Check that this character is selectable
+    if ( PlayerList[i].Menu != "" )
     {
-		// Check that this character is selectable
-		if ( PlayerList[i].Menu != "" )
-		{
-			for (j = 0; j < Excluded.Length; j++)
-				if ( InStr(";" $ Playerlist[i].Menu $ ";", ";" $ Excluded[j] $ ";") != -1 )
-					break;
+      for (j = 0; j < Excluded.Length; j++)
+        if ( InStr(";" $ Playerlist[i].Menu $ ";", ";" $ Excluded[j] $ ";") != -1 )
+          break;
 
-			if ( j < Excluded.Length )
-				continue;
-		}
+      if ( j < Excluded.Length )
+        continue;
+    }
 
         // if ( IsUnLocked(PlayerList[i]) )
         // {
-			CharList.List.Add(Playerlist[i].Portrait, i, 0);
+    CharList.List.Add(Playerlist[i].Portrait, i, 0);
         // }
         // else if ( Playerlist[i].LockedPortrait == none )
         // {
-		// 	CharList.List.Add(Playerlist[i].Portrait, i, 1);
+    // 	CharList.List.Add(Playerlist[i].Portrait, i, 1);
         // }
         // else
         // {
         // 	CharList.List.Add(Playerlist[i].LockedPortrait, i, 1);
         // }
-    }
+  }
 
-    CharList.List.LockedMat = LockedImage;
-    CharList.List.bNotify = True;
+  CharList.List.LockedMat = LockedImage;
+  CharList.List.bNotify = True;
 }
+
 
 function HandleParameters( string Who, string Team )
 {
-	local int i;
+  local int i;
 
-	for ( i = 0; i < PlayerList.Length; i++)
-	{
-		if ( PlayerList[i].DefaultName ~= Who )
-		{
-			CharList.List.SetIndex(CharList.List.FindItem(i));
-		}
-	}
+  for ( i = 0; i < PlayerList.Length; i++)
+  {
+    if ( PlayerList[i].DefaultName ~= Who )
+    {
+      CharList.List.SetIndex(CharList.List.FindItem(i));
+    }
+  }
 
-	UpdateSpinnyDude();
+  UpdateSpinnyDude();
 }
 
 // // Overridden to set Idle Animation
