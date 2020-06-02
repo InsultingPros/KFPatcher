@@ -1,5 +1,6 @@
 class stubRule extends GameRules;
 
+
 // no map switch if we leave from lobby
 function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
 {

@@ -1,4 +1,4 @@
-class stubFrag extends FragFire;
+class stubFragFire extends FragFire;
 
 function DoFireEffect()
 {
@@ -9,6 +9,7 @@ function DoFireEffect()
   local Actor Other;
   local int Hand;
 
+  // added working ammo check
   Weapon.GetAmmoCount(MaxAmmo,CurAmmo);
   if(CurAmmo == 0 && class'MuVariableClass'.default.PrevAmmo == 0)
     return;

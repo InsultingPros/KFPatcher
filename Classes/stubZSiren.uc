@@ -4,6 +4,7 @@ class stubZSiren extends ZombieSiren;
 // if decapped no scream
 simulated function SpawnTwoShots()
 {
+  // added bDecapitated
   if( bZapped || bDecapitated )
   {
     return;
@@ -13,7 +14,6 @@ simulated function SpawnTwoShots()
 
   if( Level.NetMode!=NM_Client )
   {
-    // Deal Actual Damage.
     if( Controller!=None && KFDoorMover(Controller.Target)!=None )
       Controller.Target.TakeDamage(ScreamDamage*0.6,Self,Location,vect(0,0,0),ScreamDamageType);
     else HurtRadius(ScreamDamage ,ScreamRadius, ScreamDamageType, ScreamForce, Location);

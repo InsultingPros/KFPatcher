@@ -12,9 +12,11 @@ var stubPC stubPC;
 var stubPawn stubPawn;
 var stubGT stubGT;
 var stubRule stubRule;
-var stubFrag stubFrag;
+var stubFragFire stubFragFire;
 var stubZHusk stubZHusk;
 var stubZSiren stubZSiren;
+var stubZBloat stubZBloat;
+var stubMonster stubMonster;
 // var stubSyringe stubSyringe;
 // var stubModelSelect stubModelSelect;
 
@@ -32,6 +34,7 @@ event PreBeginPlay()
     ReplaceFunction(FList[i].Replace, FList[i].With);
   }
 
+  // yup, it's not set somehow, fucking TWI
   class'KFChar.ZombieHusk_HALLOWEEN'.default.HuskFireProjClass = class'KFChar.HuskFireProjectile_HALLOWEEN';
 }
 
@@ -92,24 +95,26 @@ defaultproperties
   // ======================================= Pawns =======================================
   // fix for dosh exploits
   FList[6]=(Replace="KFMod.KFPawn.TossCash",With="KFPatcher.stubPawn.TossCash")
+  FList[7]=(Replace="KFMod.KFPawn.GetSound",With="KFPatcher.stubPawn.GetSound")
 
   // ======================================= Controllers =======================================
   // no more 'you will become %perk' spam
-  FList[7]=(Replace="KFMod.KFPlayerController.SelectVeterancy",With="KFPatcher.stubPC.SelectVeterancy")
+  FList[8]=(Replace="KFMod.KFPlayerController.SelectVeterancy",With="KFPatcher.stubPC.SelectVeterancy")
+  FList[14]=(Replace="KFMod.KFPlayerController.ClientWeaponSpawned",With="KFPatcher.stubPC.ClientWeaponSpawned")
+  FList[15]=(Replace="KFMod.KFPlayerController.ClientWeaponDestroyed",With="KFPatcher.stubPC.ClientWeaponDestroyed")
 
   // ======================================= Weapons =======================================
   // fix for nade exploits
-  FList[8]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFrag.DoFireEffect")
+  FList[9]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFragFire.DoFireEffect")
 
   // ======================================= Zeds =======================================
   // Husks, fix none calls for toggleaux function
-  FList[9]=(Replace="KFChar.ZombieHusk_HALLOWEEN.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
-  FList[10]=(Replace="KFChar.ZombieHusk.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
+  FList[10]=(Replace="KFChar.ZombieHusk_HALLOWEEN.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
+  FList[11]=(Replace="KFChar.ZombieHusk.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
   // sirens, fixed instigator call in takedamage and no more damage while dead / decapped
-  FList[11]=(Replace="KFChar.ZombieSiren.SpawnTwoShots",With="KFPatcher.stubZSiren.SpawnTwoShots")
-  FList[12]=(Replace="KFChar.ZombieSiren.HurtRadius",With="KFPatcher.stubZSiren.HurtRadius")
-  FList[13]=(Replace="",With="")
-  FList[14]=(Replace="",With="")
-  FList[15]=(Replace="",With="")
-  FList[16]=(Replace="",With="")
+  FList[12]=(Replace="KFChar.ZombieSiren.SpawnTwoShots",With="KFPatcher.stubZSiren.SpawnTwoShots")
+  FList[13]=(Replace="KFChar.ZombieSiren.HurtRadius",With="KFPatcher.stubZSiren.HurtRadius")
+  
+  FList[16]=(Replace="KFMod.KFMonster.TakeDamage",With="KFPatcher.stubMonster.TakeDamage")
+  FList[17]=(Replace="KFChar.ZombieBloat.SpawnTwoShots",With="KFPatcher.stubZBloat.SpawnTwoShots")
 }
