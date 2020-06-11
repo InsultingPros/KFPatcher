@@ -6,7 +6,7 @@ struct FuncNameStruct
   var string Replace;
   var string With;
 };
-var array<FuncNameStruct> FList;
+var array<FuncNameStruct> List;
 
 var stubPC stubPC;
 var stubPawn stubPawn;
@@ -16,55 +16,84 @@ var stubFragFire stubFragFire;
 var stubZHusk stubZHusk;
 var stubZSiren stubZSiren;
 var stubZBloat stubZBloat;
+var stubZScrake stubZScrake;
 var stubMonster stubMonster;
+var stubFPAvoidArea stubFPAvoidArea;
+// var stubZScrakeCtrl stubZScrakeCtrl;
+// var stubPShotgun stubPShotgun;
 // var stubSyringe stubSyringe;
 // var stubModelSelect stubModelSelect;
 
 
 event PreBeginPlay()
 {
-  local int i;
+  // local function f;
+  // local uFunction A;
 
   super.PreBeginPlay();
 
-  for (i = 0; i < FList.Length; i++)
-  {
-    if (FList[i].Replace ~= "" || FList[i].With ~= "")
-      continue;
-    ReplaceFunction(FList[i].Replace, FList[i].With);
-  }
+  // foreach AllObjects(class'function', f)
+  // {
+  //   a = none;
+  //   log("Found it! Name: " $ string(f));
+  //   A = class'UFunction'.static.CastFunction(FindObject(string(f), class'function'));
+  //   log(A.FunctionFlags);
+  //   // if (string(f) ~= "GetOriginalGroundSpeed")
+  // }
+
+  ReplaceFunction(List);
+
+  // TEST
+  // ReplaceState("KFChar.ZombieScrake.RunningState", "KFPatcher.stubZScrake.RunningState");
 
   // yup, it's not set somehow, fucking TWI
   class'KFChar.ZombieHusk_HALLOWEEN'.default.HuskFireProjClass = class'KFChar.HuskFireProjectile_HALLOWEEN';
 }
 
 
-static final function bool ReplaceFunction(string Replace, string With)
+// static final function ReplaceState(string replace, string with)
+// {
+//   local UState A, B;
+//   // local uFunction fA, fB;
+
+//   A = class'UState'.static.CastState(FindObject(replace, class'state'));
+//   B = class'UState'.static.CastState(FindObject(with, class'state'));
+
+//   if (A == none || B == none)
+//   {
+//     log("> Failed to process");
+//     return;
+//   }
+
+//   A.Script = B.Script;
+
+//   // log("> " $ ReplaceArray[i].Replace $ "    ---->    " $ ReplaceArray[i].With);
+// }
+
+
+static final function ReplaceFunction(out array<FuncNameStruct> ReplaceArray)
 {
   local uFunction A, B;
+  local int i;
 
-  A = class'UFunction'.static.CastFunction(FindObject(Replace, class'Function'));
-  B = class'UFunction'.static.CastFunction(FindObject(With, class'Function'));
-
-  if(A == None || B == None)
+  for (i = 0; i < ReplaceArray.Length; i++)
   {
-    log("KF Patcher: wasn't able to hook " $ Replace $ ". Some of the string arguments are wrong!");
-    return false;
+    if (ReplaceArray[i].Replace ~= "" || ReplaceArray[i].With ~= "")
+      continue;
+ 
+    A = class'UFunction'.static.CastFunction(FindObject(ReplaceArray[i].Replace, class'function'));
+    B = class'UFunction'.static.CastFunction(FindObject(ReplaceArray[i].With, class'function'));
+
+    if (A == none || B == none)
+    {
+      log("> Failed to process " $ ReplaceArray[i].Replace $ "    ---->    " $ ReplaceArray[i].With);
+      continue;
+    }
+
+    A.Script = B.Script;
+
+    log("> " $ ReplaceArray[i].Replace $ "    ---->    " $ ReplaceArray[i].With);
   }
-
-  A.Script = B.Script;
-
-  log("KF Patcher: function " $ Replace $ " replaced with " $ With);
-  return true;
-}
-
-
-function TakeDamage(int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector momentum, class<DamageType> DamType, optional int HitIndex)
-{
-  // if (InstigatedBy == none || class<KFWeaponDamageType>(DamType) == none)
-  //   super(Monster).TakeDamage(Damage, instigatedBy, hitLocation, momentum, DamType); // skip NONE-reference error
-  // else
-  //   super(KFMonster).TakeDamage(Damage, instigatedBy, hitLocation, momentum, DamType);
 }
 
 
@@ -78,43 +107,57 @@ defaultproperties
 {
   // ======================================= KFGameType =======================================
   // Allows players to move after game ends
-  FList[0]=(Replace="KFMod.KFGameType.CheckEndGame",With="KFPatcher.stubGT.CheckEndGame")
+  List[0]=(Replace="KFMod.KFGameType.CheckEndGame",With="KFPatcher.stubGT.CheckEndGame")
   // disable gametype tick that calls zed time
-  FList[1]=(Replace="KFMod.KFGameType.Tick",With="KFPatcher.stubGT.Tick")
+  List[1]=(Replace="KFMod.KFGameType.Tick",With="KFPatcher.stubGT.Tick")
   // main function that controlls zed time
-  FList[2]=(Replace="KFMod.KFGameType.DramaticEvent",With="KFPatcher.stubGT.DramaticEvent")
+  List[2]=(Replace="KFMod.KFGameType.DramaticEvent",With="KFPatcher.stubGT.DramaticEvent")
   // altered so it won't call zed time
-  FList[3]=(Replace="KFMod.KFGameType.DoBossDeath",With="KFPatcher.stubGT.DoBossDeath")
+  List[3]=(Replace="KFMod.KFGameType.DoBossDeath",With="KFPatcher.stubGT.DoBossDeath")
   // no more late joiner text shit
-  FList[4]=(Replace="KFMod.KFGameType.PreLogin",With="KFPatcher.stubGT.PreLogin")
+  List[4]=(Replace="KFMod.KFGameType.PreLogin",With="KFPatcher.stubGT.PreLogin")
 
   // ======================================= GameRule =======================================
   // no more game end when players leave the lobby
-  FList[5]=(Replace="Engine.GameRules.CheckEndGame",With="KFPatcher.stubRule.CheckEndGame")
+  List[5]=(Replace="Engine.GameRules.CheckEndGame",With="KFPatcher.stubRule.CheckEndGame")
 
   // ======================================= Pawns =======================================
   // fix for dosh exploits
-  FList[6]=(Replace="KFMod.KFPawn.TossCash",With="KFPatcher.stubPawn.TossCash")
-  FList[7]=(Replace="KFMod.KFPawn.GetSound",With="KFPatcher.stubPawn.GetSound")
+  List[6]=(Replace="KFMod.KFPawn.TossCash",With="KFPatcher.stubPawn.TossCash")
+  List[7]=(Replace="KFMod.KFPawn.GetSound",With="KFPatcher.stubPawn.GetSound")
 
   // ======================================= Controllers =======================================
   // no more 'you will become %perk' spam
-  FList[8]=(Replace="KFMod.KFPlayerController.SelectVeterancy",With="KFPatcher.stubPC.SelectVeterancy")
-  FList[14]=(Replace="KFMod.KFPlayerController.ClientWeaponSpawned",With="KFPatcher.stubPC.ClientWeaponSpawned")
-  FList[15]=(Replace="KFMod.KFPlayerController.ClientWeaponDestroyed",With="KFPatcher.stubPC.ClientWeaponDestroyed")
+  List[8]=(Replace="KFMod.KFPlayerController.SelectVeterancy",With="KFPatcher.stubPC.SelectVeterancy")
+  List[14]=(Replace="KFMod.KFPlayerController.ClientWeaponSpawned",With="KFPatcher.stubPC.ClientWeaponSpawned")
+  List[15]=(Replace="KFMod.KFPlayerController.ClientWeaponDestroyed",With="KFPatcher.stubPC.ClientWeaponDestroyed")
 
   // ======================================= Weapons =======================================
   // fix for nade exploits
-  FList[9]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFragFire.DoFireEffect")
+  List[9]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFragFire.DoFireEffect")
 
   // ======================================= Zeds =======================================
   // Husks, fix none calls for toggleaux function
-  FList[10]=(Replace="KFChar.ZombieHusk_HALLOWEEN.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
-  FList[11]=(Replace="KFChar.ZombieHusk.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
+  List[10]=(Replace="KFChar.ZombieHusk_HALLOWEEN.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
+  List[11]=(Replace="KFChar.ZombieHusk.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
   // sirens, fixed instigator call in takedamage and no more damage while dead / decapped
-  FList[12]=(Replace="KFChar.ZombieSiren.SpawnTwoShots",With="KFPatcher.stubZSiren.SpawnTwoShots")
-  FList[13]=(Replace="KFChar.ZombieSiren.HurtRadius",With="KFPatcher.stubZSiren.HurtRadius")
+  List[12]=(Replace="KFChar.ZombieSiren.SpawnTwoShots",With="KFPatcher.stubZSiren.SpawnTwoShots")
+  List[13]=(Replace="KFChar.ZombieSiren.HurtRadius",With="KFPatcher.stubZSiren.HurtRadius")
   
-  FList[16]=(Replace="KFMod.KFMonster.TakeDamage",With="KFPatcher.stubMonster.TakeDamage")
-  FList[17]=(Replace="KFChar.ZombieBloat.SpawnTwoShots",With="KFPatcher.stubZBloat.SpawnTwoShots")
+  List[16]=(Replace="KFMod.KFMonster.TakeDamage",With="KFPatcher.stubMonster.TakeDamage")
+  List[17]=(Replace="KFChar.ZombieBloat.SpawnTwoShots",With="KFPatcher.stubZBloat.SpawnTwoShots")
+
+  List[18]=(Replace="KFMod.FleshPoundAvoidArea.Touch",With="KFPatcher.stubFPAvoidArea.Touch")
+  List[19]=(Replace="KFMod.FleshPoundAvoidArea.RelevantTo",With="KFPatcher.stubFPAvoidArea.RelevantTo")
+
+  List[20]=(Replace="Engine.GameInfo.GetServerPlayers",With="KFPatcher.stubGT.GetServerPlayers")
+
+  
+
+  // List[20]=(Replace="KFMod.KFMonster.GetOriginalGroundSpeed",With="KFPatcher.stubZScrake.GetOriginalGroundSpeed")
+  // List[21]=(Replace="KFChar.SawZombieController.WaitForAnim.EndState",With="KFPatcher.stubZScrakeCtrl.EndState")
+  // List[22]=(Replace="KFChar.SawZombieController.DoorBashing.EndState",With="KFPatcher.stubZScrakeCtrl.EndState")
+
+  // List[23]=(Replace="KFMod.ShotgunBullet.ProcessTouch",With="KFPatcher.stubPShotgun.ProcessTouch")
+  // List[21]=(Replace="KFChar.ZombieScrake.SawingLoop.GetOriginalGroundSpeed",With="KFPatcher.stubFPAvoidArea.GetSpeedSawing")
 }

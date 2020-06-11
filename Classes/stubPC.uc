@@ -92,13 +92,13 @@ function BecomeSpectator()
   ClientBecameSpectator();
 }
 
-
 simulated function ClientWeaponSpawned(class<Weapon> WClass, Inventory Inv)
 {
   local class<KFWeapon> W;
   local class<KFWeaponAttachment> Att;
   local Weapon Spawned;
 
+  log("YOLO!");
   //log("ScrnPlayerController.ClientWeaponSpawned()" @ WClass $ ". Default Mesh = " $ WClass.default.Mesh, 'ScrnBalance');
   //super.ClientWeaponSpawned(WClass, Inv);
 

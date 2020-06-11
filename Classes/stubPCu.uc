@@ -1,3 +1,4 @@
+// stub KFPlayerController for hooks
 class stubPCu extends Object;
 
 

@@ -39,7 +39,7 @@ function SpawnTwoShots()
 
     foreach DynamicActors(class'KFMonsterController', KFMonstControl)
     {
-      if( KFMonstControl != Controller )
+      if( KFMonstControl != Controller && !ClassIsChildOf(KFMonstControl, class'FleshpoundZombieController'))
       {
         if( PointDistToLine(KFMonstControl.Pawn.Location, vector(FireRotation), FireStart) < 75 )
         {

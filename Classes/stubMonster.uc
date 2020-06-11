@@ -51,9 +51,9 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
     // BurnDown variable indicates how many ticks are remaining for zed to burn.
     // It is 0, when zed isn't burning (or stopped burning).
     // So all the code below will be executed only, if zed isn't already burning
-    if( BurnDown<=0 )
+    if ( BurnDown <= 0 )
     {
-      if( HeatAmount>4 || Damage >= 15 )
+      if( HeatAmount > 4 || Damage >= 15 )
       {
         bBurnified = true;
         BurnDown = 10; // Inits burn tick count to 10
@@ -117,15 +117,15 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
     {
       if( bIsHeadShot )
       {
-          // Play a sound when someone gets a headshot TODO: Put in the real sound here
-          if( bIsHeadShot )
-          {
+        // Play a sound when someone gets a headshot TODO: Put in the real sound here
+        if( bIsHeadShot )
+        {
           PlaySound(sound'KF_EnemyGlobalSndTwo.Impact_Skull', SLOT_None,2.0,true,500);
         }
         HeadHealth -= LastDamageAmount;
         if( HeadHealth <= 0 || Damage > Health )
         {
-           RemoveHead();
+          RemoveHead();
         }
       }
 
@@ -150,7 +150,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
     Momentum = vect(0,0,0);
   }
 
-  if(class<DamTypeVomit>(DamageType)!=none) // Same rules apply to zombies as players.
+  if(class<DamTypeVomit>(DamageType) != none) // Same rules apply to zombies as players.
   {
     BileCount=7;
     if (instigatedBy != none)
@@ -179,4 +179,33 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
   // }
 
   bBackstabbed = false;
+}
+
+
+function TakeFireDamage(int Damage,pawn Instigator)
+{
+	local Vector DummyHitLoc,DummyMomentum;
+
+	TakeDamage(Damage, BurnInstigator, DummyHitLoc, DummyMomentum, FireDamageClass);
+
+	if ( BurnDown > 0 )
+	{
+		// Decrement the number of FireDamage calls left before our Zombie is extinguished :)
+		BurnDown --;
+	}
+
+	// Melt em' :)
+	if ( BurnDown < CrispUpThreshhold )
+	{
+		ZombieCrispUp();
+	}
+
+	if ( BurnDown == 0 )
+	{
+		bBurnified = false;
+		if( !bZapped )
+		{
+      SetGroundSpeed(GetOriginalGroundSpeed());
+    }
+	}
 }

@@ -89,3 +89,185 @@ function Sound GetSound(xPawnSoundGroup.ESoundType soundType)
 
   return SoundGroupClass.static.GetSound(soundType, SurfaceTypeID);
 }
+
+
+function ServerBuyWeapon( Class<Weapon> WClass, float ItemWeight )
+{
+  local Inventory I, J;
+  local float Price;
+  local bool bIsDualWeapon, bHasDual9mms, bHasDualHCs, bHasDualRevolvers;
+
+  if ( !CanBuyNow() || Class<KFWeapon>(WClass) == none || Class<KFWeaponPickup>(WClass.Default.PickupClass) == none )
+  {
+    return;
+  }
+
+  if ( Class<KFWeapon>(WClass).Default.AppID > 0 && Class<KFWeapon>(WClass).Default.UnlockedByAchievement != -1 )
+  {
+    if ( KFSteamStatsAndAchievements(PlayerReplicationInfo.SteamStatsAndAchievements) == none ||
+            (!KFSteamStatsAndAchievements(PlayerReplicationInfo.SteamStatsAndAchievements).PlayerOwnsWeaponDLC(Class<KFWeapon>(WClass).Default.AppID) &&
+             KFSteamStatsAndAchievements(PlayerReplicationInfo.SteamStatsAndAchievements).Achievements[Class<KFWeapon>(WClass).Default.UnlockedByAchievement].bCompleted != 1 ))
+        {
+            return;
+        }
+
+  }
+
+  else if ( Class<KFWeapon>(WClass).Default.AppID > 0 )
+  {
+        if ( KFSteamStatsAndAchievements(PlayerReplicationInfo.SteamStatsAndAchievements) == none ||
+            !KFSteamStatsAndAchievements(PlayerReplicationInfo.SteamStatsAndAchievements).PlayerOwnsWeaponDLC(Class<KFWeapon>(WClass).Default.AppID))
+        {
+            return;
+        }
+  }
+
+  else if ( Class<KFWeapon>(WClass).Default.UnlockedByAchievement != -1  )
+    {
+        if ( KFSteamStatsAndAchievements(PlayerReplicationInfo.SteamStatsAndAchievements) == none ||
+             KFSteamStatsAndAchievements(PlayerReplicationInfo.SteamStatsAndAchievements).Achievements[Class<KFWeapon>(WClass).Default.UnlockedByAchievement].bCompleted != 1 )
+        {
+            return;
+        }
+    }
+
+  Price = class<KFWeaponPickup>(WClass.Default.PickupClass).Default.Cost;
+
+  if ( KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill != none )
+  {
+    Price *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), WClass.Default.PickupClass);
+  }
+
+  for ( I=Inventory; I!=None; I=I.Inventory )
+  {
+    if( I.Class==WClass )
+    {
+      Return; // Already has weapon.
+    }
+
+    if ( I.Class == class'Dualies' )
+    {
+            bHasDual9mms = true;
+    }
+
+    else if ( I.Class == class'DualDeagle' || I.Class == class'GoldenDualDeagle' )
+    {
+      bHasDualHCs = true;
+    }
+
+    else if ( I.Class == class'Dual44Magnum' )
+    {
+      bHasDualRevolvers = true;
+    }
+  }
+
+    if ( WClass == class'DualDeagle' )
+    {
+        for ( J = Inventory; J != None; J = J.Inventory )
+        {
+            if ( J.class == class'Deagle' )
+            {
+                Price = Price / 2;
+                break;
+            }
+        }
+
+        bIsDualWeapon = true;
+        bHasDualHCs = true;
+    }
+
+    if ( WClass == class'GoldenDualDeagle' )
+    {
+        for ( J = Inventory; J != None; J = J.Inventory )
+        {
+            if ( J.class == class'GoldenDeagle' )
+            {
+                Price = Price / 2;
+                break;
+            }
+        }
+
+        bIsDualWeapon = true;
+        bHasDualHCs = true;
+    }
+
+    if ( WClass == class'Dual44Magnum' )
+    {
+        for ( J = Inventory; J != None; J = J.Inventory )
+        {
+            if ( J.class == class'Magnum44Pistol' )
+            {
+                Price = Price / 2;
+                break;
+            }
+        }
+
+        bIsDualWeapon = true;
+        bHasDualRevolvers = true;
+    }
+
+    if ( WClass == class'DualMK23Pistol' )
+    {
+        for ( J = Inventory; J != None; J = J.Inventory )
+        {
+            if ( J.class == class'MK23Pistol' )
+            {
+                Price = Price / 2;
+                break;
+            }
+        }
+
+        bIsDualWeapon = true;
+    }
+
+    if ( WClass == class'DualFlareRevolver' )
+    {
+        for ( J = Inventory; J != None; J = J.Inventory )
+        {
+            if ( J.class == class'FlareRevolver' )
+            {
+                Price = Price / 2;
+                break;
+            }
+        }
+
+        bIsDualWeapon = true;
+    }
+
+  bIsDualWeapon = bIsDualWeapon || WClass == class'Dualies';
+
+  if ( !CanCarry(ItemWeight) )
+  {
+    Return;
+  }
+
+  if ( PlayerReplicationInfo.Score < Price )
+  {
+    Return; // Not enough CASH.
+  }
+
+  I = Spawn(WClass);
+
+  if ( I != none )
+  {
+    if ( KFGameType(Level.Game) != none )
+    {
+      KFGameType(Level.Game).WeaponSpawned(I);
+    }
+
+    KFWeapon(I).UpdateMagCapacity(PlayerReplicationInfo);
+    KFWeapon(I).FillToInitialAmmo();
+    KFWeapon(I).SellValue = Price * 0.75;
+    I.GiveTo(self);
+    PlayerReplicationInfo.Score -= Price;
+
+    if ( bIsDualWeapon )
+    {
+      KFSteamStatsAndAchievements(PlayerReplicationInfo.SteamStatsAndAchievements).OnDualsAddedToInventory(bHasDual9mms, bHasDualHCs, bHasDualRevolvers);
+    }
+
+    ClientForceChangeWeapon(I);
+  }
+
+  SetTraderUpdate();
+}
