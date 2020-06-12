@@ -150,9 +150,9 @@ defaultproperties
   List[18]=(Replace="KFMod.FleshPoundAvoidArea.Touch",With="KFPatcher.stubFPAvoidArea.Touch")
   List[19]=(Replace="KFMod.FleshPoundAvoidArea.RelevantTo",With="KFPatcher.stubFPAvoidArea.RelevantTo")
 
+  // edit server, player info
   List[20]=(Replace="Engine.GameInfo.GetServerPlayers",With="KFPatcher.stubGT.GetServerPlayers")
-
-  
+  // List[21]=(Replace="Engine.GameInfo.GetServerDetails",With="KFPatcher.stubGT.GetServerDetails")
 
   // List[20]=(Replace="KFMod.KFMonster.GetOriginalGroundSpeed",With="KFPatcher.stubZScrake.GetOriginalGroundSpeed")
   // List[21]=(Replace="KFChar.SawZombieController.WaitForAnim.EndState",With="KFPatcher.stubZScrakeCtrl.EndState")

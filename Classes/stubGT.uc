@@ -5,7 +5,7 @@ class stubGT extends KFGameType
 // config vars
 var config string sAlive, sDead, sSpectator, sReady, sNotReady, sAwaiting;
 var config string sTagHP, sTagKills;
-var config bool bPerk;
+var config bool bShowPerk;
 var config float fRefreshTime;
 
 // other vars
@@ -17,17 +17,154 @@ var protected transient float fDelay;
 //                                 SERVER INFO
 //=============================================================================
 
+// MasterServerUplink.uc
+// Called when we should refresh the game state
+// event Refresh()
+// {
+// 	if ( (!bInitialStateCached) || ( Level.TimeSeconds > CacheRefreshTime )  )
+// 	{
+// 		Level.Game.GetServerInfo(FullCachedServerState);
+// 		Level.Game.GetServerDetails(FullCachedServerState);
+
+// 		CachedServerState = FullCachedServerState;
+
+// 		Level.Game.GetServerPlayers(FullCachedServerState);
+
+// 		ServerState 		= FullCachedServerState;
+// 		CacheRefreshTime 	= Level.TimeSeconds + 60;
+// 		bInitialStateCached = false;
+// 	}
+// 	else if (Level.Game.NumPlayers != CachePlayerCount)
+// 	{
+// 		ServerState = CachedServerState;
+
+// 		Level.Game.GetServerPlayers(ServerState);
+
+// 		FullCachedServerState = ServerState;
+
+// 	}
+// 	else
+// 		ServerState = FullCachedServerState;
+
+// 	CachePlayerCount = Level.Game.NumPlayers;
+// }
+
+
+// show server detailed info
+function GetServerDetails( out ServerResponseLine ServerState )
+{
+  local int l;
+  local Mutator M;
+  local GameRules G;
+  local int i, Len, NumMutators;
+  local string MutatorName;
+  local bool bFound;
+
+  // game info
+  AddServerDetail( ServerState, "ServerMode", Eval(Level.NetMode == NM_ListenServer, "non-dedicated", "dedicated") );
+  AddServerDetail( ServerState, "AdminName", GameReplicationInfo.AdminName );
+  AddServerDetail( ServerState, "AdminEmail", GameReplicationInfo.AdminEmail );
+
+  AddServerDetail( ServerState, "ServerVersion", Level.ROVersion );
+  AddServerDetail( ServerState, "IsVacSecured", Eval(IsVACSecured(), "true", "false"));
+
+  if ( AccessControl != None && AccessControl.RequiresPassword() )
+    AddServerDetail( ServerState, "GamePassword", "True" );
+
+  if ( AllowGameSpeedChange() && (GameSpeed != 1.0) )
+    AddServerDetail( ServerState, "GameSpeed", int(GameSpeed*100)/100.0 );
+
+  AddServerDetail( ServerState, "MaxSpectators", MaxSpectators );
+
+  // voting
+  if( VotingHandler != None )
+    VotingHandler.GetServerDetails(ServerState);
+
+  // Ask the mutators if they have anything to add.
+  for (M = BaseMutator; M != None; M = M.NextMutator)
+  {
+    M.GetServerDetails(ServerState);
+    NumMutators++;
+  }
+
+  // Ask the gamerules if they have anything to add.
+  for ( G=GameRulesModifiers; G!=None; G=G.NextGameRules )
+    G.GetServerDetails(ServerState);
+
+  // make sure all the mutators were really added
+  for ( i=0; i<ServerState.ServerInfo.Length; i++ )
+    if ( ServerState.ServerInfo[i].Key ~= "Mutator" )
+      NumMutators--;
+
+  if ( NumMutators > 1 )
+  {
+    // something is missing
+    for (M = BaseMutator.NextMutator; M != None; M = M.NextMutator)
+    {
+      MutatorName = M.GetHumanReadableName();
+      for ( i=0; i<ServerState.ServerInfo.Length; i++ )
+      {
+        if ( (ServerState.ServerInfo[i].Value ~= MutatorName) && (ServerState.ServerInfo[i].Key ~= "Mutator") )
+        {
+          bFound = true;
+          break;
+        }
+
+        if ( !bFound )
+        {
+          Len = ServerState.ServerInfo.Length;
+          ServerState.ServerInfo.Length = Len+1;
+          ServerState.ServerInfo[i].Key = "Mutator";
+          ServerState.ServerInfo[i].Value = MutatorName;
+        }
+      }     
+    }
+  }
+
+  // kf gametype
+  l = ServerState.ServerInfo.Length;
+  ServerState.ServerInfo.Length = l+1;
+  ServerState.ServerInfo[l].Key = "Max runtime zombies";
+  ServerState.ServerInfo[l].Value = string(MaxZombiesOnce);
+  l++;
+  ServerState.ServerInfo.Length = l+1;
+  ServerState.ServerInfo[l].Key = "Starting cash";
+  ServerState.ServerInfo[l].Value = string(StartingCash);
+  l++;
+
+  // invasion
+  AddServerDetail( ServerState, "InitialWave", InitialWave );
+	AddServerDetail( ServerState, "FinalWave", FinalWave );
+
+  // teamgame
+  AddServerDetail( ServerState, "BalanceTeams",  bBalanceTeams);
+	AddServerDetail( ServerState, "PlayersBalanceTeams",  bPlayersBalanceTeams);
+	AddServerDetail( ServerState, "FriendlyFireScale", int(FriendlyFireScale*100) $ "%" );
+
+  // deathmatch
+  AddServerDetail( ServerState, "GoalScore", GoalScore );
+	AddServerDetail( ServerState, "TimeLimit", TimeLimit );
+	AddServerDetail( ServerState, "Translocator", bAllowTrans );
+	AddServerDetail( ServerState, "WeaponStay", bWeaponStay );
+	AddServerDetail( ServerState, "ForceRespawn", bForceRespawn );
+
+  // unreal mp game
+  AddServerDetail( ServerState, "MinPlayers", MinPlayers );
+	AddServerDetail( ServerState, "EndTimeDelay", EndTimeDelay );
+}
+
+
 // show perk, health in player info
 function GetServerPlayers( out ServerResponseLine ServerState )
 {
   local Mutator M;
   local Controller C;
   local PlayerReplicationInfo PRI;
-  local int i, TeamFlag[2];
+  local int i; // , TeamFlag[2];
 
   i = ServerState.PlayerInfo.Length;
-  TeamFlag[0] = 1 << 29;
-  TeamFlag[1] = TeamFlag[0] << 1;
+  // TeamFlag[0] = 1 << 29;
+  // TeamFlag[1] = TeamFlag[0] << 1;
 
   for( C=Level.ControllerList; C != none; C=C.NextController )
   {
@@ -99,7 +236,7 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
   // status ready !
 
   // parse perk if we want it
-  if (default.bPerk)
+  if (default.bShowPerk)
   {
     switch (string(KFPlayerReplicationInfo(PRI).ClientVeteranSkill))
     {
@@ -149,7 +286,7 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
     perk = "^r[" $ perk $ "]^w";
   }
 
-  return class'uHelper'.static.ParseTags(perk $ PRI.PlayerName $ status);
+  return class'uHelper'.static.ParseTags(perk @ PRI.PlayerName @ status);
 }
 
 
