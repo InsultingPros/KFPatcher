@@ -172,6 +172,12 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
     Super(Monster).takeDamage(Damage, instigatedBy, hitLocation, momentum, damageType);
   }
 
+  // if (Damage*1.5 >= default.Health || (Damage > 200 && KFDamType != none && KFDamType.default.bSniperWeapon && ZedVictim.IsA('ZombieHusk') ))
+  // {
+  //   ZedVictim.Controller.Focus = none;
+  //   ZedVictim.Controller.FocalPoint = ZedVictim.Location + 512 * vector(ZedVictim.Rotation);
+  // }
+
   // block yet another zed time call
   // if( bIsHeadShot && Health <= 0 )
   // {
