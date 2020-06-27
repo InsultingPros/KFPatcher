@@ -17,6 +17,11 @@ function SpawnTwoShots()
   GetAxes(Rotation,X,Y,Z);
   FireStart = GetBoneCoords('Barrel').Origin;
 
+  if (self.class.name == 'ZombieHusk_HALLOWEEN')
+    HuskFireProjClass = class'KFChar.HuskFireProjectile_HALLOWEEN';
+  else
+    HuskFireProjClass = class'KFChar.HuskFireProjectile';
+
   if ( !SavedFireProperties.bInitialized )
   {
     SavedFireProperties.AmmoClass = Class'SkaarjAmmo';
@@ -35,8 +40,9 @@ function SpawnTwoShots()
     // Turn off extra collision before spawning vomit, otherwise spawn fails
     ToggleAuxCollision(false);
 
-    FireRotation = Controller.AdjustAim(SavedFireProperties,FireStart,600);
+    FireRotation = Controller.AdjustAim(SavedFireProperties, FireStart, 600);
 
+    // do not move fleshpounds !
     foreach DynamicActors(class'KFMonsterController', KFMonstControl)
     {
       if( KFMonstControl != Controller && !ClassIsChildOf(KFMonstControl, class'FleshpoundZombieController'))

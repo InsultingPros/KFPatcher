@@ -21,6 +21,8 @@ var stubMonster stubMonster;
 var stubFPAvoidArea stubFPAvoidArea;
 var stubShopVolume stubShopVolume;
 var stubKFWeaponPickup stubKFWeaponPickup;
+var stubDualiesFire stubDualiesFire;
+var stubDualPistol stubDualPistol;
 // var stubKFSteamWebApi stubKFSteamWebApi;
 // var stubZScrakeCtrl stubZScrakeCtrl;
 // var stubPShotgun stubPShotgun;
@@ -49,8 +51,9 @@ event PreBeginPlay()
   // TEST
   // ReplaceState("KFChar.ZombieScrake.RunningState", "KFPatcher.stubZScrake.RunningState");
 
-  // yup, it's not set somehow, fucking TWI
-  class'KFChar.ZombieHusk_HALLOWEEN'.default.HuskFireProjClass = class'KFChar.HuskFireProjectile_HALLOWEEN';
+  // set dual pistol DemoReplacement classes, thanks again TWI 
+  class'KFMod.DualDeagle'.default.DemoReplacement = class'KFMod.Deagle';
+  class'KFMod.GoldenDualDeagle'.default.DemoReplacement = class'KFMod.GoldenDeagle';
 }
 
 
@@ -132,17 +135,32 @@ defaultproperties
   // ======================================= Controllers =======================================
   // no more 'you will become %perk' spam
   List[8]=(Replace="KFMod.KFPlayerController.SelectVeterancy",With="KFPatcher.stubPC.SelectVeterancy")
-  List[14]=(Replace="KFMod.KFPlayerController.ClientWeaponSpawned",With="KFPatcher.stubPC.ClientWeaponSpawned")
-  List[15]=(Replace="KFMod.KFPlayerController.ClientWeaponDestroyed",With="KFPatcher.stubPC.ClientWeaponDestroyed")
 
   // ======================================= Weapons =======================================
+
   // fix for nade exploits
   List[9]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFragFire.DoFireEffect")
 
+  // fix accessed none Inventory for destroyed weapon pickups
+  List[24]=(Replace="KFMod.KFWeaponPickup.Destroyed",With="KFPatcher.stubKFWeaponPickup.Destroyed")
+
+  // fix accessed none IgnoreActors ! and replace all copy paste code with 1
+  List[25]=(Replace="KFMod.MK23Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[26]=(Replace="KFMod.DualMK23Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[27]=(Replace="KFMod.DeagleFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[28]=(Replace="KFMod.DualDeagleFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[29]=(Replace="KFMod.Magnum44Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[30]=(Replace="KFMod.Dual44MagnumFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+
+  // fix accessed none from DropFrom and replace all copy paste code with 1
+  List[31]=(Replace="KFMod.DualDeagle.DropFrom",With="KFPatcher.stubDualPistol.DropFrom")
+
   // ======================================= Zeds =======================================
+
   // Husks, fix none calls for toggleaux function
   List[10]=(Replace="KFChar.ZombieHusk_HALLOWEEN.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
   List[11]=(Replace="KFChar.ZombieHusk.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
+
   // sirens, fixed instigator call in takedamage and no more damage while dead / decapped
   List[12]=(Replace="KFChar.ZombieSiren.SpawnTwoShots",With="KFPatcher.stubZSiren.SpawnTwoShots")
   List[13]=(Replace="KFChar.ZombieSiren.HurtRadius",With="KFPatcher.stubZSiren.HurtRadius")
@@ -150,6 +168,7 @@ defaultproperties
   List[16]=(Replace="KFMod.KFMonster.TakeDamage",With="KFPatcher.stubMonster.TakeDamage")
   List[17]=(Replace="KFChar.ZombieBloat.SpawnTwoShots",With="KFPatcher.stubZBloat.SpawnTwoShots")
 
+  // do not let fp's to spin
   List[18]=(Replace="KFMod.FleshPoundAvoidArea.Touch",With="KFPatcher.stubFPAvoidArea.Touch")
   List[19]=(Replace="KFMod.FleshPoundAvoidArea.RelevantTo",With="KFPatcher.stubFPAvoidArea.RelevantTo")
 
@@ -160,9 +179,6 @@ defaultproperties
   List[21]=(Replace="KFMod.ShopVolume.Touch",With="KFPatcher.stubShopVolume.Touch")
   List[22]=(Replace="KFMod.ShopVolume.UnTouch",With="KFPatcher.stubShopVolume.UnTouch")
   List[23]=(Replace="KFMod.ShopVolume.UsedBy",With="KFPatcher.stubShopVolume.UsedBy")
-
-  // fix accessed none Inventory for destroyed weapon pickups
-  List[24]=(Replace="KFMod.KFWeaponPickup.Destroyed",With="KFPatcher.stubKFWeaponPickup.Destroyed")
 
   // List[21]=(Replace="KFMod.KFSteamWebApi.Timer",With="KFPatcher.stubKFSteamWebApi.Timer")
   // List[22]=(Replace="KFMod.KFSteamWebApi.HasAchievement",With="KFPatcher.stubKFSteamWebApi.HasAchievement")

@@ -1,5 +1,9 @@
 class stubFragFire extends FragFire;
 
+
+var protected transient float PrevAmmo;
+
+
 function DoFireEffect()
 {
   local float MaxAmmo, CurAmmo;
@@ -11,9 +15,9 @@ function DoFireEffect()
 
   // added working ammo check
   Weapon.GetAmmoCount(MaxAmmo,CurAmmo);
-  if(CurAmmo == 0 && class'MuVariableClass'.default.PrevAmmo == 0)
+  if (CurAmmo == 0 && default.PrevAmmo == 0)
     return;
-  class'MuVariableClass'.default.PrevAmmo = CurAmmo;
+  default.PrevAmmo = CurAmmo;
 
   Instigator.MakeNoise(1.0);
   Weapon.GetViewAxes(X,Y,Z);
