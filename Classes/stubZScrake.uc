@@ -27,3 +27,16 @@ simulated function float GetOriginalGroundSpeed()
     return OriginalGroundSpeed;
   }
 }
+
+
+function EndState()
+{
+  log("FUCK YEA!");
+	if( !bZapped )
+	{
+    SetGroundSpeed(GetOriginalGroundSpeed());
+  }
+	bCharging = False;
+	if( Level.NetMode!=NM_DedicatedServer )
+		PostNetReceive();
+}

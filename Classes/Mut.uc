@@ -19,6 +19,8 @@ var stubZBloat stubZBloat;
 var stubZScrake stubZScrake;
 var stubMonster stubMonster;
 var stubFPAvoidArea stubFPAvoidArea;
+var stubShopVolume stubShopVolume;
+// var stubKFSteamWebApi stubKFSteamWebApi;
 // var stubZScrakeCtrl stubZScrakeCtrl;
 // var stubPShotgun stubPShotgun;
 // var stubSyringe stubSyringe;
@@ -152,10 +154,19 @@ defaultproperties
 
   // edit server, player info
   List[20]=(Replace="Engine.GameInfo.GetServerPlayers",With="KFPatcher.stubGT.GetServerPlayers")
+
+  // fix accessed none MyTrader
+  List[21]=(Replace="KFMod.ShopVolume.Touch",With="KFPatcher.stubShopVolume.Touch")
+  List[22]=(Replace="KFMod.ShopVolume.UnTouch",With="KFPatcher.stubShopVolume.UnTouch")
+  List[23]=(Replace="KFMod.ShopVolume.UsedBy",With="KFPatcher.stubShopVolume.UsedBy")
+
+  // List[21]=(Replace="KFMod.KFSteamWebApi.Timer",With="KFPatcher.stubKFSteamWebApi.Timer")
+  // List[22]=(Replace="KFMod.KFSteamWebApi.HasAchievement",With="KFPatcher.stubKFSteamWebApi.HasAchievement")
+
   // List[21]=(Replace="Engine.GameInfo.GetServerDetails",With="KFPatcher.stubGT.GetServerDetails")
 
   // List[20]=(Replace="KFMod.KFMonster.GetOriginalGroundSpeed",With="KFPatcher.stubZScrake.GetOriginalGroundSpeed")
-  // List[21]=(Replace="KFChar.SawZombieController.WaitForAnim.EndState",With="KFPatcher.stubZScrakeCtrl.EndState")
+  // List[21]=(Replace="KFChar.ZombieScrake.RunningState.EndState",With="KFPatcher.stubZScrake.EndState")
   // List[22]=(Replace="KFChar.SawZombieController.DoorBashing.EndState",With="KFPatcher.stubZScrakeCtrl.EndState")
 
   // List[23]=(Replace="KFMod.ShotgunBullet.ProcessTouch",With="KFPatcher.stubPShotgun.ProcessTouch")

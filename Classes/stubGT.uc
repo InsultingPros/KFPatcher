@@ -211,17 +211,19 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
     if (bWaitingToStartMatch)
     {
       if(PRI.bReadyToPlay)
-        Status = default.sReady;
+        status = default.sReady;
       else
-        Status = default.sNotReady;
+        status = default.sNotReady;
     }
     else
-      Status = default.sAwaiting;
+      status = default.sAwaiting;
   }
 
   // if we are spectator, do not check perk, kills, etc
   else if (PRI.bOnlySpectator)
-    return class'uHelper'.static.StripTags(PRI.PlayerName) $ class'uHelper'.static.ParseTags(default.sSpectator);
+  {
+    return class'uHelper'.static.StripTags(PRI.PlayerName) @ class'uHelper'.static.ParseTags(default.sSpectator);
+  }
 
   else if (PRI.bOutOfLives && !PRI.bOnlySpectator)
     status = default.sDead;
