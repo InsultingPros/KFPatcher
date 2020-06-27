@@ -20,6 +20,7 @@ var stubZScrake stubZScrake;
 var stubMonster stubMonster;
 var stubFPAvoidArea stubFPAvoidArea;
 var stubShopVolume stubShopVolume;
+var stubKFWeaponPickup stubKFWeaponPickup;
 // var stubKFSteamWebApi stubKFSteamWebApi;
 // var stubZScrakeCtrl stubZScrakeCtrl;
 // var stubPShotgun stubPShotgun;
@@ -159,6 +160,9 @@ defaultproperties
   List[21]=(Replace="KFMod.ShopVolume.Touch",With="KFPatcher.stubShopVolume.Touch")
   List[22]=(Replace="KFMod.ShopVolume.UnTouch",With="KFPatcher.stubShopVolume.UnTouch")
   List[23]=(Replace="KFMod.ShopVolume.UsedBy",With="KFPatcher.stubShopVolume.UsedBy")
+
+  // fix accessed none Inventory for destroyed weapon pickups
+  List[24]=(Replace="KFMod.KFWeaponPickup.Destroyed",With="KFPatcher.stubKFWeaponPickup.Destroyed")
 
   // List[21]=(Replace="KFMod.KFSteamWebApi.Timer",With="KFPatcher.stubKFSteamWebApi.Timer")
   // List[22]=(Replace="KFMod.KFSteamWebApi.HasAchievement",With="KFPatcher.stubKFSteamWebApi.HasAchievement")
