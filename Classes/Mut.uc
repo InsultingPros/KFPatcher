@@ -1,4 +1,5 @@
-class Mut extends Mutator;
+class Mut extends Mutator
+  config(KFPatcher);
 
 
 struct FuncNameStruct
