@@ -1,8 +1,8 @@
 class stubPawn extends KFHumanPawn_Story;
 
 
-var protected transient float cashtimer;
-var protected transient byte CashCount;
+var transient float cashtimer;
+var transient byte CashCount;
 
 
 // toss some of your cash away. (to help a cash-strapped ally or perhaps just to party like its 1994)
@@ -17,9 +17,9 @@ exec function TossCash( int Amount )
     return;
 
   // 0.3 sec delay between throws
-  if (Level.TimeSeconds < default.cashtimer)
+  if (Level.TimeSeconds < class'stubPawn'.default.cashtimer)
     return;
-  default.cashtimer = Level.TimeSeconds + 0.3f;
+  class'stubPawn'.default.cashtimer = Level.TimeSeconds + 0.3f;
 
   Amount = Min(Amount, int(Controller.PlayerReplicationInfo.Score));
 

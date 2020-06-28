@@ -73,9 +73,9 @@ function UsedBy( Pawn user )
   User.SetAnimAction(User.IdleWeaponAnim);
 
   if (MyTrader != none)
-    default.shoptag = string(MyTrader.Tag);
+    class'stubShopVolume'.default.shoptag = string(MyTrader.Tag);
   else
-    default.shoptag = "";
+    class'stubShopVolume'.default.shoptag = "";
 
 	if ( KFPlayerController(user.Controller)!=None && KFGameType(Level.Game)!=None && !KFGameType(Level.Game).bWaveInProgress )
 		KFPlayerController(user.Controller).ShowBuyMenu(default.shoptag, KFHumanPawn(user).MaxCarryWeight);

@@ -9,8 +9,8 @@ var config bool bShowPerk;
 var config float fRefreshTime;
 
 // other vars
-var protected transient array<string> sCachedPlayersInfo;
-var protected transient float fDelay;
+var transient array<string> sCachedPlayersInfo;
+var transient float fDelay;
 
 
 //=============================================================================

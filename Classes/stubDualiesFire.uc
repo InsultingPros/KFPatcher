@@ -36,11 +36,11 @@ function DoTrace(Vector Start, Rotator Dir)
   // MK23Fire, DualMK23Fire = 3
   // DeagleFire, DualDeagleFire, Magnum44Fire, Dual44MagnumFire = 10
   if (self.class.name == 'MK23Fire' || self.class.name == 'DualMK23Fire')
-    default.penValue = 3;
+    class'stubDualiesFire'.default.penValue = 3;
   else
-    default.penValue = 10;
+    class'stubDualiesFire'.default.penValue = 10;
 
-  while( (HitCount++) < default.penValue ) // there was fixed value here per parent class
+  while( (HitCount++) < class'stubDualiesFire'.default.penValue ) // there was fixed value here per parent class
   {
     DamageActor = none;
 

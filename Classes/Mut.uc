@@ -23,6 +23,8 @@ var stubShopVolume stubShopVolume;
 var stubKFWeaponPickup stubKFWeaponPickup;
 var stubDualiesFire stubDualiesFire;
 var stubDualPistol stubDualPistol;
+var stubPipe stubPipe;
+var stubNade stubNade;
 // var stubKFSteamWebApi stubKFSteamWebApi;
 // var stubZScrakeCtrl stubZScrakeCtrl;
 // var stubPShotgun stubPShotgun;
@@ -52,8 +54,8 @@ event PreBeginPlay()
   // ReplaceState("KFChar.ZombieScrake.RunningState", "KFPatcher.stubZScrake.RunningState");
 
   // set dual pistol DemoReplacement classes, thanks again TWI 
-  class'KFMod.DualDeagle'.default.DemoReplacement = class'KFMod.Deagle';
-  class'KFMod.GoldenDualDeagle'.default.DemoReplacement = class'KFMod.GoldenDeagle';
+  // class'KFMod.DualDeagle'.default.DemoReplacement = class'KFMod.Deagle';
+  // class'KFMod.GoldenDualDeagle'.default.DemoReplacement = class'KFMod.GoldenDeagle';
 }
 
 
@@ -140,6 +142,8 @@ defaultproperties
 
   // fix for nade exploits
   List[9]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFragFire.DoFireEffect")
+  // fix sounds array errors
+  List[37]=(Replace="KFMod.Nade.Explode",With="KFPatcher.stubNade.Explode")
 
   // fix accessed none Inventory for destroyed weapon pickups
   List[24]=(Replace="KFMod.KFWeaponPickup.Destroyed",With="KFPatcher.stubKFWeaponPickup.Destroyed")
@@ -154,6 +158,15 @@ defaultproperties
 
   // fix accessed none from DropFrom and replace all copy paste code with 1
   List[31]=(Replace="KFMod.DualDeagle.DropFrom",With="KFPatcher.stubDualPistol.DropFrom")
+
+  // fix uber damage exlpoit
+  List[32]=(Replace="KFMod.PipeBombProjectile.TakeDamage",With="KFPatcher.stubPipe.TakeDamage")
+  // no detonation on dead players, npc
+  List[33]=(Replace="KFMod.PipeBombProjectile.Timer",With="KFPatcher.stubPipe.Timer")
+  // fix sounds array errors
+  List[34]=(Replace="KFMod.PipeBombProjectile.Explode",With="KFPatcher.stubPipe.Explode")
+  List[35]=(Replace="KFMod.PipeBombProjectile.PreloadAssets",With="KFPatcher.stubPipe.PreloadAssets")
+  List[36]=(Replace="KFMod.PipeBombProjectile.UnloadAssets",With="KFPatcher.stubPipe.UnloadAssets")
 
   // ======================================= Zeds =======================================
 

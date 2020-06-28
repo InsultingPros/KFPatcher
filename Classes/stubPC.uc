@@ -1,7 +1,7 @@
 class stubPC extends KFPlayerController_Story;
 
 
-var protected transient float selectDelay;
+var transient float selectDelay;
 
 
 // no more "you will become %perk" spam when you join midgame
@@ -21,11 +21,11 @@ function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceC
       bChangedVeterancyThisWave = false;
 
       // wait 2 seconds for ClientVeteranSkill replication
-      if(Level.TimeSeconds > default.selectDelay)
+      if(Level.TimeSeconds > class'stubPC'.default.selectDelay)
       {
         ClientMessage(Repl(YouWillBecomePerkString, "%Perk%", VetSkill.Default.VeterancyName));
       }
-      default.selectDelay = Level.TimeSeconds + 2.0f;
+      class'stubPC'.default.selectDelay = Level.TimeSeconds + 2.0f;
     }
 
     else if ( !bChangedVeterancyThisWave || bForceChange )

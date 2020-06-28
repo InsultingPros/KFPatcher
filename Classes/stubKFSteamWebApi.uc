@@ -57,11 +57,8 @@ event Timer()
         playerStats = playerStats$text;
       }
 
-      while(count > 0 )
-      {
-        count = myLink.ReadText(text);
-        playerStats = playerStats$text;
-      }
+      // get json
+      playerStats = myLink.InputBuffer;
 
       count = InStr(playerStats, "\"success\":true" );
       if(count == -1 )
