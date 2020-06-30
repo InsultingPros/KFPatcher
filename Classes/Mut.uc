@@ -125,6 +125,14 @@ defaultproperties
   List[3]=(Replace="KFMod.KFGameType.DoBossDeath",With="KFPatcher.stubGT.DoBossDeath")
   // no more late joiner text shit
   List[4]=(Replace="KFMod.KFGameType.PreLogin",With="KFPatcher.stubGT.PreLogin")
+  // fix killzeds log spam
+  List[38]=(Replace="KFMod.KFGameType.KillZeds",With="KFPatcher.stubGT.KillZeds")
+  // fix gamelength from cmdline, log monstercollection
+  List[39]=(Replace="KFMod.KFGameType.InitGame",With="KFPatcher.stubGT.InitGame")
+  // camera fix after pat kills
+  List[40]=(Replace="KFMod.KFGameType.MatchInProgress.Timer",With="KFPatcher.stubGT.newMatchInProgress.nTimer")
+  // no more wave switch lags
+  List[41]=(Replace="KFMod.KFGameType.MatchInProgress.CloseShops",With="KFPatcher.stubGT.newMatchInProgress.nCloseShops")
 
   // ======================================= GameRule =======================================
   // no more game end when players leave the lobby
@@ -187,12 +195,14 @@ defaultproperties
   List[19]=(Replace="KFMod.FleshPoundAvoidArea.RelevantTo",With="KFPatcher.stubFPAvoidArea.RelevantTo")
 
   // edit server, player info
-  List[20]=(Replace="Engine.GameInfo.GetServerPlayers",With="KFPatcher.stubGT.GetServerPlayers")
+  // List[20]=(Replace="Engine.GameInfo.GetServerPlayers",With="KFPatcher.stubGT.GetServerPlayers")
 
   // fix accessed none MyTrader
   List[21]=(Replace="KFMod.ShopVolume.Touch",With="KFPatcher.stubShopVolume.Touch")
   List[22]=(Replace="KFMod.ShopVolume.UnTouch",With="KFPatcher.stubShopVolume.UnTouch")
   List[23]=(Replace="KFMod.ShopVolume.UsedBy",With="KFPatcher.stubShopVolume.UsedBy")
+
+  // List[23]=(Replace="KFChar.ZombieBoss.UsedBy",With="KFPatcher.stubZBoss.UsedBy")
 
   // List[21]=(Replace="KFMod.KFSteamWebApi.Timer",With="KFPatcher.stubKFSteamWebApi.Timer")
   // List[22]=(Replace="KFMod.KFSteamWebApi.HasAchievement",With="KFPatcher.stubKFSteamWebApi.HasAchievement")

@@ -19,6 +19,7 @@ function Touch( Actor Other )
       return;
     }
 
+    // none check
     if (MyTrader != none)
       MyTrader.SetOpen(true);
 
@@ -58,6 +59,7 @@ function UnTouch( Actor Other )
   if (Other == none)
     return;
 
+  // none check
   if ( MyTrader != none && Pawn(Other) != none && PlayerController(Pawn(Other).Controller) != none && KFGameType(Level.Game) != none )
     MyTrader.SetOpen(false);
 }
@@ -72,11 +74,10 @@ function UsedBy( Pawn user )
   // Set the pawn to an idle anim so he wont keep making footsteps
   User.SetAnimAction(User.IdleWeaponAnim);
 
+  // none check
   if (MyTrader != none)
     class'stubShopVolume'.default.shoptag = string(MyTrader.Tag);
-  else
-    class'stubShopVolume'.default.shoptag = "";
 
-	if ( KFPlayerController(user.Controller)!=None && KFGameType(Level.Game)!=None && !KFGameType(Level.Game).bWaveInProgress )
-		KFPlayerController(user.Controller).ShowBuyMenu(default.shoptag, KFHumanPawn(user).MaxCarryWeight);
+	if ( KFPlayerController(user.Controller) != None && KFGameType(Level.Game) != None && !KFGameType(Level.Game).bWaveInProgress )
+		KFPlayerController(user.Controller).ShowBuyMenu(class'stubShopVolume'.default.shoptag, KFHumanPawn(user).MaxCarryWeight);
 }
