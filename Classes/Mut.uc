@@ -148,7 +148,6 @@ defaultproperties
   List[12]=(Replace="KFMod.KFPlayerController.SelectVeterancy",With="KFPatcher.stubPC.SelectVeterancy")
 
   // ======================================= Weapons =======================================
-
   // fix for nade exploits
   List[13]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFragFire.DoFireEffect")
   // fix sounds array errors
