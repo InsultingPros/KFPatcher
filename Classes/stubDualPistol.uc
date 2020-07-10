@@ -1,14 +1,19 @@
 class stubDualPistol extends DualDeagle;
 
 
+var KFWeaponPickup WPickup;
+var KFWeapon SingleKFW;
+var class<KFWeapon> SingleClass;
+
+
 function DropFrom(vector StartLocation)
 {
   local int m;
-  local KFWeaponPickup Pickup;
+  local Pickup Pickup;
+  local Inventory I;
   local int AmmoThrown, OtherAmmo;
-  local KFWeapon SinglePistol;
 
-  if ( !bCanThrow )
+  if (!bCanThrow)
     return;
 
   AmmoThrown = AmmoAmount(0);
@@ -23,42 +28,58 @@ function DropFrom(vector StartLocation)
   if ( Instigator != None )
     DetachFromPawn(Instigator);
 
+  // TEST !
+  class'stubDualPistol'.static.GetSingleWeaponClass(self);
+
   if( Instigator.Health > 0 )
   {
     OtherAmmo = AmmoThrown / 2;
     AmmoThrown -= OtherAmmo;
-    SinglePistol = KFWeapon(Spawn(DemoReplacement));
-    SinglePistol.SellValue = SellValue / 2;
-    SinglePistol.GiveTo(Instigator);
-    SinglePistol.Ammo[0].AmmoAmount = OtherAmmo;
-    SinglePistol.MagAmmoRemaining = MagAmmoRemaining / 2;
-    MagAmmoRemaining = Max(MagAmmoRemaining-SinglePistol.MagAmmoRemaining,0);
-
-    Pickup = KFWeaponPickup(Spawn(SinglePistol.PickupClass,,, StartLocation));
+    I = Spawn(Class'Deagle');
+    I.GiveTo(Instigator);
+    Weapon(I).Ammo[0].AmmoAmount = OtherAmmo;
+    Deagle(I).MagAmmoRemaining = MagAmmoRemaining / 2;
+    MagAmmoRemaining = Max(MagAmmoRemaining-Deagle(I).MagAmmoRemaining,0);
   }
-  else
-    Pickup = KFWeaponPickup(Spawn(class<KFWeapon>(DemoReplacement).default.PickupClass,,, StartLocation));
+
+  // Pickup = Spawn(Class'DeaglePickup',,, StartLocation);
+  Pickup = KFWeaponPickup(spawn(class'stubDualPistol'.default.SingleClass.default.PickupClass,,, StartLocation));
 
   if ( Pickup != None )
   {
     Pickup.InitDroppedPickupFor(self);
-    Pickup.DroppedBy = PlayerController(Instigator.Controller);
     Pickup.Velocity = Velocity;
-    // fixing dropping exploit
-    Pickup.SellValue = SellValue / 2;
-    Pickup.Cost = Pickup.SellValue / 0.75;
-    Pickup.AmmoAmount[0] = AmmoThrown;
-    Pickup.MagAmmoRemaining = MagAmmoRemaining;
+    WeaponPickup(Pickup).AmmoAmount[0] = AmmoThrown;
+    if( KFWeaponPickup(Pickup)!=None )
+      KFWeaponPickup(Pickup).MagAmmoRemaining = MagAmmoRemaining;
     if (Instigator.Health > 0)
-      Pickup.bThrown = true;
+      WeaponPickup(Pickup).bThrown = true;
   }
 
   Destroyed();
   Destroy();
 }
 
+// Pickup = KFWeaponPickup(Spawn(class<KFWeapon>(DemoReplacement).default.PickupClass,,, StartLocation));
 
-defaultproperties
+static final function GetSingleWeaponClass(KFWeapon KFWeapon)
 {
-
+  switch (KFWeapon.class.name)
+  {
+    case 'DualDeagle':
+      class'stubDualPistol'.default.SingleClass = class'Deagle';
+      break;
+    case 'GoldenDualDeagle':
+      class'stubDualPistol'.default.SingleClass = class'GoldenDeagle';
+      break;
+    case 'Dual44Magnum':
+      class'stubDualPistol'.default.SingleClass = class'Magnum44Pistol';
+      break;
+    case 'DualMK23Pistol':
+      class'stubDualPistol'.default.SingleClass = class'MK23Pistol';
+      break;
+  }  
 }
+
+
+defaultproperties{}

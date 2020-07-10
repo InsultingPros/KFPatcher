@@ -159,6 +159,8 @@ event InitGame( string Options, out string Error )
 //                      Player Camera Fix
 //=============================================================================
 
+// N.B. i edited whole timer, fixed some random fuckups
+// like last zed killing
 state newMatchInProgress extends MatchInProgress
 {
   function nCloseShops()
@@ -176,12 +178,16 @@ state newMatchInProgress extends MatchInProgress
 
     SelectShop();
 
-    foreach AllActors(class'Pickup', Pickup)
+    // changed from AllActors
+    foreach DynamicActors(class'Pickup', Pickup)
     {
-      if ( Pickup.bDropped )
-      {
-        Pickup.Destroy();
-      }
+      // do not touch dosh
+      if (Pickup == none || Pickup.IsA('CashPickup'))
+        continue;
+
+      // trying not to destroy them imidiately
+      if (Pickup.bDropped)
+        Pickup.LifeSpan = 3.0;
     }
 
     // Tell all players to stop showing the path to the trader
@@ -195,6 +201,8 @@ state newMatchInProgress extends MatchInProgress
         if ( KFPlayerController(C) != none )
         {
           KFPlayerController(C).SetShowPathToTrader(false);
+          // disable Garbage Collection!
+          // DO NOT FORGET TO ENABLE IT ON SERVERTRAVEL !!
           // KFPlayerController(C).ClientForceCollectGarbage();
 
           if ( WaveNum < FinalWave - 1 )
@@ -1071,7 +1079,7 @@ exec function KillZeds()
   foreach DynamicActors(class 'KFMonster', Monster)
   {
     // fill our array
-    if(Monster.Health > 0 && !Monster.bDeleteMe)
+    if (Monster.Health > 0 && !Monster.bDeleteMe)
       class'stubGT'.default.Monsters[class'stubGT'.default.Monsters.length] = Monster;
   }
 
@@ -1094,4 +1102,59 @@ final static function MowZeds(out array<KFMonster> Monsters)
 
   // cleanup, just to be safe
   Monsters.length = 0;
+}
+
+
+//=============================================================================
+//                    Garbage Collection on Server Travel
+//=============================================================================
+
+// function ProcessServerTravel( string URL, bool bItems )
+// {
+//   local playercontroller P, LocalPlayer;
+
+//   // Pass it along
+//   BaseMutator.ServerTraveling(URL,bItems);
+
+//   EndLogging("mapchange");
+
+//   // Notify clients we're switching level and give them time to receive.
+//   // We call PreClientTravel directly on any local PlayerPawns (ie listen server)
+//   log("ProcessServerTravel:"@URL);
+
+//   foreach DynamicActors(class'PlayerController', P)
+//   {
+//     if ( NetConnection( P.Player) != none )
+//     {
+//       P.ClientTravel( Eval( Instr(URL,"?") > 0, Left(URL,Instr(URL,"?")), URL), TRAVEL_Relative, bItems );
+//       class'stubGT'.static.TriggerGC(p);
+//     }
+//     else
+//     {
+//       LocalPlayer = P;
+//       P.PreClientTravel();
+//       class'stubGT'.static.TriggerGC(p);
+//     }
+//   }
+
+//   if ( (Level.NetMode == NM_ListenServer) && (LocalPlayer != None) )
+//         Level.NextURL = Level.NextURL
+//                      $"?Team="$LocalPlayer.GetDefaultURL("Team")
+//                      $"?Name="$LocalPlayer.GetDefaultURL("Name")
+//                      $"?Class="$LocalPlayer.GetDefaultURL("Class")
+//                      $"?Character="$LocalPlayer.GetDefaultURL("Character");
+
+//   // Switch immediately if not networking.
+//   if( Level.NetMode!=NM_DedicatedServer && Level.NetMode!=NM_ListenServer )
+//     Level.NextSwitchCountdown = 0.0;
+// }
+
+
+final static function TriggerGC(PlayerController p)
+{
+  if (p == none || KFPlayerController(p) == none)
+    return;
+  
+  KFPlayerController(p).ClientForceCollectGarbage();
+  log("Ayyy, ClientForceCollectGarbage triggered for " $ KFPlayerController(p).PlayerOwnerName);
 }

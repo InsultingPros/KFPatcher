@@ -1,5 +1,57 @@
 class stubZBoss extends ZombieBoss;
 
+
+//=============================================================================
+//                              Needle Fix
+//=============================================================================
+
+state nFireMissile
+{
+  function AnimEnd( int Channel )
+  {
+    local vector Start;
+    local Rotator R;
+
+    Start = GetBoneCoords('tip').Origin;
+
+    // at least shoot at someone, not walls
+    if (Controller.Target == none)
+      Controller.Target = Controller.Enemy;
+
+    // fix MyAmmo none logs
+    if ( !SavedFireProperties.bInitialized )
+    {
+      SavedFireProperties.AmmoClass = class'SkaarjAmmo';
+      SavedFireProperties.ProjectileClass = class'BossLAWProj';
+      SavedFireProperties.WarnTargetPct = 0.15;
+      SavedFireProperties.MaxRange = 10000;
+      SavedFireProperties.bTossed = false;
+      SavedFireProperties.bTrySplash = false;
+      SavedFireProperties.bLeadTarget = true;
+      SavedFireProperties.bInstantHit = true;
+      SavedFireProperties.bInitialized = true;
+    }
+
+    R = AdjustAim(SavedFireProperties,Start,100);
+    PlaySound(RocketFireSound,SLOT_Interact,2.0,,TransientSoundRadius,,false);
+    // added projectile owner
+    spawn(class'BossLAWProj',self,,Start,R);
+
+    bShotAnim = true;
+    Acceleration = vect(0,0,0);
+    SetAnimAction('FireEndMissile');
+    HandleWaitForAnim('FireEndMissile');
+
+    // Randomly send out a message about Patriarch shooting a rocket(5% chance)
+    if ( FRand() < 0.05 && Controller.Enemy != none && PlayerController(Controller.Enemy.Controller) != none )
+    {
+      PlayerController(Controller.Enemy.Controller).Speech('AUTO', 10, "");
+    }
+
+    GoToState('');
+  }
+}
+
 // // Make the Boss's ambient scale higher, since there is only 1, doesn't matter if he's relevant almost all the time
 // simulated function CalcAmbientRelevancyScale()
 // {
@@ -936,65 +988,6 @@ class stubZBoss extends ZombieBoss;
 // 	}
 // }
 
-// state FireMissile
-// {
-// Ignores RangedAttack;
-
-//     function bool ShouldChargeFromDamage()
-//     {
-//         return false;
-//     }
-
-// 	function BeginState()
-// 	{
-//         Acceleration = vect(0,0,0);
-// 	}
-
-// 	function AnimEnd( int Channel )
-// 	{
-// 		local vector Start;
-// 		local Rotator R;
-
-// 		Start = GetBoneCoords('tip').Origin;
-
-// 		if ( !SavedFireProperties.bInitialized )
-// 		{
-// 			SavedFireProperties.AmmoClass = MyAmmo.Class;
-// 			SavedFireProperties.ProjectileClass = MyAmmo.ProjectileClass;
-// 			SavedFireProperties.WarnTargetPct = 0.15;
-// 			SavedFireProperties.MaxRange = 10000;
-// 			SavedFireProperties.bTossed = False;
-// 			SavedFireProperties.bTrySplash = False;
-// 			SavedFireProperties.bLeadTarget = True;
-// 			SavedFireProperties.bInstantHit = True;
-// 			SavedFireProperties.bInitialized = true;
-// 		}
-
-// 		R = AdjustAim(SavedFireProperties,Start,100);
-// 		PlaySound(RocketFireSound,SLOT_Interact,2.0,,TransientSoundRadius,,false);
-// 		Spawn(Class'BossLAWProj',,,Start,R);
-
-// 		bShotAnim = true;
-// 		Acceleration = vect(0,0,0);
-// 		SetAnimAction('FireEndMissile');
-// 		HandleWaitForAnim('FireEndMissile');
-
-// 		// Randomly send out a message about Patriarch shooting a rocket(5% chance)
-// 		if ( FRand() < 0.05 && Controller.Enemy != none && PlayerController(Controller.Enemy.Controller) != none )
-// 		{
-// 			PlayerController(Controller.Enemy.Controller).Speech('AUTO', 10, "");
-// 		}
-
-// 		GoToState('');
-// 	}
-// Begin:
-// 	while ( true )
-// 	{
-// 		Acceleration = vect(0,0,0);
-// 		Sleep(0.1);
-// 	}
-// }
-
 // function bool MeleeDamageTarget(int hitdamage, vector pushdir)
 // {
 // 	if( Controller.Target!=None && Controller.Target.IsA('NetKActor') )
@@ -1319,52 +1312,7 @@ class stubZBoss extends ZombieBoss;
 // 	}
 // }
 
-// simulated function DropNeedle()
-// {
-// 	if( CurrentNeedle!=None )
-// 	{
-// 		DetachFromBone(CurrentNeedle);
-// 		CurrentNeedle.SetLocation(GetBoneCoords('Rpalm_MedAttachment').Origin);
-// 		CurrentNeedle.DroppedNow();
-// 		CurrentNeedle = None;
-// 	}
-// }
-// simulated function NotifySyringeA()
-// {
-//     //log("Heal Part 1");
 
-// 	if( Level.NetMode!=NM_Client )
-// 	{
-// 		if( SyringeCount<3 )
-// 			SyringeCount++;
-// 		if( Level.NetMode!=NM_DedicatedServer )
-// 			 PostNetReceive();
-// 	}
-// 	if( Level.NetMode!=NM_DedicatedServer )
-// 	{
-// 		DropNeedle();
-// 		CurrentNeedle = Spawn(Class'BossHPNeedle');
-// 		AttachToBone(CurrentNeedle,'Rpalm_MedAttachment');
-// 	}
-// }
-// function NotifySyringeB()
-// {
-//     //log("Heal Part 2");
-// 	if( Level.NetMode != NM_Client )
-// 	{
-// 		Health += HealingAmount;
-// 		bHealed = true;
-// 	}
-// }
-// simulated function NotifySyringeC()
-// {
-//     //log("Heal Part 3");
-// 	if( Level.NetMode!=NM_DedicatedServer && CurrentNeedle!=None )
-// 	{
-// 		CurrentNeedle.Velocity = vect(-45,300,-90) >> Rotation;
-// 		DropNeedle();
-// 	}
-// }
 
 // simulated function PostNetReceive()
 // {

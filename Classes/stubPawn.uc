@@ -1,6 +1,15 @@
 class stubPawn extends KFHumanPawn_Story;
 
 
+struct FDualList
+{
+	var class<KFWeapon> Single,Dual;
+};
+var array<FDualList> DualMap;
+
+var int OtherPrice;
+var class<KFWeapon> SecType;
+
 var transient float cashtimer;
 var transient byte CashCount;
 
@@ -88,4 +97,194 @@ function Sound GetSound(xPawnSoundGroup.ESoundType soundType)
   }
 
   return SoundGroupClass.static.GetSound(soundType, SurfaceTypeID);
+}
+
+
+//=============================================================================
+//                             Dualies Print Fix
+//=============================================================================
+
+function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
+{
+  local Inventory I, J;
+  local float Price;
+
+  if ( !CanBuyNow() || class<KFWeapon>(WClass) == none || class<KFWeaponPickup>(WClass.Default.PickupClass) == none || class'stubPawn'.static.HasWeaponClass(WClass) )
+  {
+    return;
+  }
+
+  Price = class<KFWeaponPickup>(WClass.default.PickupClass).default.Cost;
+
+  if ( KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill != none )
+    Price *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), WClass.Default.PickupClass);
+
+  // N.B. addition !
+  // ItemWeight = class<KFWeapon>(WClass).default.Weight;
+
+  if ( class'stubPawn'.static.IsDualWeapon(WClass,SecType) )
+	{
+		if ( WClass != class'Dualies' && class'stubPawn'.static.HasWeaponClass(class'stubPawn'.default.SecType, J) )
+		{
+			// ItemWeight -= class'stubPawn'.default.SecType.default.Weight;
+			Price *= 0.5f;
+			class'stubPawn'.default.OtherPrice = KFWeapon(J).SellValue;
+			if ( class'stubPawn'.default.OtherPrice == -1 )
+			{
+				class'stubPawn'.default.OtherPrice = class<KFWeaponPickup>(class'stubPawn'.default.SecType.Default.PickupClass).Default.Cost * 0.75;
+				if ( KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill != none )
+					class'stubPawn'.default.OtherPrice *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), SecType.Default.PickupClass);
+			}
+		}
+	}
+	else if ( class'stubPawn'.static.HasDualies(WClass,Inventory) )
+		return;
+
+  // add
+  Price = int(Price); // Truncuate price.
+
+  if ( !CanCarry(ItemWeight) )
+  {
+    return;
+  }
+
+  if ( PlayerReplicationInfo.Score < Price )
+  {
+    ClientMessage("Error: "$WClass.Name$" is too expensive ("$int(Price)$">"$int(PlayerReplicationInfo.Score)$")");
+    return; // Not enough CASH.
+  }
+
+  I = Spawn(WClass);
+
+  if ( I != none )
+  {
+    if ( KFGameType(Level.Game) != none )
+      KFGameType(Level.Game).WeaponSpawned(I);
+
+    KFWeapon(I).UpdateMagCapacity(PlayerReplicationInfo);
+    KFWeapon(I).FillToInitialAmmo();
+    KFWeapon(I).SellValue = Price * 0.75;
+    if (class'stubPawn'.default.OtherPrice > 0)
+			KFWeapon(I).SellValue += class'stubPawn'.default.OtherPrice;
+
+    I.GiveTo(self);
+    PlayerReplicationInfo.Score -= Price;
+    ClientForceChangeWeapon(I);
+  }
+  else
+    ClientMessage("Error: "$WClass.Name$" failed to spawn.");
+
+  SetTraderUpdate();
+}
+
+
+static final function bool HasWeaponClass( class<Inventory> IC, optional out Inventory Res )
+{
+	local Inventory I;
+	
+	for ( I=default.Inventory; I!=None; I=I.default.Inventory )
+  {
+    if( I.Class == IC )
+		{
+			Res = I;
+			return true;
+		}
+  }
+
+	return false;
+}
+
+
+static final function bool IsDualWeapon(class<Weapon> W, optional out class<KFWeapon> SingleType )
+{
+	local int i;
+	
+	if (W.Default.DemoReplacement != none)
+	{
+		SingleType = class<KFWeapon>(W.Default.DemoReplacement);
+		return true;
+	}
+
+	for( i=(Default.DualMap.Length-1); i>=0; --i )
+  {
+    if( W==Default.DualMap[i].Dual )
+		{
+			SingleType = Default.DualMap[i].Single;
+			return true;
+		}
+  }
+
+	return false;
+}
+
+
+static final function bool HasDualies( class<Weapon> W, Inventory InvList, optional out class<KFWeapon> DualType )
+{
+	local int i;
+	local Inventory In;
+	
+	for ( In=InvList; In!=None; In=In.Inventory )
+  {
+    if( Weapon(In)!=None && Weapon(In).DemoReplacement==W )
+		{
+			DualType = class<KFWeapon>(In.Class);
+			return true;
+		}
+  }
+
+	for ( i=(Default.DualMap.Length-1); i>=0; --i )
+  {
+    if ( W == Default.DualMap[i].Single )
+		{
+			DualType = Default.DualMap[i].Dual;
+			W = Default.DualMap[i].Dual;
+			for ( In=InvList; In!=None; In=In.Inventory )
+      {
+        if (In.Class == W)
+					return true;
+      }
+			return false;
+		}
+  }
+
+	return false;
+}
+
+function ThrowGrenade()
+{
+  local inventory inv;
+  local Frag aFrag;
+
+  for ( inv = inventory; inv != none; inv = inv.Inventory )
+  {
+    aFrag = Frag(inv);
+
+    if ( aFrag != none && aFrag.HasAmmo() && !bThrowingNade )
+    {
+      if ( KFWeapon(Weapon) == none || Weapon.GetFireMode(0).NextFireTime - Level.TimeSeconds > 0.1 ||
+                 (KFWeapon(Weapon).bIsReloading && !KFWeapon(Weapon).InterruptReload()) )
+      {
+        return;
+      }
+
+      // TODO: cache this without setting SecItem yet
+      // SecondaryItem = aFrag;
+      // addition
+      aFrag.Skins[1] = class<KFSpeciesType>(Species).static.GetSleeveTexture();
+      KFWeapon(Weapon).ClientGrenadeState = GN_TempDown;
+      Weapon.PutDown();
+      break;
+      // aFrag.StartThrow();
+    }
+  }
+}
+
+
+defaultproperties
+{
+  DualMap[0]=(Single=class'Single',Dual=class'Dualies')
+	DualMap[1]=(Single=class'Magnum44Pistol',Dual=class'Dual44Magnum')
+	DualMap[2]=(Single=class'Deagle',Dual=class'DualDeagle')
+	DualMap[3]=(Single=class'FlareRevolver',Dual=class'DualFlareRevolver')
+	DualMap[4]=(Single=class'MK23Pistol',Dual=class'DualMK23Pistol')
 }

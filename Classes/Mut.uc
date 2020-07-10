@@ -2,6 +2,10 @@ class Mut extends Mutator
   config(KFPatcher);
 
 
+//=============================================================================
+//                              variables
+//=============================================================================
+
 struct FuncNameStruct
 {
   var string Replace;
@@ -9,29 +13,43 @@ struct FuncNameStruct
 };
 var array<FuncNameStruct> List;
 
+// controllers
 var stubPC stubPC;
+// pawns
 var stubPawn stubPawn;
+// game info / rule
 var stubGT stubGT;
 var stubRule stubRule;
-var stubFragFire stubFragFire;
-var stubZHusk stubZHusk;
-var stubZSiren stubZSiren;
-var stubZBloat stubZBloat;
-var stubZScrake stubZScrake;
+// zeds
 var stubMonster stubMonster;
+var stubZBoss stubZBoss;
+var stubZBloat stubZBloat;
+var stubZHusk stubZHusk;
+var stubZScrake stubZScrake;
+var stubZSiren stubZSiren;
 var stubFPAvoidArea stubFPAvoidArea;
-var stubShopVolume stubShopVolume;
+// weapons
 var stubKFWeaponPickup stubKFWeaponPickup;
+var stubFragFire stubFragFire;
 var stubDualiesFire stubDualiesFire;
 var stubDualPistol stubDualPistol;
 var stubPipe stubPipe;
 var stubNade stubNade;
+// various
+var stubShopVolume stubShopVolume;
+var stubKFTab_BuyMenu stubKFTab_BuyMenu;
+var stubKFBuyMenuSaleList stubKFBuyMenuSaleList;
+
 // var stubKFSteamWebApi stubKFSteamWebApi;
 // var stubZScrakeCtrl stubZScrakeCtrl;
 // var stubPShotgun stubPShotgun;
 // var stubSyringe stubSyringe;
 // var stubModelSelect stubModelSelect;
 
+
+//=============================================================================
+//                              Logic
+//=============================================================================
 
 event PreBeginPlay()
 {
@@ -51,33 +69,10 @@ event PreBeginPlay()
 
   ReplaceFunction(List);
 
-  // TEST
-  // ReplaceState("KFChar.ZombieScrake.RunningState", "KFPatcher.stubZScrake.RunningState");
-
   // set dual pistol DemoReplacement classes, thanks again TWI 
   // class'KFMod.DualDeagle'.default.DemoReplacement = class'KFMod.Deagle';
   // class'KFMod.GoldenDualDeagle'.default.DemoReplacement = class'KFMod.GoldenDeagle';
 }
-
-
-// static final function ReplaceState(string replace, string with)
-// {
-//   local UState A, B;
-//   // local uFunction fA, fB;
-
-//   A = class'UState'.static.CastState(FindObject(replace, class'state'));
-//   B = class'UState'.static.CastState(FindObject(with, class'state'));
-
-//   if (A == none || B == none)
-//   {
-//     log("> Failed to process");
-//     return;
-//   }
-
-//   A.Script = B.Script;
-
-//   // log("> " $ ReplaceArray[i].Replace $ "    ---->    " $ ReplaceArray[i].With);
-// }
 
 
 static final function ReplaceFunction(out array<FuncNameStruct> ReplaceArray)
@@ -106,12 +101,15 @@ static final function ReplaceFunction(out array<FuncNameStruct> ReplaceArray)
 }
 
 
-// ReplaceFunction("Core.Object.ReplaceText", "KFPatcher.Mut.ReplaceTextHook");
-// ReplaceFunction("Core.Object.ReplaceText", "KFPatcher.stubPC.ReplaceTextHook");
+//=============================================================================
+//                              Default Properties
+//=============================================================================
+
 // ReplaceFunction("Engine.PlayerController.ServerSay", "KFPatcher.Mut.ReplaceTextHook");
 // ReplaceFunction("KFMod.KFPlayerController.JoinedAsSpectatorOnly", "KFPatcher.stubPC.JoinedAsSpectatorOnly");
 // ReplaceFunction("KFMod.KFPlayerController.BecomeSpectator", "KFPatcher.stubPC.BecomeSpectator");
 // ReplaceFunction("KFMod.Syringe.PostBeginPlay", "KFPatcher.stubSyringe.PostBeginPlay");
+
 defaultproperties
 {
   // ======================================= KFGameType =======================================
@@ -126,81 +124,98 @@ defaultproperties
   // no more late joiner text shit
   List[4]=(Replace="KFMod.KFGameType.PreLogin",With="KFPatcher.stubGT.PreLogin")
   // fix killzeds log spam
-  List[38]=(Replace="KFMod.KFGameType.KillZeds",With="KFPatcher.stubGT.KillZeds")
+  List[5]=(Replace="KFMod.KFGameType.KillZeds",With="KFPatcher.stubGT.KillZeds")
   // fix gamelength from cmdline, log monstercollection
-  List[39]=(Replace="KFMod.KFGameType.InitGame",With="KFPatcher.stubGT.InitGame")
+  List[6]=(Replace="KFMod.KFGameType.InitGame",With="KFPatcher.stubGT.InitGame")
   // camera fix after pat kills
-  List[40]=(Replace="KFMod.KFGameType.MatchInProgress.Timer",With="KFPatcher.stubGT.newMatchInProgress.nTimer")
+  List[7]=(Replace="KFMod.KFGameType.MatchInProgress.Timer",With="KFPatcher.stubGT.newMatchInProgress.nTimer")
   // no more wave switch lags
-  List[41]=(Replace="KFMod.KFGameType.MatchInProgress.CloseShops",With="KFPatcher.stubGT.newMatchInProgress.nCloseShops")
+  List[8]=(Replace="KFMod.KFGameType.MatchInProgress.CloseShops",With="KFPatcher.stubGT.newMatchInProgress.nCloseShops")
 
   // ======================================= GameRule =======================================
   // no more game end when players leave the lobby
-  List[5]=(Replace="Engine.GameRules.CheckEndGame",With="KFPatcher.stubRule.CheckEndGame")
+  List[9]=(Replace="Engine.GameRules.CheckEndGame",With="KFPatcher.stubRule.CheckEndGame")
 
   // ======================================= Pawns =======================================
   // fix for dosh exploits
-  List[6]=(Replace="KFMod.KFPawn.TossCash",With="KFPatcher.stubPawn.TossCash")
-  List[7]=(Replace="KFMod.KFPawn.GetSound",With="KFPatcher.stubPawn.GetSound")
+  List[10]=(Replace="KFMod.KFPawn.TossCash",With="KFPatcher.stubPawn.TossCash")
+  List[11]=(Replace="KFMod.KFPawn.GetSound",With="KFPatcher.stubPawn.GetSound")
+  List[45]=(Replace="KFMod.KFPawn.ThrowGrenade",With="KFPatcher.stubPawn.ThrowGrenade")
+  
 
   // ======================================= Controllers =======================================
   // no more 'you will become %perk' spam
-  List[8]=(Replace="KFMod.KFPlayerController.SelectVeterancy",With="KFPatcher.stubPC.SelectVeterancy")
+  List[12]=(Replace="KFMod.KFPlayerController.SelectVeterancy",With="KFPatcher.stubPC.SelectVeterancy")
 
   // ======================================= Weapons =======================================
 
   // fix for nade exploits
-  List[9]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFragFire.DoFireEffect")
+  List[13]=(Replace="KFMod.FragFire.DoFireEffect",With="KFPatcher.stubFragFire.DoFireEffect")
   // fix sounds array errors
-  List[37]=(Replace="KFMod.Nade.Explode",With="KFPatcher.stubNade.Explode")
+  List[14]=(Replace="KFMod.Nade.Explode",With="KFPatcher.stubNade.Explode")
 
   // fix accessed none Inventory for destroyed weapon pickups
-  List[24]=(Replace="KFMod.KFWeaponPickup.Destroyed",With="KFPatcher.stubKFWeaponPickup.Destroyed")
+  List[15]=(Replace="KFMod.KFWeaponPickup.Destroyed",With="KFPatcher.stubKFWeaponPickup.Destroyed")
 
   // fix accessed none IgnoreActors ! and replace all copy paste code with 1
-  List[25]=(Replace="KFMod.MK23Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
-  List[26]=(Replace="KFMod.DualMK23Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
-  List[27]=(Replace="KFMod.DeagleFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
-  List[28]=(Replace="KFMod.DualDeagleFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
-  List[29]=(Replace="KFMod.Magnum44Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
-  List[30]=(Replace="KFMod.Dual44MagnumFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[16]=(Replace="KFMod.MK23Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[17]=(Replace="KFMod.DualMK23Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[18]=(Replace="KFMod.DeagleFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[19]=(Replace="KFMod.DualDeagleFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[20]=(Replace="KFMod.Magnum44Fire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
+  List[21]=(Replace="KFMod.Dual44MagnumFire.DoTrace",With="KFPatcher.stubDualiesFire.DoTrace")
 
   // fix accessed none from DropFrom and replace all copy paste code with 1
-  List[31]=(Replace="KFMod.DualDeagle.DropFrom",With="KFPatcher.stubDualPistol.DropFrom")
+  List[22]=(Replace="KFMod.DualDeagle.DropFrom",With="KFPatcher.stubDualPistol.DropFrom")
 
   // fix uber damage exlpoit
-  List[32]=(Replace="KFMod.PipeBombProjectile.TakeDamage",With="KFPatcher.stubPipe.TakeDamage")
+  List[23]=(Replace="KFMod.PipeBombProjectile.TakeDamage",With="KFPatcher.stubPipe.TakeDamage")
   // no detonation on dead players, npc
-  List[33]=(Replace="KFMod.PipeBombProjectile.Timer",With="KFPatcher.stubPipe.Timer")
+  List[24]=(Replace="KFMod.PipeBombProjectile.Timer",With="KFPatcher.stubPipe.Timer")
   // fix sounds array errors
-  List[34]=(Replace="KFMod.PipeBombProjectile.Explode",With="KFPatcher.stubPipe.Explode")
-  List[35]=(Replace="KFMod.PipeBombProjectile.PreloadAssets",With="KFPatcher.stubPipe.PreloadAssets")
-  List[36]=(Replace="KFMod.PipeBombProjectile.UnloadAssets",With="KFPatcher.stubPipe.UnloadAssets")
+  List[25]=(Replace="KFMod.PipeBombProjectile.Explode",With="KFPatcher.stubPipe.Explode")
+  List[26]=(Replace="KFMod.PipeBombProjectile.PreloadAssets",With="KFPatcher.stubPipe.PreloadAssets")
+  List[27]=(Replace="KFMod.PipeBombProjectile.UnloadAssets",With="KFPatcher.stubPipe.UnloadAssets")
 
   // ======================================= Zeds =======================================
 
   // Husks, fix none calls for toggleaux function
-  List[10]=(Replace="KFChar.ZombieHusk_HALLOWEEN.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
-  List[11]=(Replace="KFChar.ZombieHusk.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
+  List[28]=(Replace="KFChar.ZombieHusk_HALLOWEEN.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
+  List[29]=(Replace="KFChar.ZombieHusk.SpawnTwoShots",With="KFPatcher.stubZHusk.SpawnTwoShots")
 
   // sirens, fixed instigator call in takedamage and no more damage while dead / decapped
-  List[12]=(Replace="KFChar.ZombieSiren.SpawnTwoShots",With="KFPatcher.stubZSiren.SpawnTwoShots")
-  List[13]=(Replace="KFChar.ZombieSiren.HurtRadius",With="KFPatcher.stubZSiren.HurtRadius")
+  List[30]=(Replace="KFChar.ZombieSiren.SpawnTwoShots",With="KFPatcher.stubZSiren.SpawnTwoShots")
+  List[31]=(Replace="KFChar.ZombieSiren.HurtRadius",With="KFPatcher.stubZSiren.HurtRadius")
   
-  List[16]=(Replace="KFMod.KFMonster.TakeDamage",With="KFPatcher.stubMonster.TakeDamage")
-  List[17]=(Replace="KFChar.ZombieBloat.SpawnTwoShots",With="KFPatcher.stubZBloat.SpawnTwoShots")
+  List[32]=(Replace="KFMod.KFMonster.TakeDamage",With="KFPatcher.stubMonster.TakeDamage")
+  List[33]=(Replace="KFChar.ZombieBloat.SpawnTwoShots",With="KFPatcher.stubZBloat.SpawnTwoShots")
 
   // do not let fp's to spin
-  List[18]=(Replace="KFMod.FleshPoundAvoidArea.Touch",With="KFPatcher.stubFPAvoidArea.Touch")
-  List[19]=(Replace="KFMod.FleshPoundAvoidArea.RelevantTo",With="KFPatcher.stubFPAvoidArea.RelevantTo")
+  List[34]=(Replace="KFMod.FleshPoundAvoidArea.Touch",With="KFPatcher.stubFPAvoidArea.Touch")
+  List[35]=(Replace="KFMod.FleshPoundAvoidArea.RelevantTo",With="KFPatcher.stubFPAvoidArea.RelevantTo")
+
+  // no burn skin
+  List[36]=(Replace="KFChar.ZombieBoss.FireMissile.AnimEnd",With="KFPatcher.stubZBoss.nFireMissile.AnimEnd")
+
+  //////////////////////
+  List[37]=(Replace="KFGui.KFTab_BuyMenu.IsLocked",With="KFPatcher.stubKFTab_BuyMenu.IsLocked")
+  List[38]=(Replace="KFGui.KFTab_BuyMenu.SetInfoText",With="KFPatcher.stubKFTab_BuyMenu.SetInfoText")
+
+  List[39]=(Replace="KFGui.KFBuyMenuSaleList.UpdateList",With="KFPatcher.stubKFBuyMenuSaleList.UpdateList")
+  List[40]=(Replace="KFGui.KFBuyMenuSaleList.IndexChanged",With="KFPatcher.stubKFBuyMenuSaleList.IndexChanged")
+
+  // List[47]=(Replace="KFMod.KFPawn.ServerBuyWeapon",With="KFPatcher.stubPawn.ServerBuyWeapon")
 
   // edit server, player info
   // List[20]=(Replace="Engine.GameInfo.GetServerPlayers",With="KFPatcher.stubGT.GetServerPlayers")
 
+  // ======================================= Shop Volume =======================================
   // fix accessed none MyTrader
-  List[21]=(Replace="KFMod.ShopVolume.Touch",With="KFPatcher.stubShopVolume.Touch")
-  List[22]=(Replace="KFMod.ShopVolume.UnTouch",With="KFPatcher.stubShopVolume.UnTouch")
-  List[23]=(Replace="KFMod.ShopVolume.UsedBy",With="KFPatcher.stubShopVolume.UsedBy")
+  List[41]=(Replace="KFMod.ShopVolume.Touch",With="KFPatcher.stubShopVolume.Touch")
+  List[42]=(Replace="KFMod.ShopVolume.UnTouch",With="KFPatcher.stubShopVolume.UnTouch")
+  List[43]=(Replace="KFMod.ShopVolume.UsedBy",With="KFPatcher.stubShopVolume.UsedBy")
+  // fix bound check for Touching
+  List[44]=(Replace="KFMod.ShopVolume.BootPlayers",With="KFPatcher.stubShopVolume.BootPlayers")
 
   // List[23]=(Replace="KFChar.ZombieBoss.UsedBy",With="KFPatcher.stubZBoss.UsedBy")
 
