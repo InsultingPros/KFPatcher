@@ -43,7 +43,7 @@ var stubKFBuyMenuSaleList stubKFBuyMenuSaleList;
 // var stubKFSteamWebApi stubKFSteamWebApi;
 // var stubZScrakeCtrl stubZScrakeCtrl;
 // var stubPShotgun stubPShotgun;
-// var stubSyringe stubSyringe;
+var stubSyringe stubSyringe;
 // var stubModelSelect stubModelSelect;
 
 
@@ -108,7 +108,7 @@ static final function ReplaceFunction(out array<FuncNameStruct> ReplaceArray)
 // ReplaceFunction("Engine.PlayerController.ServerSay", "KFPatcher.Mut.ReplaceTextHook");
 // ReplaceFunction("KFMod.KFPlayerController.JoinedAsSpectatorOnly", "KFPatcher.stubPC.JoinedAsSpectatorOnly");
 // ReplaceFunction("KFMod.KFPlayerController.BecomeSpectator", "KFPatcher.stubPC.BecomeSpectator");
-// ReplaceFunction("KFMod.Syringe.PostBeginPlay", "KFPatcher.stubSyringe.PostBeginPlay");
+// ReplaceFunction;
 
 defaultproperties
 {
@@ -175,6 +175,8 @@ defaultproperties
   List[25]=(Replace="KFMod.PipeBombProjectile.Explode",With="KFPatcher.stubPipe.Explode")
   List[26]=(Replace="KFMod.PipeBombProjectile.PreloadAssets",With="KFPatcher.stubPipe.PreloadAssets")
   List[27]=(Replace="KFMod.PipeBombProjectile.UnloadAssets",With="KFPatcher.stubPipe.UnloadAssets")
+
+  List[46]=(Replace="KFMod.Syringe.HackClientStartFire",With="KFPatcher.stubSyringe.HackClientStartFire")
 
   // ======================================= Zeds =======================================
 

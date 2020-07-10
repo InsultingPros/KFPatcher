@@ -1,7 +1,10 @@
+// imagine almost all main functions of this class are bugged
+// amazing, i cummed twice
 class	stubShopVolume extends KFShopVolume_Story;
 
 
 var string shopTag;
+
 
 //  fix for accessed nones
 function Touch( Actor Other )
@@ -82,6 +85,7 @@ function UsedBy( Pawn user )
 }
 
 
+// touching out of bounds fix
 function bool BootPlayers()
 {
   local KFHumanPawn Bootee;
@@ -91,6 +95,7 @@ function bool BootPlayers()
   local array<Teleporter> UnusedSpots;
   local bool bBooted;
 
+  // really wtf is this
   if ( !bTelsInit )
     InitTeleports();
   if ( !bHasTeles )
@@ -100,6 +105,7 @@ function bool BootPlayers()
 
   for (idx = 0; idx < Touching.Length; idx++)
   {
+    // none check so we wont go out of bounds
     if (Touching[idx] == none)
       continue;
 
@@ -108,7 +114,7 @@ function bool BootPlayers()
       Bootee = KFHumanPawn(Touching[idx]);
       NumTouching ++ ;
 
-      if( PlayerController(Bootee.Controller)!=none )
+      if (PlayerController(Bootee.Controller) != none)
       {
         PlayerController(Bootee.Controller).ReceiveLocalizedMessage(class'KFMainMessages');
         PlayerController(Bootee.Controller).ClientCloseMenu(true, true);
@@ -119,8 +125,8 @@ function bool BootPlayers()
 
       // removed pawn check coz WE ALREADY CHECKED IT !
       Bootee.PlayTeleportEffect(false, true);
-      bBooted = UnusedSpots[i].Accept( Bootee, self );
-      if(bBooted)
+      bBooted = UnusedSpots[i].Accept(Bootee, self);
+      if (bBooted)
       {
         NumBooted ++;
         UnusedSpots.Remove(i,1);   // someone is being teleported here. We can't have the next guy spawning on top of him.
