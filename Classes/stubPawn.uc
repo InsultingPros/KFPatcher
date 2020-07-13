@@ -14,6 +14,10 @@ var transient float cashtimer;
 var transient byte CashCount;
 
 
+//=============================================================================
+//                             Dosh shit
+//=============================================================================
+
 // toss some of your cash away. (to help a cash-strapped ally or perhaps just to party like its 1994)
 exec function TossCash( int Amount )
 {
@@ -66,6 +70,10 @@ exec function TossCash( int Amount )
   }
 }
 
+
+//=============================================================================
+//                             Sound none on player death
+//=============================================================================
 
 // fix for none soundgroup calls on death
 function Sound GetSound(xPawnSoundGroup.ESoundType soundType)
@@ -248,35 +256,6 @@ static final function bool HasDualies( class<Weapon> W, Inventory InvList, optio
   }
 
 	return false;
-}
-
-function ThrowGrenade()
-{
-  local inventory inv;
-  local Frag aFrag;
-
-  for ( inv = inventory; inv != none; inv = inv.Inventory )
-  {
-    aFrag = Frag(inv);
-
-    if ( aFrag != none && aFrag.HasAmmo() && !bThrowingNade )
-    {
-      if ( KFWeapon(Weapon) == none || Weapon.GetFireMode(0).NextFireTime - Level.TimeSeconds > 0.1 ||
-                 (KFWeapon(Weapon).bIsReloading && !KFWeapon(Weapon).InterruptReload()) )
-      {
-        return;
-      }
-
-      // TODO: cache this without setting SecItem yet
-      // SecondaryItem = aFrag;
-      // addition
-      aFrag.Skins[1] = class<KFSpeciesType>(Species).static.GetSleeveTexture();
-      KFWeapon(Weapon).ClientGrenadeState = GN_TempDown;
-      Weapon.PutDown();
-      break;
-      // aFrag.StartThrow();
-    }
-  }
 }
 
 

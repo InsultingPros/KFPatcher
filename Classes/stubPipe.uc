@@ -52,6 +52,7 @@ function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector M
 }
 
 
+// NPC, dead players trigger fix
 function Timer()
 {
   local Pawn CheckPawn;
@@ -154,6 +155,7 @@ function Timer()
 }
 
 
+// explode sounds none fix
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
   local PlayerController  LocalPlayer;

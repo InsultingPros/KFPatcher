@@ -11,9 +11,9 @@ class stubSyringe extends Syringe;
 // fix syringe heal ammounts when players die
 simulated function bool HackClientStartFire()
 {
-  if( StartFire(1) )
+  if (StartFire(1))
   {
-    if ( Role<ROLE_Authority )
+    if (Role < ROLE_Authority)
     {
       // best idea i've come to
       // at least im not running timer like Poosh
