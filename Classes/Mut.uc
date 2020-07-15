@@ -68,10 +68,6 @@ event PreBeginPlay()
   // }
 
   ReplaceFunction(default.List);
-
-  // set dual pistol DemoReplacement classes, thanks again TWI 
-  // class'KFMod.DualDeagle'.default.DemoReplacement = class'KFMod.Deagle';
-  // class'KFMod.GoldenDualDeagle'.default.DemoReplacement = class'KFMod.GoldenDeagle';
 }
 
 
@@ -105,12 +101,8 @@ static final function ReplaceFunction(out array<FuncNameStruct> ReplaceArray)
 //                              Default Properties
 //=============================================================================
 
-// ReplaceFunction("Engine.PlayerController.ServerSay", "KFPatcher.Mut.ReplaceTextHook");
-// ReplaceFunction("KFMod.KFPlayerController.JoinedAsSpectatorOnly", "KFPatcher.stubPC.JoinedAsSpectatorOnly");
-// ReplaceFunction("KFMod.KFPlayerController.BecomeSpectator", "KFPatcher.stubPC.BecomeSpectator");
-// ReplaceFunction;
+// ("Engine.PlayerController.ServerSay", "KFPatcher.Mut.ReplaceTextHook");
+// ("KFMod.KFPlayerController.JoinedAsSpectatorOnly", "KFPatcher.stubPC.JoinedAsSpectatorOnly");
+// ("KFMod.KFPlayerController.BecomeSpectator", "KFPatcher.stubPC.BecomeSpectator");
 
-defaultproperties
-{
-
-}
+defaultproperties{}

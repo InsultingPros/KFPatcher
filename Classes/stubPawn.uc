@@ -26,7 +26,9 @@ exec function TossCash( int Amount )
   local Vector TossVel;
   local Actor A;
 
-  if (Controller.PlayerReplicationInfo.Score <= 0 || Amount <= 0)
+  // why it is defined as float in a first place?
+  PlayerReplicationInfo.Score = int(PlayerReplicationInfo.Score);
+  if (PlayerReplicationInfo.Score <= 0) // Controller.
     return;
 
   // 0.3 sec delay between throws
@@ -34,6 +36,12 @@ exec function TossCash( int Amount )
     return;
   class'stubPawn'.default.cashtimer = Level.TimeSeconds + 0.3f;
 
+  
+  // set minimal throw cash = 30
+  if (Amount < 30)
+    Amount = clamp(Amount, 30, int(Controller.PlayerReplicationInfo.Score));
+
+  // and check if we have THAT much dosh to throw or not
   Amount = Min(Amount, int(Controller.PlayerReplicationInfo.Score));
 
   GetAxes(Rotation,X,Y,Z);

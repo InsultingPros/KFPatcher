@@ -4,19 +4,19 @@ class stubZSiren extends ZombieSiren;
 // if decapped no scream
 simulated function SpawnTwoShots()
 {
-  // added bDecapitated
-  if( bZapped || bDecapitated )
-  {
+  // added bDecapitated check
+  // headless chickens can't cry
+  if (bZapped || bDecapitated)
     return;
-  }
 
   DoShakeEffect();
 
-  if( Level.NetMode!=NM_Client )
+  if (Level.NetMode != NM_Client)
   {
-    if( Controller!=None && KFDoorMover(Controller.Target)!=None )
+    if (Controller != none && KFDoorMover(Controller.Target) != none)
       Controller.Target.TakeDamage(ScreamDamage*0.6,Self,Location,vect(0,0,0),ScreamDamageType);
-    else HurtRadius(ScreamDamage ,ScreamRadius, ScreamDamageType, ScreamForce, Location);
+    else
+      HurtRadius(ScreamDamage ,ScreamRadius, ScreamDamageType, ScreamForce, Location);
   }
 }
 
@@ -28,15 +28,15 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
   local vector dir;
   local float UsedDamageAmount;
 
-  if( bHurtEntry )
+  if (bHurtEntry)
     return;
 
   bHurtEntry = true;
-  foreach VisibleCollidingActors( class 'Actor', Victims, DamageRadius, HitLocation )
+  foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
   {
     // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
     // Or Karma actors in this case. Self inflicted Death due to flying chairs is uncool for a zombie of your stature.
-    if( (Victims != self) && !Victims.IsA('FluidSurfaceInfo') && !Victims.IsA('KFMonster') && !Victims.IsA('ExtendedZCollision') )
+    if ( (Victims != self) && !Victims.IsA('FluidSurfaceInfo') && !Victims.IsA('KFMonster') && !Victims.IsA('ExtendedZCollision') )
     {
       Momentum = ScreamForce; // bugfix, when pull wasn't applied always  -- PooSH
       dir = Victims.Location - HitLocation;

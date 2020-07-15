@@ -1078,9 +1078,11 @@ exec function KillZeds()
   // it leads to log spam
   foreach DynamicActors(class 'KFMonster', Monster)
   {
+    // failsafe
+    if (Monster == none || Monster.Health <= 0 && Monster.bDeleteMe)
+      continue;
     // fill our array
-    if (Monster.Health > 0 && !Monster.bDeleteMe)
-      class'stubGT'.default.Monsters[class'stubGT'.default.Monsters.length] = Monster;
+    class'stubGT'.default.Monsters[class'stubGT'.default.Monsters.length] = Monster;
   }
 
   // pass it to our new kill function
@@ -1093,10 +1095,10 @@ final static function MowZeds(out array<KFMonster> Monsters)
   local int i;
 
   // suicide is the easiest solution
-  // + i don't want to add kills to executer
-  for(i=0; i<Monsters.length; ++i)
+  // + I don't want to add kills to executer
+  for (i=0; i<Monsters.length; ++i)
   {
-    if(Monsters[i] != none)
+    if (Monsters[i] != none)
       Monsters[i].Suicide();
   }
 

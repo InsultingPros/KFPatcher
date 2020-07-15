@@ -8,7 +8,7 @@ function SpawnTwoShots()
   local KFMonsterController KFMonstControl;
   local bool bInitialized;
 
-  if ( Controller != none && KFDoorMover(Controller.Target) != none )
+  if (Controller != none && KFDoorMover(Controller.Target) != none)
   {
     Controller.Target.TakeDamage(22,Self,Location,vect(0,0,0),Class'DamTypeVomit');
     return;
@@ -17,14 +17,16 @@ function SpawnTwoShots()
   GetAxes(Rotation,X,Y,Z);
   FireStart = GetBoneCoords('Barrel').Origin;
 
+  // detect outer and change projectile class
+  // since we use this function for all husk classes
   if (self.class.name == 'ZombieHusk_HALLOWEEN')
     HuskFireProjClass = class'KFChar.HuskFireProjectile_HALLOWEEN';
   else
     HuskFireProjClass = class'KFChar.HuskFireProjectile';
 
-  if ( !SavedFireProperties.bInitialized )
+  if (!SavedFireProperties.bInitialized)
   {
-    SavedFireProperties.AmmoClass = Class'SkaarjAmmo';
+    SavedFireProperties.AmmoClass = class'SkaarjAmmo';
     SavedFireProperties.ProjectileClass = HuskFireProjClass;
     SavedFireProperties.WarnTargetPct = 1;
     SavedFireProperties.MaxRange = 65535;
@@ -35,7 +37,7 @@ function SpawnTwoShots()
     SavedFireProperties.bInitialized = true;
   }
 
-  while ( !IsInState('ZombieDying') && !bInitialized)
+  while (!IsInState('ZombieDying') && !bInitialized)
   {
     // Turn off extra collision before spawning vomit, otherwise spawn fails
     ToggleAuxCollision(false);
@@ -45,9 +47,9 @@ function SpawnTwoShots()
     // do not move fleshpounds !
     foreach DynamicActors(class'KFMonsterController', KFMonstControl)
     {
-      if( KFMonstControl != Controller && !ClassIsChildOf(KFMonstControl, class'FleshpoundZombieController'))
+      if (KFMonstControl != Controller && !ClassIsChildOf(KFMonstControl, class'FleshpoundZombieController'))
       {
-        if( PointDistToLine(KFMonstControl.Pawn.Location, vector(FireRotation), FireStart) < 75 )
+        if (PointDistToLine(KFMonstControl.Pawn.Location, vector(FireRotation), FireStart) < 75 )
         {
           KFMonstControl.GetOutOfTheWayOfShot(vector(FireRotation),FireStart);
         }
