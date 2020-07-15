@@ -63,47 +63,47 @@ state nFireMissile
 function bool MeleeDamageTarget(int hitdamage, vector pushdir)
 {
   // added 'Controller != none' check
-	if (Controller != none && Controller.Target != none && Controller.Target.IsA('NetKActor'))
-		pushdir = Normal(Controller.Target.Location-Location)*100000;
+  if (Controller != none && Controller.Target != none && Controller.Target.IsA('NetKActor'))
+    pushdir = Normal(Controller.Target.Location-Location)*100000;
 
-	return super(KFMonster).MeleeDamageTarget(hitdamage, pushdir);
+  return super(KFMonster).MeleeDamageTarget(hitdamage, pushdir);
 }
 
 
 // non state one
 function ClawDamageTarget()
 {
-	local vector PushDir;
-	local name Anim;
-	local float frame,rate;
-	local float UsedMeleeDamage;
-	local bool bDamagedSomeone;
-	local KFHumanPawn P;
-	local Actor OldTarget;
+  local vector PushDir;
+  local name Anim;
+  local float frame,rate;
+  local float UsedMeleeDamage;
+  local bool bDamagedSomeone;
+  local KFHumanPawn P;
+  local Actor OldTarget;
 
-	if (MeleeDamage > 1)
+  if (MeleeDamage > 1)
     UsedMeleeDamage = (MeleeDamage - (MeleeDamage * 0.05)) + (MeleeDamage * (FRand() * 0.1));
-	else
+  else
     UsedMeleeDamage = MeleeDamage;
 
-	GetAnimParams(1, Anim,frame,rate);
+  GetAnimParams(1, Anim,frame,rate);
 
-	if (Anim == 'MeleeImpale')
+  if (Anim == 'MeleeImpale')
     MeleeRange = ImpaleMeleeDamageRange;
-	else
+  else
     MeleeRange = ClawMeleeDamageRange;
 
-	if (Controller != none && Controller.Target != none)
-		PushDir = (damageForce * Normal(Controller.Target.Location - Location));
-	else
-		PushDir = damageForce * vector(Rotation);
+  if (Controller != none && Controller.Target != none)
+    PushDir = (damageForce * Normal(Controller.Target.Location - Location));
+  else
+    PushDir = damageForce * vector(Rotation);
 
   class'stubZBoss'.default.bInitialized = false;
 
-	if (Anim == 'MeleeImpale')
+  if (Anim == 'MeleeImpale')
     bDamagedSomeone = MeleeDamageTarget(UsedMeleeDamage, PushDir);
-	else
-	{
+  else
+  {
     // added 'Controller != none' check
     while (Controller != none && !class'stubZBoss'.default.bInitialized)
     {
@@ -121,18 +121,67 @@ function ClawDamageTarget()
       Controller.Target = OldTarget;
       class'stubZBoss'.default.bInitialized = true;
     }
-	}
+  }
 
-	MeleeRange = Default.MeleeRange;
-	// End Balance Round 1, 2, and 3
+  MeleeRange = Default.MeleeRange;
+  // End Balance Round 1, 2, and 3
 
-	if (bDamagedSomeone)
-	{
-		if (Anim == 'MeleeImpale')
+  if (bDamagedSomeone)
+  {
+    if (Anim == 'MeleeImpale')
       PlaySound(MeleeImpaleHitSound, SLOT_Interact, 2.0);
-		else
+    else
       PlaySound(MeleeAttackHitSound, SLOT_Interact, 2.0);
-	}
+  }
+}
+
+
+//=============================================================================
+//                   headshot fix while he is machinegunning
+//=============================================================================
+
+state FireChaingun
+{
+  function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> damageType, optional int HitIndex)
+  {
+    local float EnemyDistSq, DamagerDistSq;
+
+    // changed vect(0,0,0) with Momentum
+    global.TakeDamage(Damage,instigatedBy,hitlocation,Momentum,damageType);
+
+    // if someone close up is shooting us, just charge them
+    if (InstigatedBy != none)
+    {
+      DamagerDistSq = VSizeSquared(Location - InstigatedBy.Location);
+
+      if ( (ChargeDamage > 200 && DamagerDistSq < (500 * 500)) || DamagerDistSq < (100 * 100) )
+      {
+        SetAnimAction('transition');
+        //log("Frak this shizz, Charging!!!!");
+        GoToState('Charging');
+        return;
+      }
+    }
+
+    if (Controller.Enemy != none && InstigatedBy != none && InstigatedBy != Controller.Enemy)
+    {
+      EnemyDistSq = VSizeSquared(Location - Controller.Enemy.Location);
+      DamagerDistSq = VSizeSquared(Location - InstigatedBy.Location);
+    }
+
+    if (InstigatedBy != none && (DamagerDistSq < EnemyDistSq || Controller.Enemy == none) )
+    {
+      MonsterController(Controller).ChangeEnemy(InstigatedBy,Controller.CanSee(InstigatedBy));
+      Controller.Target = InstigatedBy;
+      Controller.Focus = InstigatedBy;
+
+      if( DamagerDistSq < (500 * 500) )
+      {
+        SetAnimAction('transition');
+        GoToState('Charging');
+      }
+    }
+  }
 }
 
 
