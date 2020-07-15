@@ -35,6 +35,7 @@ var stubDualiesFire stubDualiesFire;
 var stubDualPistol stubDualPistol;
 var stubPipe stubPipe;
 var stubNade stubNade;
+var stubLAWProj stubLAWProj;
 // various
 var stubShopVolume stubShopVolume;
 var stubKFTab_BuyMenu stubKFTab_BuyMenu;
