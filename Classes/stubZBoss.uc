@@ -123,8 +123,7 @@ function ClawDamageTarget()
     }
   }
 
-  MeleeRange = Default.MeleeRange;
-  // End Balance Round 1, 2, and 3
+  MeleeRange = default.MeleeRange;
 
   if (bDamagedSomeone)
   {

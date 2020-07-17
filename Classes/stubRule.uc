@@ -7,8 +7,8 @@ function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
   if (Level.Game.IsInState('PendingMatch'))
     return false;
 
-  if ( NextGameRules != None )
-    return NextGameRules.CheckEndGame(Winner,Reason);
+  if (NextGameRules != none)
+    return NextGameRules.CheckEndGame(Winner, Reason);
 
   return true;
 }

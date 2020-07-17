@@ -1,12 +1,14 @@
 class stubZHusk extends ZombieHusk_HALLOWEEN;
 
 
+var bool bInitialized;
+
+
 function SpawnTwoShots()
 {
   local vector X,Y,Z, FireStart;
   local rotator FireRotation;
   local KFMonsterController KFMonstControl;
-  local bool bInitialized;
 
   if (Controller != none && KFDoorMover(Controller.Target) != none)
   {
@@ -37,7 +39,9 @@ function SpawnTwoShots()
     SavedFireProperties.bInitialized = true;
   }
 
-  while (!IsInState('ZombieDying') && !bInitialized)
+  class'stubZHusk'.default.bInitialized = false;
+
+  while (!IsInState('ZombieDying') && !class'stubZHusk'.default.bInitialized)
   {
     // Turn off extra collision before spawning vomit, otherwise spawn fails
     ToggleAuxCollision(false);
@@ -61,6 +65,6 @@ function SpawnTwoShots()
 
     // Turn extra collision back on
     ToggleAuxCollision(true);
-    bInitialized = true;
+    class'stubZHusk'.default.bInitialized = true;
   }
 }

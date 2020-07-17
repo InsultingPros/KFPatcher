@@ -1,11 +1,13 @@
 class stubZBloat extends ZombieBloat;
 
 
+var bool bInitialized;
+
+
 function SpawnTwoShots()
 {
   local vector X,Y,Z, FireStart;
   local rotator FireRotation;
-  local bool bInitialized;
 
   if( Controller!=None && KFDoorMover(Controller.Target)!=None )
   {
@@ -28,7 +30,9 @@ function SpawnTwoShots()
     SavedFireProperties.bInitialized = true;
   }
 
-  while ( !IsInState('ZombieDying') && !bInitialized)
+  class'stubZBloat'.default.bInitialized = false;
+
+  while (!IsInState('ZombieDying') && !class'stubZBloat'.default.bInitialized)
   {
     // Turn off extra collision before spawning vomit, otherwise spawn fails
     ToggleAuxCollision(false);
@@ -45,6 +49,6 @@ function SpawnTwoShots()
     // Turn extra collision back on
     ToggleAuxCollision(true);
 
-    bInitialized = true;
+    class'stubZBloat'.default.bInitialized = true;
   }
 }
