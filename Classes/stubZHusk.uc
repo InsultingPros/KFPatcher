@@ -1,9 +1,6 @@
 class stubZHusk extends ZombieHusk_HALLOWEEN;
 
 
-var bool bInitialized;
-
-
 function SpawnTwoShots()
 {
   local vector X,Y,Z, FireStart;
@@ -39,9 +36,9 @@ function SpawnTwoShots()
     SavedFireProperties.bInitialized = true;
   }
 
-  class'stubZHusk'.default.bInitialized = false;
-
-  while (!IsInState('ZombieDying') && !class'stubZHusk'.default.bInitialized)
+  FeedThreshold = 1.0f;
+  // FeedThreshold is 'OBSOLOTE' so we are free to use it
+  while (!IsInState('ZombieDying') && FeedThreshold > 0.0f)
   {
     // Turn off extra collision before spawning vomit, otherwise spawn fails
     ToggleAuxCollision(false);
@@ -65,6 +62,6 @@ function SpawnTwoShots()
 
     // Turn extra collision back on
     ToggleAuxCollision(true);
-    class'stubZHusk'.default.bInitialized = true;
+    FeedThreshold = 0.0f;
   }
 }

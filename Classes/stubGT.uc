@@ -27,7 +27,7 @@ var string CmdLine;
 // camera fix
 var bool bBossView;
 var float BossViewBackTime;
-var ZombieBoss BossArray;
+var transient ZombieBoss BossArray;
 
 
 //=============================================================================

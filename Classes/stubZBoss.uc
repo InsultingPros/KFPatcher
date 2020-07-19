@@ -1,14 +1,11 @@
 class stubZBoss extends ZombieBoss;
 
 
-var bool bInitialized;
-
-
 //=============================================================================
 //                              ammo class == none fix
 //=============================================================================
 
-state nFireMissile
+state FireMissile
 {
   function AnimEnd( int Channel )
   {
@@ -88,24 +85,27 @@ function ClawDamageTarget()
 
   GetAnimParams(1, Anim,frame,rate);
 
-  if (Anim == 'MeleeImpale')
-    MeleeRange = ImpaleMeleeDamageRange;
-  else
-    MeleeRange = ClawMeleeDamageRange;
-
   if (Controller != none && Controller.Target != none)
     PushDir = (damageForce * Normal(Controller.Target.Location - Location));
   else
     PushDir = damageForce * vector(Rotation);
 
-  class'stubZBoss'.default.bInitialized = false;
-
+  // merging 2 similar checks
+  // dick animation
   if (Anim == 'MeleeImpale')
+  {
+    MeleeRange = ImpaleMeleeDamageRange;
     bDamagedSomeone = MeleeDamageTarget(UsedMeleeDamage, PushDir);
+  }
+  // the hand animation
   else
   {
+    MeleeRange = ClawMeleeDamageRange;
+    FeedThreshold = 1.0f;
+
     // added 'Controller != none' check
-    while (Controller != none && !class'stubZBoss'.default.bInitialized)
+    // FeedThreshold is 'OBSOLOTE' so we are free to use it
+    while (Controller != none && FeedThreshold > 0.0f)
     {
       OldTarget = Controller.Target;
 
@@ -119,7 +119,7 @@ function ClawDamageTarget()
       }
 
       Controller.Target = OldTarget;
-      class'stubZBoss'.default.bInitialized = true;
+      FeedThreshold = 0.0f;
     }
   }
 

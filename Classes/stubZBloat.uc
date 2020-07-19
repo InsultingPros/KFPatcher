@@ -1,9 +1,6 @@
 class stubZBloat extends ZombieBloat;
 
 
-var bool bInitialized;
-
-
 function SpawnTwoShots()
 {
   local vector X,Y,Z, FireStart;
@@ -30,9 +27,9 @@ function SpawnTwoShots()
     SavedFireProperties.bInitialized = true;
   }
 
-  class'stubZBloat'.default.bInitialized = false;
-
-  while (!IsInState('ZombieDying') && !class'stubZBloat'.default.bInitialized)
+  FeedThreshold = 1.0f;
+  // FeedThreshold is 'OBSOLOTE' so we are free to use it
+  while (!IsInState('ZombieDying') && FeedThreshold > 0.0f)
   {
     // Turn off extra collision before spawning vomit, otherwise spawn fails
     ToggleAuxCollision(false);
@@ -49,6 +46,6 @@ function SpawnTwoShots()
     // Turn extra collision back on
     ToggleAuxCollision(true);
 
-    class'stubZBloat'.default.bInitialized = true;
+    FeedThreshold = 0.0f;
   }
 }
