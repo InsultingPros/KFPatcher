@@ -9,15 +9,15 @@ function SpawnTwoShots()
   local vector X,Y,Z, FireStart;
   local rotator FireRotation;
 
-  if( Controller!=None && KFDoorMover(Controller.Target)!=None )
+  if (Controller != none && KFDoorMover(Controller.Target) != none)
   {
-    Controller.Target.TakeDamage(22,Self,Location,vect(0,0,0),Class'DamTypeVomit');
+    Controller.Target.TakeDamage(22, Self, Location, vect(0,0,0), class'DamTypeVomit');
     return;
   }
 
   GetAxes(Rotation,X,Y,Z);
   FireStart = Location+(vect(30,0,64) >> Rotation)*DrawScale;
-  if ( !SavedFireProperties.bInitialized )
+  if (!SavedFireProperties.bInitialized)
   {
     SavedFireProperties.AmmoClass = class'SkaarjAmmo';
     SavedFireProperties.ProjectileClass = class'KFBloatVomit';
@@ -37,15 +37,15 @@ function SpawnTwoShots()
     // Turn off extra collision before spawning vomit, otherwise spawn fails
     ToggleAuxCollision(false);
     FireRotation = Controller.AdjustAim(SavedFireProperties,FireStart,600);
-    Spawn(Class'KFBloatVomit',self,,FireStart,FireRotation);
+    Spawn(class'KFBloatVomit',self,,FireStart,FireRotation);
 
-    FireStart-=(0.5*CollisionRadius*Y);
+    FireStart -= (0.5*CollisionRadius*Y);
     FireRotation.Yaw -= 1200;
-    spawn(Class'KFBloatVomit',self,,FireStart, FireRotation);
+    spawn(class'KFBloatVomit',self,,FireStart, FireRotation);
 
-    FireStart+=(CollisionRadius*Y);
+    FireStart += (CollisionRadius*Y);
     FireRotation.Yaw += 2400;
-    spawn(Class'KFBloatVomit',self,,FireStart, FireRotation);
+    spawn(class'KFBloatVomit', self,, FireStart, FireRotation);
     // Turn extra collision back on
     ToggleAuxCollision(true);
 

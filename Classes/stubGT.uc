@@ -17,12 +17,17 @@ var transient array<KFMonster> Monsters;
 // zedtime
 var config bool bAllowZedTime;
 
+// all traders
+var config bool bAllTradersOpen;
+var config string bAllTradersMessage;
+
 // InitGame
 var string CmdLine;
 
 // camera fix
 var bool bBossView;
 var float BossViewBackTime;
+var ZombieBoss BossArray;
 
 
 //=============================================================================
@@ -40,27 +45,43 @@ event InitGame( string Options, out string Error )
   super(Invasion).InitGame(Options, Error);
 
   // remove 6 player limit, yay!
+  // max to 32 players
   MaxPlayers = clamp(GetIntOption( Options, "MaxPlayers", MaxPlayers ), 0, 32);
   default.MaxPlayers = clamp(default.MaxPlayers, 0, 32);
 
-  foreach DynamicActors(class'KFLevelRules',KFLRit)
+  foreach DynamicActors(class'KFLevelRules', KFLRit)
   {
-    if(KFLRules==none)
+    if (KFLRules == none)
       KFLRules = KFLRit;
     else Warn("MULTIPLE KFLEVELRULES FOUND!!!!!");
   }
 
-  foreach AllActors(class'ShopVolume',SH)
+  // added all traders open option
+  foreach AllActors(class'ShopVolume', SH)
   {
-    if(!SH.bObjectiveModeOnly || bUsingObjectiveMode )
+    if (SH == none)
+      continue;
+
+    // open everything
+    if (class'stubGT'.default.bAllTradersOpen)
+    {
+      SH.bAlwaysClosed = false;
+      SH.bAlwaysEnabled = true;
+    }
+
+    // now fill the array ;d
+    if (!SH.bObjectiveModeOnly || bUsingObjectiveMode )
     {
       ShopList[ShopList.Length] = SH;
     }
   }
 
-  foreach DynamicActors(class'ZombieVolume',ZZ)
+  if (class'stubGT'.default.bAllTradersOpen)
+    log("> bAllTradersOpen = true. All traders will be open!");
+
+  foreach DynamicActors(class'ZombieVolume', ZZ)
   {
-    if(!ZZ.bObjectiveModeOnly || bUsingObjectiveMode)
+    if (!ZZ.bObjectiveModeOnly || bUsingObjectiveMode)
     {
       ZedSpawnList[ZedSpawnList.Length] = ZZ;
     }
@@ -73,7 +94,7 @@ event InitGame( string Options, out string Error )
   log("KFLRules = "$KFLRules);
 
   InOpt = ParseOption(Options, "UseBots");
-  if ( InOpt != "" )
+  if (InOpt != "")
   {
     bNoBots = bool(InOpt);
   }
@@ -82,23 +103,23 @@ event InitGame( string Options, out string Error )
   KFGameLength = GetIntOption(Options, "GameLength", KFGameLength);
 
   // add anti idiot protection
-  if ( KFGameLength < 0 || KFGameLength > 3)
+  if (KFGameLength < 0 || KFGameLength > 3)
   {
-    log("GameLength must be in [0..3]: 0-short, 1-medium, 2-long, 3-custom");
+    log("> GameLength must be in [0..3]: 0-short, 1-medium, 2-long, 3-custom");
     KFGameLength = GL_Long;
   }
-  log("Game length = "$KFGameLength);
+  log("> Game length = "$KFGameLength);
 
   // added a log
   MonsterCollection = SpecialEventMonsterCollections[ GetSpecialEventType() ];
-  log("MonsterCollection = " $ MonsterCollection);
+  log("> MonsterCollection = " $ MonsterCollection);
 
-  if( KFGameLength != GL_Custom )
+  if (KFGameLength != GL_Custom)
   {
     // Set up the default game type settings
     bUseEndGameBoss = true;
     bRespawnOnBoss = true;
-    if( StandardMonsterClasses.Length > 0 )
+    if (StandardMonsterClasses.Length > 0)
     {
       MonsterClasses = StandardMonsterClasses;
     }
@@ -108,25 +129,25 @@ event InitGame( string Options, out string Error )
     UpdateGameLength();
 
     // Set difficulty based values
-    if ( GameDifficulty >= 7.0 ) // Hell on Earth
+    if (GameDifficulty >= 7.0) // Hell on Earth
     {
       TimeBetweenWaves = TimeBetweenWavesHell;
       StartingCash = StartingCashHell;
       MinRespawnCash = MinRespawnCashHell;
     }
-    else if ( GameDifficulty >= 5.0 ) // Suicidal
+    else if (GameDifficulty >= 5.0) // Suicidal
     {
       TimeBetweenWaves = TimeBetweenWavesSuicidal;
       StartingCash = StartingCashSuicidal;
       MinRespawnCash = MinRespawnCashSuicidal;
     }
-    else if ( GameDifficulty >= 4.0 ) // Hard
+    else if (GameDifficulty >= 4.0) // Hard
     {
       TimeBetweenWaves = TimeBetweenWavesHard;
       StartingCash = StartingCashHard;
       MinRespawnCash = MinRespawnCashHard;
     }
-    else if ( GameDifficulty >= 2.0 ) // Normal
+    else if (GameDifficulty >= 2.0) // Normal
     {
       TimeBetweenWaves = TimeBetweenWavesNormal;
       StartingCash = StartingCashNormal;
@@ -161,9 +182,60 @@ event InitGame( string Options, out string Error )
 
 // N.B. i edited whole timer, fixed some random fuckups
 // like last zed killing
-state newMatchInProgress extends MatchInProgress
+state MatchInProgress
 {
-  function nCloseShops()
+  function OpenShops()
+  {
+    local int i;
+    local Controller C;
+
+    bTradingDoorsOpen = true;
+
+    for (i=0; i<ShopList.Length; i++)
+    {
+      if (ShopList[i].bAlwaysClosed)
+        continue;
+      if (ShopList[i].bAlwaysEnabled)
+        ShopList[i].OpenShop();
+    }
+
+    if (KFGameReplicationInfo(GameReplicationInfo).CurrentShop == none)
+    {
+      SelectShop();
+    }
+
+    KFGameReplicationInfo(GameReplicationInfo).CurrentShop.OpenShop();
+
+    // Tell all players to start showing the path to the trader
+    for (C=Level.ControllerList; C!=none; C=C.NextController)
+    {
+      if (C.Pawn != none && C.Pawn.Health > 0)
+      {
+        // Disable pawn collision during trader time
+        C.Pawn.bBlockActors = false;
+
+        if (KFPlayerController(C) != none)
+        {
+          KFPlayerController(C).SetShowPathToTrader(true);
+          // Have Trader tell players that the Shop's Open
+          if (WaveNum < FinalWave)
+            KFPlayerController(C).ClientLocationalVoiceMessage(C.PlayerReplicationInfo, none, 'TRADER', 2);
+          else
+            KFPlayerController(C).ClientLocationalVoiceMessage(C.PlayerReplicationInfo, none, 'TRADER', 3);
+
+          // send message if eveything is open
+          if (class'stubGT'.default.bAllTradersOpen)
+            class'uHelper'.static.SendMessage(PlayerController(C), class'stubGT'.default.bAllTradersMessage);
+
+          // Hints
+          KFPlayerController(C).CheckForHint(31);
+          HintTime_1 = Level.TimeSeconds + 11;
+        }
+      }
+    }
+  }
+
+  function CloseShops()
   {
     local int i;
     local Controller C;
@@ -1032,18 +1104,26 @@ function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
     return false;
   }
 
-  for ( P = Level.ControllerList; P != none; P = P.nextController )
+  for (P = Level.ControllerList; P != none; P = P.nextController)
   {
     Player = PlayerController(P);
-    if ( Player != none )
+    if (Player != none)
     {
       Player.ClientSetBehindView(true);
       // disable this so players can move freely after the game ends
       // Player.ClientGameEnded();
 
-      if ( bSetAchievement && KFSteamStatsAndAchievements(Player.SteamStatsAndAchievements) != none )
-      {
+      if (bSetAchievement && KFSteamStatsAndAchievements(Player.SteamStatsAndAchievements) != none)
         KFSteamStatsAndAchievements(Player.SteamStatsAndAchievements).WonGame(MapName, GameDifficulty, KFGameLength == GL_Long);
+
+      if (KFGameReplicationInfo(GameReplicationInfo).EndGameType == 1)
+      {
+        foreach DynamicActors(class'ZombieBoss', class'stubGT'.default.BossArray)
+        {
+          if (class'stubGT'.default.BossArray == none && class'stubGT'.default.BossArray.Health <= 0)
+            continue;
+          class'uHelper'.static.ShowPatHP(Player, class'stubGT'.default.BossArray);
+        }
       }
     }
 
