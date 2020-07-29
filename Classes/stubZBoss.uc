@@ -19,7 +19,7 @@ state FireMissile
       Controller.Target = Controller.Enemy;
 
     // fix MyAmmo none logs
-    if ( !SavedFireProperties.bInitialized )
+    if (!SavedFireProperties.bInitialized)
     {
       SavedFireProperties.AmmoClass = class'SkaarjAmmo';
       SavedFireProperties.ProjectileClass = class'BossLAWProj';
@@ -156,7 +156,6 @@ state FireChaingun
       if ( (ChargeDamage > 200 && DamagerDistSq < (500 * 500)) || DamagerDistSq < (100 * 100) )
       {
         SetAnimAction('transition');
-        //log("Frak this shizz, Charging!!!!");
         GoToState('Charging');
         return;
       }

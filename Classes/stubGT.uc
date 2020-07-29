@@ -1068,6 +1068,30 @@ event PreLogin( string Options, string Address, string PlayerID, out string Erro
 }
 
 
+// adding garbage collection to here since wave swith doesn't trigger it anymore
+function Logout(Controller Exiting)
+{
+  local Inventory Inv;
+
+  if (Exiting != none && MessagingSpectator(Exiting) == none )
+  {
+    Exiting.ConsoleCommand("obj garbage");
+    log("Triggered GC for KFPC named: " $ Exiting);
+  }
+
+  if (Exiting.Pawn != none)
+  {
+    for (Inv = Exiting.Pawn.Inventory; Inv != none; Inv = Inv.Inventory)
+    {
+      if (class<Weapon>(Inv.class) != none)
+        WeaponDestroyed(class<Weapon>(Inv.class));
+    }
+  }
+
+  super(DeathMatch).Logout(Exiting);
+}
+
+
 //=============================================================================
 //                      LET SPECS TO FLY AFTER GAME ENDS
 //=============================================================================

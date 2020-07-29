@@ -120,12 +120,12 @@ function DoTrace(Vector Start, Rotator Dir)
 
   // Turn the collision back on for any actors we turned it off
   // FIXED accessed none IgnoreActors !
-  if ( IgnoreActors.Length <= 0 )
+  if (IgnoreActors.Length <= 0)
     return;
 
   for (i=0; i<IgnoreActors.Length; i++)
   {
-    if ( IgnoreActors[i] != none )
+    if (IgnoreActors[i] != none)
       IgnoreActors[i].SetCollision(true);
   }
 }

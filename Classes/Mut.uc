@@ -54,22 +54,23 @@ var stubSyringe stubSyringe;
 
 event PreBeginPlay()
 {
-  // local function f;
-  // local uFunction A;
-
   super.PreBeginPlay();
-
-  // foreach AllObjects(class'function', f)
-  // {
-  //   a = none;
-  //   log("Found it! Name: " $ string(f));
-  //   A = class'UFunction'.static.CastFunction(FindObject(string(f), class'function'));
-  //   log(A.FunctionFlags);
-  //   // if (string(f) ~= "GetOriginalGroundSpeed")
-  // }
-
+  // using config list for more usability
   ReplaceFunction(default.List);
 }
+
+// function list print
+
+// local function f;
+// local uFunction A;
+// foreach AllObjects(class'function', f)
+// {
+//   a = none;
+//   log("Found it! Name: " $ string(f));
+//   A = class'UFunction'.static.CastFunction(FindObject(string(f), class'function'));
+//   log(A.FunctionFlags);
+//   // if (string(f) ~= "GetOriginalGroundSpeed")
+// }
 
 
 static final function ReplaceFunction(out array<FuncNameStruct> ReplaceArray)
