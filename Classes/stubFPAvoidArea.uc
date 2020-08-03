@@ -12,7 +12,7 @@ function Touch(actor Other)
 // added health check, 1500 is FP's base health
 function bool RelevantTo(Pawn P)
 {
-  if (KFMonster(p) != none && KFMonster(p).default.Health >= 1500)
+  if (KFMonster(p) != none && KFMonster(p).default.Health >= 1500) //  || KFMonster(p).IsInState('')) )
     return false;
 
   return ( KFMonst != none && VSizeSquared(KFMonst.Velocity) >= 75 && super(AvoidMarker).RelevantTo(P)

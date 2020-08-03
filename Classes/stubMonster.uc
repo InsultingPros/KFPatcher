@@ -1,6 +1,33 @@
 class stubMonster extends KFMonster;
 
 
+//=============================================================================
+//                             controller == none fix
+//=============================================================================
+
+// when you kill zeds before they fall into stun
+// should i check it before whole function body??
+function bool FlipOver()
+{
+	if (Physics == PHYS_Falling)
+    SetPhysics(PHYS_Walking);
+
+	bShotAnim = true;
+	SetAnimAction('KnockDown');
+	Acceleration = vect(0, 0, 0);
+	Velocity.X = 0;
+	Velocity.Y = 0;
+
+  if (Controller != none && KFMonsterController(Controller) != none)
+  {
+    Controller.GoToState('WaitForAnim');
+	  KFMonsterController(Controller).bUseFreezeHack = true;
+  }
+
+	return true;
+}
+
+
 function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector momentum, class<DamageType> damageType, optional int HitIndex )
 {
   local bool bIsHeadshot;

@@ -15,6 +15,42 @@ var transient byte CashCount;
 
 
 //=============================================================================
+//                             weapon == none fix
+//=============================================================================
+
+function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
+{
+	local float InvisTime;
+
+	if (bInvis)
+	{
+	  if ( (OldWeapon != none) && (OldWeapon.OverlayMaterial == InvisMaterial) )
+		  InvisTime = OldWeapon.ClientOverlayCounter;
+	  else
+		  InvisTime = 20000;
+	}
+  if (HasUDamage() || bInvis)
+    SetWeaponOverlay(None, 0.f, true);
+
+  super(Pawn).ServerChangedWeapon(OldWeapon, NewWeapon);
+
+  if (bInvis)
+    SetWeaponOverlay(InvisMaterial, InvisTime, true);
+  else if (HasUDamage())
+    SetWeaponOverlay(UDamageWeaponMaterial, UDamageTime - Level.TimeSeconds, false);
+
+  // the fix
+  if (weapon == none)
+    return;
+
+  if (bBerserk)
+    Weapon.StartBerserk();
+  else if ( Weapon.bBerserk )
+		Weapon.StopBerserk();
+}
+
+
+//=============================================================================
 //                             Dosh shit
 //=============================================================================
 
@@ -50,7 +86,7 @@ exec function TossCash( int Amount )
   TossVel = TossVel * ((Velocity Dot TossVel) + 500) + Vect(0,0,200);
 
   // added owner to cash pickup, 2020 finally
-  CashPickup = spawn(class'CashPickup', Self,, Location + 0.8 * CollisionRadius * X - 0.5 * CollisionRadius * Y);
+  CashPickup = spawn(class'CashPickup', self,, Location + 0.8 * CollisionRadius * X - 0.5 * CollisionRadius * Y);
 
   if (CashPickup != none)
   {

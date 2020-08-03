@@ -58,16 +58,17 @@ function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceC
 
 function JoinedAsSpectatorOnly()
 {
-  if ( Pawn != None )
+  if (Pawn != none)
     Pawn.Died(self, class'DamageType', Pawn.Location);
 
-  if ( PlayerReplicationInfo.Team != None )
+  if (PlayerReplicationInfo.Team != none)
     PlayerReplicationInfo.Team.RemoveFromTeam(self);
 
-  PlayerReplicationInfo.Team = None;
+  PlayerReplicationInfo.Team = none;
   ServerSpectate();
 
-  // let's block this
+  // let's fix blank messages
+  class'uHelper'.static.BroadcastText(Level, "^b" $ self.PlayerOwnerName $ " ^w joined as spectator.", true);
   // BroadcastLocalizedMessage(Level.Game.GameMessageClass, 14, PlayerReplicationInfo);
 
   ClientBecameSpectator();

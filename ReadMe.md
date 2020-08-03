@@ -18,22 +18,7 @@ Package contains:
 At the moment of 29.07.2020 only from **CoreAPI**.
 For compilation copy-paste to *EditPackages*
 
-```java
+```cpp
 EditPackages=COREAPI
 EditPackages=KFPatcher
 ```
-
-## To-Do
-
-### Zeds
-
-#### Pat
-
-- [ ] Fix instand rockets at your face and other NOT smooth animations-actions.
-
-#### GamePlay
-
-- [ ] Fix the whole projectile class and end teamkilling bullshit.
-- [ ] Add configurable server info.
-- [ ] Polish player info.
-- [ ] Remake player counting functions for native faked feature.
