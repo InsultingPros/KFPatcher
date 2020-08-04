@@ -58,7 +58,7 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
 exec function TossCash( int Amount )
 {
   local Vector X,Y,Z;
-  local CashPickup CashPickup ;
+  local CashPickup CashPickup;
   local Vector TossVel;
   local Actor A;
 

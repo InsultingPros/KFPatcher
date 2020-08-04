@@ -2,7 +2,7 @@ class stubMonster extends KFMonster;
 
 
 //=============================================================================
-//                             controller == none fix
+//                            controller == none fix
 //=============================================================================
 
 // when you kill zeds before they fall into stun
@@ -18,6 +18,7 @@ function bool FlipOver()
 	Velocity.X = 0;
 	Velocity.Y = 0;
 
+  // fix!
   if (Controller != none && KFMonsterController(Controller) != none)
   {
     Controller.GoToState('WaitForAnim');
@@ -27,6 +28,23 @@ function bool FlipOver()
 	return true;
 }
 
+
+simulated function HandleBumpGlass()
+{
+	Acceleration = vect(0,0,0);
+	Velocity = vect(0,0,0);
+
+	SetAnimAction(MeleeAnims[0]);
+	bShotAnim = true;
+
+  // fix!
+  if (Controller != none)
+	  controller.GotoState('WaitForAnim');
+}
+
+//=============================================================================
+//                            instigatedBy == none fix
+//=============================================================================
 
 function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector momentum, class<DamageType> damageType, optional int HitIndex )
 {

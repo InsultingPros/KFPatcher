@@ -40,6 +40,7 @@ var stubLAWProj stubLAWProj;
 var stubShopVolume stubShopVolume;
 var stubKFTab_BuyMenu stubKFTab_BuyMenu;
 var stubKFBuyMenuSaleList stubKFBuyMenuSaleList;
+var stubCashPickup stubCashPickup;
 
 // var stubKFSteamWebApi stubKFSteamWebApi;
 // var stubZScrakeCtrl stubZScrakeCtrl;

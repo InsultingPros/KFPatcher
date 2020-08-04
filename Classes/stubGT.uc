@@ -1206,7 +1206,6 @@ final static function MowZeds(out array<KFMonster> Monsters)
       Monsters[i].Suicide();
   }
 
-  // cleanup, just to be safe
   Monsters.length = 0;
 }
 
@@ -1264,3 +1263,6 @@ final static function TriggerGC(PlayerController p)
   KFPlayerController(p).ClientForceCollectGarbage();
   log("Ayyy, ClientForceCollectGarbage triggered for " $ KFPlayerController(p).PlayerOwnerName);
 }
+
+
+defaultproperties{}
