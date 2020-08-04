@@ -6,6 +6,9 @@
 
 ## GamePlay
 
+- [ ] Workaround for FPP gamelength (stubGT - initgame).
+- [ ] Workaround for fp spin vanilla vs fpp gametype. Or add a cmd / bool to control it.
+- [ ] add slomo bool - pat only, player death, etc
 - [ ] Fix and poilsh player info.
 - [ ] Add configurable server info.
 - [ ] Cut very long messaged into several ones.
