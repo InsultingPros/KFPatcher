@@ -1,7 +1,83 @@
 class stubPC extends KFPlayerController_Story;
 
 
-// no delay suicide
+//=============================================================================
+//                       slomo + voice messages fuckup fix
+//=============================================================================
+
+// all 3 functions are from ScrN
+simulated function ClientEnterZedTime()
+{
+  // this 'xPlayer' bool is not being used anywhere so let's use it
+  // we need this bool for voice messages
+  autozoom = true;
+
+  CheckZEDMessage();
+
+  if (Pawn != none && Pawn.Weapon != none)
+    Pawn.Weapon.PlaySound(Sound'KF_PlayerGlobalSnd.Zedtime_Enter', SLOT_Talk, 2.0,false,500.0,1.1/Level.TimeDilation,false);
+  else
+    PlaySound(Sound'KF_PlayerGlobalSnd.Zedtime_Enter', SLOT_Talk, 2.0,false,500.0,1.1/Level.TimeDilation,false);
+}
+
+
+simulated function ClientExitZedTime()
+{
+  // this 'xPlayer' bool is not being used anywhere so let's use it
+  // we need this bool for voice messages
+  autozoom = false;
+
+  if (Pawn != none && Pawn.Weapon != none)
+    Pawn.Weapon.PlaySound(Sound'KF_PlayerGlobalSnd.Zedtime_Exit', SLOT_Talk, 2.0,false,500.0,1.1/Level.TimeDilation,false);
+  else
+    PlaySound(Sound'KF_PlayerGlobalSnd.Zedtime_Exit', SLOT_Talk, 2.0,false,500.0,1.1/Level.TimeDilation,false);
+}
+
+
+function bool AllowVoiceMessage(name MessageType)
+{
+  // glorious admins can spam voice every time
+  if (Level.NetMode == NM_Standalone || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin))
+    return true;
+
+  // this 'xPlayer' float is not being used anywhere so let's use it
+  gibwatchtime = Level.TimeSeconds - OldMessageTime;
+
+  if (gibwatchtime < 3)
+  {
+    if ((MessageType == 'TAUNT') || (MessageType == 'AUTOTAUNT'))
+      return false;
+    if (gibwatchtime < 1)
+      return false;
+  }
+
+  // zed time screws up voice messages
+  if (!autozoom && MessageType != 'TRADER' && MessageType != 'AUTO')
+  {
+    OldMessageTime = Level.TimeSeconds;
+    if (gibwatchtime < 10)
+    {
+      // this 'xPlayer' int is not being used anywhere so let's use it
+      if (numcams > 0)
+        numcams--;
+      else
+      {
+        ClientMessage("Keep quiet for " $ ceil(10-gibwatchtime) $"s");
+        return false;
+      }
+    }
+    else
+      // 7 must be not too many, not too few. Was 10 for ScrN
+      numcams = 7;
+  }
+  return true;
+}
+
+
+//=============================================================================
+//                        no delay suicide
+//=============================================================================
+
 exec function Suicide()
 {
   if (Pawn != none)

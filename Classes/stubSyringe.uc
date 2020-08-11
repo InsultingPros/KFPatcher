@@ -1,13 +1,6 @@
 class stubSyringe extends Syringe;
 
 
-// simulated function PostBeginPlay()
-// {
-//   Super(KFWeapon).PostBeginPlay();
-//   HealBoostAmount = 100;
-// }
-
-
 // fix syringe heal ammounts when players die
 simulated function bool HackClientStartFire()
 {
