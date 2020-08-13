@@ -35,7 +35,7 @@ var transient ZombieBoss BossArray;
 //=============================================================================
 
 // max players limit ^, gamelenght fix, save cmdline
-event InitGame( string Options, out string Error )
+event InitGame(string Options, out string Error)
 {
   local KFLevelRules KFLRit;
   local ShopVolume SH;
