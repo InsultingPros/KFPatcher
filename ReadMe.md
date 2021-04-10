@@ -23,4 +23,4 @@ EditPackages=COREAPI
 EditPackages=KFPatcher
 ```
 
-[**CoreAPI**]: https://github.com/Insulting-Pros/CoreAPI 'jaja'
+[**CoreAPI**]: https://github.com/InsultingPros/CoreAPI 'jaja'
