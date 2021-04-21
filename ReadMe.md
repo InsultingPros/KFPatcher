@@ -16,7 +16,8 @@ Package contains:
 ## Dependancies
 
 At the moment of 29.07.2020 only from [**CoreAPI**].
-For compilation copy-paste to *EditPackages*
+
+Use [KFCmdlet and it's batches](https://github.com/InsultingPros/KFCmdlet) for easy compilation.
 
 ```cpp
 EditPackages=COREAPI
