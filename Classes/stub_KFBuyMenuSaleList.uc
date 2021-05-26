@@ -1,4 +1,4 @@
-class stubKFBuyMenuSaleList extends KFBuyMenuSaleList;
+class stub_KFBuyMenuSaleList extends KFBuyMenuSaleList;
 
 
 function UpdateList()

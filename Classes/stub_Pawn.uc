@@ -1,4 +1,4 @@
-class stubPawn extends KFHumanPawn_Story;
+class stub_Pawn extends KFHumanPawn_Story;
 
 
 struct FDualList
@@ -68,9 +68,9 @@ exec function TossCash( int Amount )
     return;
 
   // 0.3 sec delay between throws
-  if (Level.TimeSeconds < class'stubPawn'.default.cashtimer)
+  if (Level.TimeSeconds < class'stub_Pawn'.default.cashtimer)
     return;
-  class'stubPawn'.default.cashtimer = Level.TimeSeconds + 0.3f;
+  class'stub_Pawn'.default.cashtimer = Level.TimeSeconds + 0.3f;
 
   
   // set minimal throw cash = 30
@@ -161,7 +161,7 @@ function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
   local Inventory I, J;
   local float Price;
 
-  if ( !CanBuyNow() || class<KFWeapon>(WClass) == none || class<KFWeaponPickup>(WClass.Default.PickupClass) == none || class'stubPawn'.static.HasWeaponClass(WClass) )
+  if ( !CanBuyNow() || class<KFWeapon>(WClass) == none || class<KFWeaponPickup>(WClass.Default.PickupClass) == none || class'stub_Pawn'.static.HasWeaponClass(WClass) )
   {
     return;
   }
@@ -174,22 +174,22 @@ function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
   // N.B. addition !
   // ItemWeight = class<KFWeapon>(WClass).default.Weight;
 
-  if ( class'stubPawn'.static.IsDualWeapon(WClass,SecType) )
+  if ( class'stub_Pawn'.static.IsDualWeapon(WClass,SecType) )
 	{
-		if ( WClass != class'Dualies' && class'stubPawn'.static.HasWeaponClass(class'stubPawn'.default.SecType, J) )
+		if ( WClass != class'Dualies' && class'stub_Pawn'.static.HasWeaponClass(class'stub_Pawn'.default.SecType, J) )
 		{
-			// ItemWeight -= class'stubPawn'.default.SecType.default.Weight;
+			// ItemWeight -= class'stub_Pawn'.default.SecType.default.Weight;
 			Price *= 0.5f;
-			class'stubPawn'.default.OtherPrice = KFWeapon(J).SellValue;
-			if ( class'stubPawn'.default.OtherPrice == -1 )
+			class'stub_Pawn'.default.OtherPrice = KFWeapon(J).SellValue;
+			if ( class'stub_Pawn'.default.OtherPrice == -1 )
 			{
-				class'stubPawn'.default.OtherPrice = class<KFWeaponPickup>(class'stubPawn'.default.SecType.Default.PickupClass).Default.Cost * 0.75;
+				class'stub_Pawn'.default.OtherPrice = class<KFWeaponPickup>(class'stub_Pawn'.default.SecType.Default.PickupClass).Default.Cost * 0.75;
 				if ( KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill != none )
-					class'stubPawn'.default.OtherPrice *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), SecType.Default.PickupClass);
+					class'stub_Pawn'.default.OtherPrice *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), SecType.Default.PickupClass);
 			}
 		}
 	}
-	else if ( class'stubPawn'.static.HasDualies(WClass,Inventory) )
+	else if ( class'stub_Pawn'.static.HasDualies(WClass,Inventory) )
 		return;
 
   // add
@@ -216,8 +216,8 @@ function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
     KFWeapon(I).UpdateMagCapacity(PlayerReplicationInfo);
     KFWeapon(I).FillToInitialAmmo();
     KFWeapon(I).SellValue = Price * 0.75;
-    if (class'stubPawn'.default.OtherPrice > 0)
-			KFWeapon(I).SellValue += class'stubPawn'.default.OtherPrice;
+    if (class'stub_Pawn'.default.OtherPrice > 0)
+			KFWeapon(I).SellValue += class'stub_Pawn'.default.OtherPrice;
 
     I.GiveTo(self);
     PlayerReplicationInfo.Score -= Price;

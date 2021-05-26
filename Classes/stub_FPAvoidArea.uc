@@ -1,4 +1,4 @@
-class stubFPAvoidArea extends FleshPoundAvoidArea;
+class stub_FPAvoidArea extends FleshPoundAvoidArea;
 
 
 // added KFMonsterController check

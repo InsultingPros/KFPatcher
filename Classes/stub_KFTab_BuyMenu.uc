@@ -1,4 +1,4 @@
-class stubKFTab_BuyMenu extends KFTab_BuyMenu;
+class stub_KFTab_BuyMenu extends KFTab_BuyMenu;
 
 
 function bool IsLocked(GUIBuyable buyable)

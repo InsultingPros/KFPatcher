@@ -1,4 +1,4 @@
-class stubPC extends KFPlayerController_Story;
+class stub_PC extends KFPlayerController_Story;
 
 
 //=============================================================================
@@ -165,7 +165,7 @@ function JoinedAsSpectatorOnly()
     if (PlayerReplicationInfo != none)
     {
       // BroadcastLocalizedMessage(Level.Game.GameMessageClass, 14, PlayerReplicationInfo);
-      class'uHelper'.static.BroadcastText(Level, "^b" $ PlayerReplicationInfo.PlayerName $ "^w joined as spectator.");
+      class'o_Helper'.static.BroadcastText(Level, "^b" $ PlayerReplicationInfo.PlayerName $ "^w joined as spectator.");
       break;
     }
   }
@@ -192,7 +192,7 @@ function BecomeSpectator()
 
   // no repInfo checks since player is not leaving atm, just moving around
   // change the text a bit, this is an other case
-  class'uHelper'.static.BroadcastText(Level, "^b" $ PlayerReplicationInfo.PlayerName $ "^w moved to spectator slot.");
+  class'o_Helper'.static.BroadcastText(Level, "^b" $ PlayerReplicationInfo.PlayerName $ "^w moved to spectator slot.");
 
   ClientBecameSpectator();
 }

@@ -1,4 +1,4 @@
-class stubGT extends KFGameType
+class stub_GT extends KFGameType
   config(KFPatcher);
 
 
@@ -63,7 +63,7 @@ event InitGame(string Options, out string Error)
       continue;
 
     // open everything
-    if (class'stubGT'.default.bAllTradersOpen)
+    if (class'stub_GT'.default.bAllTradersOpen)
     {
       SH.bAlwaysClosed = false;
       SH.bAlwaysEnabled = true;
@@ -76,7 +76,7 @@ event InitGame(string Options, out string Error)
     }
   }
 
-  if (class'stubGT'.default.bAllTradersOpen)
+  if (class'stub_GT'.default.bAllTradersOpen)
     log("> bAllTradersOpen = true. All traders will be open!");
 
   foreach DynamicActors(class'ZombieVolume', ZZ)
@@ -172,7 +172,7 @@ event InitGame(string Options, out string Error)
   LoadUpMonsterList();
 
   // save options for debug and further use
-  class'stubGT'.default.CmdLine = Options;
+  class'stub_GT'.default.CmdLine = Options;
 }
 
 
@@ -224,8 +224,8 @@ state MatchInProgress
             KFPlayerController(C).ClientLocationalVoiceMessage(C.PlayerReplicationInfo, none, 'TRADER', 3);
 
           // send message if eveything is open
-          if (class'stubGT'.default.bAllTradersOpen)
-            class'uHelper'.static.SendMessage(PlayerController(C), class'stubGT'.default.bAllTradersMessage);
+          if (class'stub_GT'.default.bAllTradersOpen)
+            class'o_Helper'.static.SendMessage(PlayerController(C), class'stub_GT'.default.bAllTradersMessage);
 
           // Hints
           KFPlayerController(C).CheckForHint(31);
@@ -381,9 +381,9 @@ state MatchInProgress
 
     // set camera for midgame boss's
     // check DoBossDeath()
-    if (class'stubGT'.default.bBossView && !bWaveBossInProgress && class'stubGT'.default.BossViewBackTime < Level.TimeSeconds)
+    if (class'stub_GT'.default.bBossView && !bWaveBossInProgress && class'stub_GT'.default.BossViewBackTime < Level.TimeSeconds)
     {
-      class'stubGT'.default.bBossView = false;
+      class'stub_GT'.default.bBossView = false;
 
       for ( C = Level.ControllerList; C != None; C = C.NextController )
       {
@@ -425,7 +425,7 @@ state MatchInProgress
 
         if ( ViewingBoss != none )
         {
-          class'stubGT'.default.bBossView = true;
+          class'stub_GT'.default.bBossView = true;
           ViewingBoss.bAlwaysRelevant = true;
 
           for ( C = Level.ControllerList; C != none; C = C.NextController )
@@ -450,9 +450,9 @@ state MatchInProgress
       }
 
       // remove camera from boss
-      else if ( class'stubGT'.default.bBossView && (ViewingBoss==none || (ViewingBoss!=none && !ViewingBoss.bShotAnim) ) )
+      else if ( class'stub_GT'.default.bBossView && (ViewingBoss==none || (ViewingBoss!=none && !ViewingBoss.bShotAnim) ) )
       {
-        class'stubGT'.default.bBossView = false;
+        class'stub_GT'.default.bBossView = false;
         ViewingBoss = none;
 
         for ( C = Level.ControllerList; C != none; C = C.NextController )
@@ -809,19 +809,19 @@ function GetServerPlayers( out ServerResponseLine ServerState )
       ServerState.PlayerInfo[i].PlayerNum  = C.PlayerNum;
       // our new functions might be a bit heavy, so limit its execution
       // and use cached string
-      if (Level.TimeSeconds >= class'stubGT'.default.fDelay)
+      if (Level.TimeSeconds >= class'stub_GT'.default.fDelay)
       {
-        class'stubGT'.default.sCachedPlayersInfo[i] = class'stubGT'.static.ParsePlayerName(PRI, C, bWaitingToStartMatch);
-        ServerState.PlayerInfo[i].PlayerName = class'stubGT'.default.sCachedPlayersInfo[i]; // PRI.PlayerName;
-        class'stubGT'.default.fDelay = Level.TimeSeconds + class'stubGT'.default.fRefreshTime;
+        class'stub_GT'.default.sCachedPlayersInfo[i] = class'stub_GT'.static.ParsePlayerName(PRI, C, bWaitingToStartMatch);
+        ServerState.PlayerInfo[i].PlayerName = class'stub_GT'.default.sCachedPlayersInfo[i]; // PRI.PlayerName;
+        class'stub_GT'.default.fDelay = Level.TimeSeconds + class'stub_GT'.default.fRefreshTime;
       }
       else
-        ServerState.PlayerInfo[i].PlayerName = class'stubGT'.default.sCachedPlayersInfo[i];
+        ServerState.PlayerInfo[i].PlayerName = class'stub_GT'.default.sCachedPlayersInfo[i];
       ServerState.PlayerInfo[i].Score      = PRI.Score;
       ServerState.PlayerInfo[i].Ping       = 4 * PRI.Ping;
       // do we need this?
       // if (bTeamGame && PRI.Team != none)
-      // ServerState.PlayerInfo[i].StatsID = class'stubGT'.static.GetPerkInfo(PRI); // ServerState.PlayerInfo[i].StatsID | TeamFlag[PRI.Team.TeamIndex];
+      // ServerState.PlayerInfo[i].StatsID = class'stub_GT'.static.GetPerkInfo(PRI); // ServerState.PlayerInfo[i].StatsID | TeamFlag[PRI.Team.TeamIndex];
       i++;
     }
   }
@@ -856,7 +856,7 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
   // if we are spectator, do not check perk, kills, etc
   else if (PRI.bOnlySpectator)
   {
-    return class'uHelper'.static.StripTags(PRI.PlayerName) @ class'uHelper'.static.ParseTags(default.sSpectator);
+    return class'o_Helper'.static.StripTags(PRI.PlayerName) @ class'o_Helper'.static.ParseTags(default.sSpectator);
   }
 
   else if (PRI.bOutOfLives && !PRI.bOnlySpectator)
@@ -922,7 +922,7 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
     perk = "^r[" $ perk $ "]^w";
   }
 
-  return class'uHelper'.static.ParseTags(perk @ PRI.PlayerName @ status);
+  return class'o_Helper'.static.ParseTags(perk @ PRI.PlayerName @ status);
 }
 
 
@@ -938,7 +938,7 @@ event Tick(float DeltaTime)
   local Controller C;
 
   // global switch
-  if (!class'stubGT'.default.bAllowZedTime)
+  if (!class'stub_GT'.default.bAllowZedTime)
     return;
 
   if ( bZEDTimeActive )
@@ -982,7 +982,7 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
   local Controller C;
 
   // global switch
-  if (!class'stubGT'.default.bAllowZedTime)
+  if (!class'stub_GT'.default.bAllowZedTime)
     return;
 
   TimeSinceLastEvent = Level.TimeSeconds - LastZedTimeEvent;
@@ -1042,10 +1042,10 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
 // DO NOT Force slomo for a longer period of time when the boss dies
 function DoBossDeath()
 {
-  class'stubgt'.default.bBossView = true;
+  class'stub_GT'.default.bBossView = true;
 	
   // global switch
-  if (class'stubGT'.default.bAllowZedTime)
+  if (class'stub_GT'.default.bAllowZedTime)
   {
     bZEDTimeActive =  true;
     bSpeedingBackUp = false;
@@ -1053,7 +1053,7 @@ function DoBossDeath()
     CurrentZEDTimeDuration = ZEDTimeDuration*2;
     SetGameSpeed(ZedTimeSlomoScale);
 
-    class'stubgt'.default.BossViewBackTime = Level.Timeseconds + ZEDTimeDuration*1.1;
+    class'stub_GT'.default.BossViewBackTime = Level.Timeseconds + ZEDTimeDuration*1.1;
   }
 
   // changed controller disabling to directly killing zeds
@@ -1142,11 +1142,11 @@ function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
 
       if (KFGameReplicationInfo(GameReplicationInfo).EndGameType == 1)
       {
-        foreach DynamicActors(class'ZombieBoss', class'stubGT'.default.BossArray)
+        foreach DynamicActors(class'ZombieBoss', class'stub_GT'.default.BossArray)
         {
-          if (class'stubGT'.default.BossArray == none || class'stubGT'.default.BossArray.Health <= 0)
+          if (class'stub_GT'.default.BossArray == none || class'stub_GT'.default.BossArray.Health <= 0)
             continue;
-          class'uHelper'.static.ShowPatHP(Player, class'stubGT'.default.BossArray);
+          class'o_Helper'.static.ShowPatHP(Player, class'stub_GT'.default.BossArray);
         }
       }
     }
@@ -1186,11 +1186,11 @@ exec function KillZeds()
     if (Monster == none || Monster.Health <= 0 && Monster.bDeleteMe)
       continue;
     // fill our array
-    class'stubGT'.default.Monsters[class'stubGT'.default.Monsters.length] = Monster;
+    class'stub_GT'.default.Monsters[class'stub_GT'.default.Monsters.length] = Monster;
   }
 
   // pass it to our new kill function
-  class'stubGT'.static.MowZeds(class'stubGT'.default.Monsters);
+  class'stub_GT'.static.MowZeds(class'stub_GT'.default.Monsters);
 }
 
 
@@ -1232,13 +1232,13 @@ final static function MowZeds(out array<KFMonster> Monsters)
 //     if ( NetConnection( P.Player) != none )
 //     {
 //       P.ClientTravel( Eval( Instr(URL,"?") > 0, Left(URL,Instr(URL,"?")), URL), TRAVEL_Relative, bItems );
-//       class'stubGT'.static.TriggerGC(p);
+//       class'stub_GT'.static.TriggerGC(p);
 //     }
 //     else
 //     {
 //       LocalPlayer = P;
 //       P.PreClientTravel();
-//       class'stubGT'.static.TriggerGC(p);
+//       class'stub_GT'.static.TriggerGC(p);
 //     }
 //   }
 

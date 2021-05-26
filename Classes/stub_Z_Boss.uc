@@ -1,4 +1,4 @@
-class stubZBoss extends ZombieBoss;
+class stub_Z_Boss extends ZombieBoss;
 
 
 //=============================================================================

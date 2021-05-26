@@ -1,4 +1,4 @@
-class stubZSiren extends ZombieSiren;
+class stub_Z_Siren extends ZombieSiren;
 
 
 // if decapped no scream

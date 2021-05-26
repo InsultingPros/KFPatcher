@@ -1,4 +1,4 @@
-class stubZScrake extends ZombieScrake;
+class stub_Z_Scrake extends ZombieScrake;
 
 
 var ZombieScrake sc;

@@ -1,13 +1,13 @@
 // imagine almost all main functions of this class are bugged
 // amazing, i cummed twice
-class	stubShopVolume extends KFShopVolume_Story;
+class	stub_ShopVolume extends KFShopVolume_Story;
 
 
 var string shopTag;
 
 
-//  fix for accessed nones
-function Touch( Actor Other )
+// fix for accessed nones
+function Touch(Actor Other)
 {
   // to prevent accessed none warnings
   if (Other == none)
@@ -67,7 +67,7 @@ function UnTouch( Actor Other )
 }
 
 
-function UsedBy( Pawn user )
+function UsedBy(Pawn user)
 {
   // to prevent accessed none warnings
   if (user == none || KFHumanPawn(user) == none)
@@ -78,10 +78,10 @@ function UsedBy( Pawn user )
 
   // none check
   if (MyTrader != none)
-    class'stubShopVolume'.default.shoptag = string(MyTrader.Tag);
+    class'stub_ShopVolume'.default.shoptag = string(MyTrader.Tag);
 
-  if ( KFPlayerController(user.Controller) != none && KFGameType(Level.Game) != none && !KFGameType(Level.Game).bWaveInProgress )
-    KFPlayerController(user.Controller).ShowBuyMenu(class'stubShopVolume'.default.shoptag, KFHumanPawn(user).MaxCarryWeight);
+  if (KFPlayerController(user.Controller) != none && KFGameType(Level.Game) != none && !KFGameType(Level.Game).bWaveInProgress)
+    KFPlayerController(user.Controller).ShowBuyMenu(class'stub_ShopVolume'.default.shoptag, KFHumanPawn(user).MaxCarryWeight);
 }
 
 

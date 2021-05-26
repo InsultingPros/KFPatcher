@@ -1,4 +1,4 @@
-class stubLAWProj extends LAWProj;
+class stub_LAWProj extends LAWProj;
 
 
 // RepInfo == none fix

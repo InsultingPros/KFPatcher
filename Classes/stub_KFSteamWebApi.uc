@@ -1,4 +1,4 @@
-class stubKFSteamWebApi extends KFSteamWebApi;
+class stub_KFSteamWebApi extends KFSteamWebApi;
 
 
 event Timer()

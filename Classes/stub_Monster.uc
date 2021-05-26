@@ -1,4 +1,4 @@
-class stubMonster extends KFMonster;
+class stub_Monster extends KFMonster;
 
 
 //=============================================================================

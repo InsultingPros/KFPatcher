@@ -1,4 +1,4 @@
-class stubPipe extends PipeBombProjectile;
+class stub_Pipe extends PipeBombProjectile;
 
 
 var sound BoomSound;
@@ -59,8 +59,8 @@ function Timer()
   local float ThreatLevel;
 
   // raise a detection poin half a meter up to prevent small objects on the ground bloking the trace
-  class'stubPipe'.default.DetectLocation = Location;
-  class'stubPipe'.default.DetectLocation.Z += 25;
+  class'stub_Pipe'.default.DetectLocation = Location;
+  class'stub_Pipe'.default.DetectLocation.Z += 25;
 
   if( !bHidden && !bTriggered )
   {
@@ -80,7 +80,7 @@ function Timer()
         bAlwaysRelevant = false;
         PlaySound(BeepSound,,0.5,,50.0);
 
-        foreach VisibleCollidingActors( class 'Pawn', CheckPawn, DetectionRadius, class'stubPipe'.default.DetectLocation )
+        foreach VisibleCollidingActors( class 'Pawn', CheckPawn, DetectionRadius, class'stub_Pipe'.default.DetectLocation )
         {
           // don't trigger pipes on NPC  -- PooSH
           if( CheckPawn == Instigator || KF_StoryNPC(CheckPawn) != none && KFGameType(Level.Game).FriendlyFireScale > 0 &&
@@ -143,7 +143,7 @@ function Timer()
         }
         else
         {
-          Explode(class'stubPipe'.default.DetectLocation, vector(Rotation));
+          Explode(class'stub_Pipe'.default.DetectLocation, vector(Rotation));
         }
       }
     }
@@ -173,7 +173,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     NetUpdateTime = Level.TimeSeconds - 1;
   }
 
-  PlaySound(class'stubPipe'.default.BoomSound,,2.0);
+  PlaySound(class'stub_Pipe'.default.BoomSound,,2.0);
 
   // Shrapnel
   for( i=Rand(6); i<10; i++ )

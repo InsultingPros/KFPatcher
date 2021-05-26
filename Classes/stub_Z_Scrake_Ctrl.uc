@@ -1,4 +1,4 @@
-class stubZScrakeCtrl extends SawZombieController;
+class stub_Z_Scrake_Ctrl extends SawZombieController;
 
 
 function EndState()

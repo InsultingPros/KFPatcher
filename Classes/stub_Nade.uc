@@ -1,4 +1,4 @@
-class stubNade extends Nade;
+class stub_Nade extends Nade;
 
 
 var array<sound> BoomSounds;
@@ -13,7 +13,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
   bHasExploded = True;
   BlowUp(HitLocation);
 
-  PlaySound(class'stubNade'.default.BoomSounds[rand(3)],,2.0);
+  PlaySound(class'stub_Nade'.default.BoomSounds[rand(3)],,2.0);
 
   // Shrapnel
   for( i=Rand(6); i<10; i++ )
