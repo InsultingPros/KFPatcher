@@ -3,109 +3,47 @@ class Mut extends Mutator
 
 
 //=============================================================================
-//                              variables
-//=============================================================================
-
-struct FuncNameStruct
+struct FunctionRecord
 {
-  var string Replace;
-  var string With;
+  var config string Replace, With;
 };
-var config array<FuncNameStruct> List;
-
-// controllers
-var stubPC stubPC;
-// pawns
-var stubPawn stubPawn;
-// game info / rule
-var stubGT stubGT;
-var stubRule stubRule;
-// zeds
-var stubMonster stubMonster;
-var stubZBoss stubZBoss;
-var stubZBloat stubZBloat;
-var stubZHusk stubZHusk;
-var stubZScrake stubZScrake;
-var stubZSiren stubZSiren;
-var stubFPAvoidArea stubFPAvoidArea;
-// weapons
-var stubKFWeaponPickup stubKFWeaponPickup;
-var stubFragFire stubFragFire;
-var stubDualiesFire stubDualiesFire;
-var stubDualPistol stubDualPistol;
-var stubPipe stubPipe;
-var stubNade stubNade;
-var stubLAWProj stubLAWProj;
-// various
-var stubShopVolume stubShopVolume;
-var stubKFTab_BuyMenu stubKFTab_BuyMenu;
-var stubKFBuyMenuSaleList stubKFBuyMenuSaleList;
-var stubCashPickup stubCashPickup;
-
-// var stubKFSteamWebApi stubKFSteamWebApi;
-// var stubZScrakeCtrl stubZScrakeCtrl;
-// var stubPShotgun stubPShotgun;
-var stubSyringe stubSyringe;
-// var stubModelSelect stubModelSelect;
+var config array<FunctionRecord> List;
 
 
 //=============================================================================
-//                              Logic
-//=============================================================================
-
 event PreBeginPlay()
 {
   super.PreBeginPlay();
-  // using config list for more usability
-  ReplaceFunction(default.List);
+
+  // replacing vanilla functions with ours
+  ReplaceFunctions();
 }
 
-// function list print
 
-// local function f;
-// local uFunction A;
-// foreach AllObjects(class'function', f)
-// {
-//   a = none;
-//   log("Found it! Name: " $ string(f));
-//   A = class'UFunction'.static.CastFunction(FindObject(string(f), class'function'));
-//   log(A.FunctionFlags);
-//   // if (string(f) ~= "GetOriginalGroundSpeed")
-// }
-
-
-static final function ReplaceFunction(out array<FuncNameStruct> ReplaceArray)
+final function ReplaceFunctions()
 {
   local uFunction A, B;
   local int i;
 
-  for (i = 0; i < ReplaceArray.Length; i++)
+  for (i = 0; i < List.Length; i++)
   {
-    if (ReplaceArray[i].Replace ~= "" || ReplaceArray[i].With ~= "")
-      continue;
- 
-    A = class'UFunction'.static.CastFunction(FindObject(ReplaceArray[i].Replace, class'function'));
-    B = class'UFunction'.static.CastFunction(FindObject(ReplaceArray[i].With, class'function'));
+    // This removes the need to declare variables for every new class we make.
+    DynamicLoadObject("KFPatcher." $ Left(List[i].With,InStr(List[i].With,".")), class'class', true);
+
+    A = class'UFunction'.static.CastFunction(FindObject(List[i].Replace, class'function'));
+    B = class'UFunction'.static.CastFunction(FindObject(List[i].With, class'function'));
 
     if (A == none || B == none)
     {
-      log("> Failed to process " $ ReplaceArray[i].Replace $ "    ---->    " $ ReplaceArray[i].With);
+      log("> Failed to replace " $ List[i].Replace $ " with " $ List[i].With);
       continue;
     }
 
     A.Script = B.Script;
-
-    log("> " $ ReplaceArray[i].Replace $ "    ---->    " $ ReplaceArray[i].With);
+    log("> Processing: " $ List[i].Replace $ "    ---->    " $ List[i].With);
   }
 }
 
 
 //=============================================================================
-//                              Default Properties
-//=============================================================================
-
-// ("Engine.PlayerController.ServerSay", "KFPatcher.Mut.ReplaceTextHook");
-// ("KFMod.KFPlayerController.JoinedAsSpectatorOnly", "KFPatcher.stubPC.JoinedAsSpectatorOnly");
-// ("KFMod.KFPlayerController.BecomeSpectator", "KFPatcher.stubPC.BecomeSpectator");
-
 defaultproperties{}
