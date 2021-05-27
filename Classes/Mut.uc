@@ -5,7 +5,7 @@ class Mut extends Mutator
 //=============================================================================
 struct FunctionRecord
 {
-  var config string Replace, With;
+  var config string Info, Replace, With;
 };
 var config array<FunctionRecord> List;
 
