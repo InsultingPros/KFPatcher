@@ -55,13 +55,16 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
 //=============================================================================
 
 // toss some of your cash away. (to help a cash-strapped ally or perhaps just to party like its 1994)
-exec function TossCash( int Amount )
+exec function TossCash(int Amount)
 {
   local Vector X,Y,Z;
   local CashPickup CashPickup;
   local Vector TossVel;
   local Actor A;
 
+  // NEW check!
+  if (PlayerReplicationInfo == none)
+    return;
   // why it is defined as float in a first place?
   PlayerReplicationInfo.Score = int(PlayerReplicationInfo.Score);
   if (PlayerReplicationInfo.Score <= 0) // Controller.
