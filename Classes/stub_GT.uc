@@ -225,7 +225,7 @@ state MatchInProgress
 
           // send message if eveything is open
           if (class'stub_GT'.default.bAllTradersOpen)
-            class'o_Helper'.static.SendMessage(PlayerController(C), class'stub_GT'.default.bAllTradersMessage);
+            class'o_Helper'.static.SendMessage(PlayerController(C), class'stub_GT'.default.bAllTradersMessage, false);
 
           // Hints
           KFPlayerController(C).CheckForHint(31);
