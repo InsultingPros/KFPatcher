@@ -1189,6 +1189,7 @@ exec function KillZeds()
     class'stub_GT'.default.Monsters[class'stub_GT'.default.Monsters.length] = Monster;
   }
 
+  // and i have to do this hacky hack to avoid crashes
   // pass it to our new kill function
   class'stub_GT'.static.MowZeds(class'stub_GT'.default.Monsters);
 }
