@@ -198,4 +198,10 @@ function BecomeSpectator()
 }
 
 
+function bool IsInInventory(class<Pickup> PickupToCheck, bool bCheckForEquivalent, bool bCheckForVariant)
+{
+  return false;
+}
+
+
 defaultproperties{}

@@ -28,7 +28,7 @@ final function ReplaceFunctions()
   for (i = 0; i < List.Length; i++)
   {
     // This removes the need to declare variables for every new class we make.
-    DynamicLoadObject("KFPatcher." $ Left(List[i].With,InStr(List[i].With,".")), class'class', true);
+    DynamicLoadObject(class.outer.name $ "." $ Left(List[i].With,InStr(List[i].With,".")), class'class', true);
 
     A = class'UFunction'.static.CastFunction(FindObject(List[i].Replace, class'function'));
     B = class'UFunction'.static.CastFunction(FindObject(List[i].With, class'function'));

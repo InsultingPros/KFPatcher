@@ -4,6 +4,11 @@ class stub_Nade extends Nade;
 var array<sound> BoomSounds;
 
 
+// EXPERIMENTAL!!
+// fixes nade crashes, but obviously we can't use this :yoba:
+function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> damageType, optional int HitIndex){}
+
+
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
   local PlayerController  LocalPlayer;
@@ -22,6 +27,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     if( P!=None )
       P.RemoteRole = ROLE_None;
   }
+
   if ( EffectIsRelevant(Location,false) )
   {
     Spawn(Class'KFmod.KFNadeExplosion',,, HitLocation, rotator(vect(0,0,1)));

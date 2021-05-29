@@ -136,4 +136,11 @@ static final function class<KFWeapon> GetSingleWC(KFWeapon KFWeapon)
 }
 
 
+// allow variants of weapons to be picked up
+function bool HandlePickupQuery(pickup Item)
+{
+  return super(Weapon).HandlePickupQuery(Item);
+}
+
+
 defaultproperties{}

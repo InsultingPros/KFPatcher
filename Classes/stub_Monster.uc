@@ -233,6 +233,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
 }
 
 
+// attempt to fix ground speed bugs
 function TakeFireDamage(int Damage,pawn Instigator)
 {
 	local Vector DummyHitLoc,DummyMomentum;
@@ -256,6 +257,7 @@ function TakeFireDamage(int Damage,pawn Instigator)
 		bBurnified = false;
 		if( !bZapped )
 		{
+      // was `default.GroundSpeed`
       SetGroundSpeed(GetOriginalGroundSpeed());
     }
 	}

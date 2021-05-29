@@ -67,7 +67,7 @@ function bool MeleeDamageTarget(int hitdamage, vector pushdir)
 }
 
 
-// non state one
+// non-state one
 function ClawDamageTarget()
 {
   local vector PushDir;
@@ -77,6 +77,10 @@ function ClawDamageTarget()
   local bool bDamagedSomeone;
   local KFHumanPawn P;
   local Actor OldTarget;
+
+  // check this from the very start to prevent any log spam
+  if (Controller == none || IsInState('ZombieDying'))
+    return;
 
   if (MeleeDamage > 1)
     UsedMeleeDamage = (MeleeDamage - (MeleeDamage * 0.05)) + (MeleeDamage * (FRand() * 0.1));
@@ -101,26 +105,18 @@ function ClawDamageTarget()
   else
   {
     MeleeRange = ClawMeleeDamageRange;
-    FeedThreshold = 1.0f;
+    OldTarget = Controller.Target;
 
-    // added 'Controller != none' check
-    // FeedThreshold is 'OBSOLOTE' so we are free to use it
-    while (Controller != none && FeedThreshold > 0.0f)
+    foreach DynamicActors(class'KFHumanPawn', P)
     {
-      OldTarget = Controller.Target;
-
-      foreach DynamicActors(class'KFHumanPawn', P)
+      if ( (P.Location - Location) dot PushDir > 0.0 ) // Added dot Product check in Balance Round 3
       {
-        if ( (P.Location - Location) dot PushDir > 0.0 ) // Added dot Product check in Balance Round 3
-        {
-          Controller.Target = P;
-          bDamagedSomeone = bDamagedSomeone || MeleeDamageTarget(UsedMeleeDamage, damageForce * Normal(P.Location - Location)); // Always pushing players away added in Balance Round 3
-        }
+        Controller.Target = P;
+        bDamagedSomeone = bDamagedSomeone || MeleeDamageTarget(UsedMeleeDamage, damageForce * Normal(P.Location - Location)); // Always pushing players away added in Balance Round 3
       }
-
-      Controller.Target = OldTarget;
-      FeedThreshold = 0.0f;
     }
+
+    Controller.Target = OldTarget;
   }
 
   MeleeRange = default.MeleeRange;

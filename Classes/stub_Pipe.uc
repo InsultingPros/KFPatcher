@@ -2,7 +2,6 @@ class stub_Pipe extends PipeBombProjectile;
 
 
 var sound BoomSound;
-var transient vector DetectLocation;
 
 
 static function PreloadAssets()
@@ -57,10 +56,13 @@ function Timer()
 {
   local Pawn CheckPawn;
   local float ThreatLevel;
+  // still not sure about creating new local vars
+  // but welp, it works fine
+  local vector DetectLocation;
 
   // raise a detection poin half a meter up to prevent small objects on the ground bloking the trace
-  class'stub_Pipe'.default.DetectLocation = Location;
-  class'stub_Pipe'.default.DetectLocation.Z += 25;
+  DetectLocation = Location;
+  DetectLocation.Z += 25;
 
   if( !bHidden && !bTriggered )
   {
@@ -80,7 +82,7 @@ function Timer()
         bAlwaysRelevant = false;
         PlaySound(BeepSound,,0.5,,50.0);
 
-        foreach VisibleCollidingActors( class 'Pawn', CheckPawn, DetectionRadius, class'stub_Pipe'.default.DetectLocation )
+        foreach VisibleCollidingActors( class 'Pawn', CheckPawn, DetectionRadius, DetectLocation )
         {
           // don't trigger pipes on NPC  -- PooSH
           if( CheckPawn == Instigator || KF_StoryNPC(CheckPawn) != none && KFGameType(Level.Game).FriendlyFireScale > 0 &&
@@ -143,7 +145,7 @@ function Timer()
         }
         else
         {
-          Explode(class'stub_Pipe'.default.DetectLocation, vector(Rotation));
+          Explode(DetectLocation, vector(Rotation));
         }
       }
     }

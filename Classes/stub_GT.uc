@@ -1265,4 +1265,18 @@ final static function TriggerGC(PlayerController p)
 }
 
 
+function bool SetPause( BOOL bPause, PlayerController P )
+{
+  if (bPauseable || (bAdminCanPause && (P.IsA('Admin') || P.PlayerReplicationInfo.bAdmin || P.PlayerReplicationInfo.bSilentAdmin)) || Level.Netmode==NM_Standalone)
+  {
+    if (bPause)
+      Level.Pauser=P.PlayerReplicationInfo;
+    else
+      Level.Pauser=None;
+    return True;
+  }
+  else return False;
+}
+
+
 defaultproperties{}

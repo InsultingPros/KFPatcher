@@ -1,6 +1,29 @@
 class stub_LAWProj extends LAWProj;
 
 
+// removed SirenScream damage type check since 90% of the time they don't disentigrate anyway...
+// also prevents detonation from fire or other explosives
+function TakeDamage(int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> damageType, optional int HitIndex)
+{
+  if(!bDud 
+  && DamageType != class'DamTypeFlamethrower'
+  && DamageType != class'DamTypeFrag' 
+  && DamageType != class'DamTypeLaw' 
+  && DamageType != class'DamTypeM203Grenade' 
+  && DamageType != class'DamTypeM32Grenade'
+  && DamageType != class'DamTypeM79Grenade' 
+  && DamageType != class'DamTypePipeBomb'
+  && DamageType != class'DamTypeSealSquealExplosion'
+  && DamageType != class'DamTypeSeekerSixRocket'
+  && DamageType != class'DamTypeSPGrenade'
+  && DamageType != class'SirenScreamDamage'
+  && !ClassIsChildOf(damageType, class'DamTypeBurned'))
+  {
+    Explode(HitLocation, vect(0,0,0));
+  }
+}
+
+
 // RepInfo == none fix
 simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {
