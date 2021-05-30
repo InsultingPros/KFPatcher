@@ -1,6 +1,9 @@
 class stub_PC extends KFPlayerController_Story;
 
 
+var byte MaxVoiceMsgIn10s, contsMaxMsg;
+
+
 //=============================================================================
 //                       slomo + voice messages fuckup fix
 //=============================================================================
@@ -36,18 +39,18 @@ simulated function ClientExitZedTime()
 
 function bool AllowVoiceMessage(name MessageType)
 {
-  // glorious admins can spam voice every time
-  if (Level.NetMode == NM_Standalone || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin))
+  local float TimeSinceLastMsg;
+
+  if (Level.NetMode == NM_Standalone || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     return true;
 
-  // this 'xPlayer' float is not being used anywhere so let's use it
-  gibwatchtime = Level.TimeSeconds - OldMessageTime;
+  TimeSinceLastMsg = Level.TimeSeconds - OldMessageTime;
 
-  if (gibwatchtime < 3)
+  if (TimeSinceLastMsg < 3)
   {
-    if ((MessageType == 'TAUNT') || (MessageType == 'AUTOTAUNT'))
+    if (MessageType == 'TAUNT' || MessageType == 'AUTOTAUNT')
       return false;
-    if (gibwatchtime < 1)
+    if (TimeSinceLastMsg < 1 )
       return false;
   }
 
@@ -55,20 +58,18 @@ function bool AllowVoiceMessage(name MessageType)
   if (!autozoom && MessageType != 'TRADER' && MessageType != 'AUTO')
   {
     OldMessageTime = Level.TimeSeconds;
-    if (gibwatchtime < 10)
+    if (TimeSinceLastMsg < 10)
     {
-      // this 'xPlayer' int is not being used anywhere so let's use it
-      if (numcams > 0)
-        numcams--;
+      if (class'stub_PC'.default.MaxVoiceMsgIn10s > 0)
+        class'stub_PC'.default.MaxVoiceMsgIn10s--;
       else
       {
-        ClientMessage("Keep quiet for " $ ceil(10-gibwatchtime) $"s");
+        ClientMessage("Keep quiet for " $ ceil(10 - TimeSinceLastMsg) $"s");
         return false;
       }
     }
     else
-      // 7 must be not too many, not too few. Was 10 for ScrN
-      numcams = 7;
+      class'stub_PC'.default.MaxVoiceMsgIn10s = class'stub_PC'.default.contsMaxMsg;
   }
   return true;
 }
@@ -91,6 +92,7 @@ exec function Suicide()
 
 // simulated SendSelectedVeterancyToServer() -> to this
 // no more "you will become %perk" spam when you join midgame
+// can change perk unlimited amount of times
 function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceChange)
 {
   if (VetSkill == none || KFPlayerReplicationInfo(PlayerReplicationInfo) == none)
@@ -109,20 +111,20 @@ function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceC
       if (Level.TimeSeconds > MinAdrenalineCost)
       {
         // moved this aswell so message and perk switch will happen at the same time
-        bChangedVeterancyThisWave = false;
+        // bChangedVeterancyThisWave = false;
         ClientMessage(Repl(YouWillBecomePerkString, "%Perk%", VetSkill.Default.VeterancyName));
       }
 
       MinAdrenalineCost = Level.TimeSeconds + 2.0f;
     }
 
-    else if (!bChangedVeterancyThisWave || bForceChange)
+    else // if (!bChangedVeterancyThisWave || bForceChange)
     {
       if (VetSkill != KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill)
         ClientMessage(Repl(YouAreNowPerkString, "%Perk%", VetSkill.Default.VeterancyName));
 
-      if (GameReplicationInfo.bMatchHasBegun)
-        bChangedVeterancyThisWave = true;
+      // if (GameReplicationInfo.bMatchHasBegun)
+      //   bChangedVeterancyThisWave = true;
 
       KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill = VetSkill;
       KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkillLevel = KFSteamStatsAndAchievements(SteamStatsAndAchievements).PerkHighestLevelAvailable(VetSkill.default.PerkIndex);
@@ -132,8 +134,8 @@ function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceC
         KFHumanPawn(Pawn).VeterancyChanged();
     }
 
-    else
-      ClientMessage(PerkChangeOncePerWaveString);
+    // else
+    //   ClientMessage(PerkChangeOncePerWaveString);
   }
 }
 
@@ -204,4 +206,8 @@ function bool IsInInventory(class<Pickup> PickupToCheck, bool bCheckForEquivalen
 }
 
 
-defaultproperties{}
+defaultproperties
+{
+  MaxVoiceMsgIn10s=7
+  contsMaxMsg=7
+}

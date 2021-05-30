@@ -20,4 +20,3 @@
 - [ ] disable some weapons for some waves
 - [ ] don't let husks move while shooting
 - [ ] don't let husks move each other with projectiles
-- [ ] Trade everywhere <KFMod.KFPawn.CanBuyNow","stubPawn.CanBuyNow">
