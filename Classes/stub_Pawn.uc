@@ -155,6 +155,21 @@ function Sound GetSound(xPawnSoundGroup.ESoundType soundType)
 }
 
 
+// allows us to buy from trader menu from anywhere
+function bool CanBuyNow()
+{
+  local ShopVolume Sh;
+
+  if (class'o_Settings'.default.bBuyEverywhere)
+    return true;
+
+  if (KFGameType(Level.Game) == none || KFGameType(Level.Game).bWaveInProgress || PlayerReplicationInfo == none)
+    return false;
+  foreach TouchingActors(class'ShopVolume', Sh)
+    return true;
+  return false;
+}
+
 //=============================================================================
 //                             Dualies Print Fix
 //=============================================================================

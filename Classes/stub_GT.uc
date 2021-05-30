@@ -1,25 +1,11 @@
-class stub_GT extends KFGameType
-  config(KFPatcher);
+class stub_GT extends KFGameType;
 
-
-// player info
-var config string sAlive, sDead, sSpectator, sReady, sNotReady, sAwaiting;
-var config string sTagHP, sTagKills;
-var config bool bShowPerk;
-var config float fRefreshTime;
 
 var transient array<string> sCachedPlayersInfo;
 var transient float fDelay;
 
 // killzeds
 var transient array<KFMonster> Monsters;
-
-// zedtime
-var config bool bAllowZedTime;
-
-// all traders
-var config bool bAllTradersOpen;
-var config string bAllTradersMessage;
 
 // InitGame
 var string CmdLine;
@@ -63,7 +49,7 @@ event InitGame(string Options, out string Error)
       continue;
 
     // open everything
-    if (class'stub_GT'.default.bAllTradersOpen)
+    if (class'o_Settings'.default.bAllTradersOpen)
     {
       SH.bAlwaysClosed = false;
       SH.bAlwaysEnabled = true;
@@ -76,7 +62,7 @@ event InitGame(string Options, out string Error)
     }
   }
 
-  if (class'stub_GT'.default.bAllTradersOpen)
+  if (class'o_Settings'.default.bAllTradersOpen)
     log("> bAllTradersOpen = true. All traders will be open!");
 
   foreach DynamicActors(class'ZombieVolume', ZZ)
@@ -224,8 +210,8 @@ state MatchInProgress
             KFPlayerController(C).ClientLocationalVoiceMessage(C.PlayerReplicationInfo, none, 'TRADER', 3);
 
           // send message if eveything is open
-          if (class'stub_GT'.default.bAllTradersOpen)
-            class'o_Helper'.static.SendMessage(PlayerController(C), class'stub_GT'.default.bAllTradersMessage, false);
+          if (class'o_Settings'.default.bAllTradersOpen)
+            class'o_Helper'.static.SendMessage(PlayerController(C), class'o_Settings'.default.bAllTradersMessage, false);
 
           // Hints
           KFPlayerController(C).CheckForHint(31);
@@ -813,7 +799,7 @@ function GetServerPlayers( out ServerResponseLine ServerState )
       {
         class'stub_GT'.default.sCachedPlayersInfo[i] = class'stub_GT'.static.ParsePlayerName(PRI, C, bWaitingToStartMatch);
         ServerState.PlayerInfo[i].PlayerName = class'stub_GT'.default.sCachedPlayersInfo[i]; // PRI.PlayerName;
-        class'stub_GT'.default.fDelay = Level.TimeSeconds + class'stub_GT'.default.fRefreshTime;
+        class'stub_GT'.default.fDelay = Level.TimeSeconds + class'o_Settings'.default.fRefreshTime;
       }
       else
         ServerState.PlayerInfo[i].PlayerName = class'stub_GT'.default.sCachedPlayersInfo[i];
@@ -845,34 +831,34 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
     if (bWaitingToStartMatch)
     {
       if(PRI.bReadyToPlay)
-        status = default.sReady;
+        status = class'o_Settings'.default.sReady;
       else
-        status = default.sNotReady;
+        status = class'o_Settings'.default.sNotReady;
     }
     else
-      status = default.sAwaiting;
+      status = class'o_Settings'.default.sAwaiting;
   }
 
   // if we are spectator, do not check perk, kills, etc
   else if (PRI.bOnlySpectator)
   {
-    return class'o_Helper'.static.StripTags(PRI.PlayerName) @ class'o_Helper'.static.ParseTags(default.sSpectator);
+    return class'o_Helper'.static.StripTags(PRI.PlayerName) @ class'o_Helper'.static.ParseTags(class'o_Settings'.default.sSpectator);
   }
 
   else if (PRI.bOutOfLives && !PRI.bOnlySpectator)
-    status = default.sDead;
+    status = class'o_Settings'.default.sDead;
 
   // else we are alive and need more info
   else
-    status = default.sAlive;
+    status = class'o_Settings'.default.sAlive;
 
   // parse kills, health
-  status = repl(status, default.sTagHP, KFPlayerReplicationInfo(PRI).PlayerHealth);
-  status = repl(status, default.sTagKills, PRI.Kills);
+  status = repl(status, class'o_Settings'.default.sTagHP, KFPlayerReplicationInfo(PRI).PlayerHealth);
+  status = repl(status, class'o_Settings'.default.sTagKills, PRI.Kills);
   // status ready !
 
   // parse perk if we want it
-  if (default.bShowPerk)
+  if (class'o_Settings'.default.bShowPerk)
   {
     switch (string(KFPlayerReplicationInfo(PRI).ClientVeteranSkill))
     {
@@ -938,7 +924,7 @@ event Tick(float DeltaTime)
   local Controller C;
 
   // global switch
-  if (!class'stub_GT'.default.bAllowZedTime)
+  if (!class'o_Settings'.default.bAllowZedTime)
     return;
 
   if ( bZEDTimeActive )
@@ -982,7 +968,7 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
   local Controller C;
 
   // global switch
-  if (!class'stub_GT'.default.bAllowZedTime)
+  if (!class'o_Settings'.default.bAllowZedTime)
     return;
 
   TimeSinceLastEvent = Level.TimeSeconds - LastZedTimeEvent;
@@ -1045,7 +1031,7 @@ function DoBossDeath()
   class'stub_GT'.default.bBossView = true;
 	
   // global switch
-  if (class'stub_GT'.default.bAllowZedTime)
+  if (class'o_Settings'.default.bAllowZedTime)
   {
     bZEDTimeActive =  true;
     bSpeedingBackUp = false;
