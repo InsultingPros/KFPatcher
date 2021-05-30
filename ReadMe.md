@@ -4,6 +4,8 @@
 
 This is an attempt to fix most game breaking bugs and log spam in **Killing Floor 1**. And some additional features to make some utility mutators 'OBSOLOTE' :innocent:
 
+You can check the [To-Do](Docs/To-Do.md) for more details.
+
 ## Internals
 
 At the moment of 29.07.2020 consists of 1 package and 1 **config** file that allows you to choose what fixes to enable.
