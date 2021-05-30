@@ -33,9 +33,14 @@ final function ReplaceFunctions()
     A = class'UFunction'.static.CastFunction(FindObject(List[i].Replace, class'function'));
     B = class'UFunction'.static.CastFunction(FindObject(List[i].With, class'function'));
 
-    if (A == none || B == none)
+    if (A == none)
     {
-      log("> Failed to replace " $ List[i].Replace $ " with " $ List[i].With);
+      log("> Failed to process " $ List[i].Replace);
+      continue;
+    }
+    if (B == none)
+    {
+      log("> Failed to process " $ List[i].With);
       continue;
     }
 
