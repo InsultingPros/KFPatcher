@@ -1266,4 +1266,73 @@ function bool SetPause( BOOL bPause, PlayerController P )
 }
 
 
+//=============================================================================
+//                    remove UpdateGameLength() / greylist
+//=============================================================================
+function UpdateGameLength(){}
+
+
+exec function AddNamedBot(string botname)
+{
+  super(Invasion).AddNamedBot(botname);
+}
+
+
+exec function AddBots(int num)
+{
+  num = Clamp(num, 0, MaxPlayers - (NumPlayers + NumBots));
+
+  while (--num >= 0)
+  {
+    if (Level.NetMode != NM_Standalone)
+      MinPlayers = Max(MinPlayers + 1, NumPlayers + NumBots + 1);
+    AddBot();
+  }
+}
+
+
+event PostLogin( PlayerController NewPlayer )
+{
+  local int i;
+
+  NewPlayer.SetGRI(GameReplicationInfo);
+  NewPlayer.PlayerReplicationInfo.PlayerID = CurrentID++;
+
+  super(Invasion).PostLogin(NewPlayer);
+
+  if (UnrealPlayer(NewPlayer) != None)
+    UnrealPlayer(NewPlayer).ClientReceiveLoginMenu(LoginMenuClass, bAlwaysShowLoginMenu);
+  if (NewPlayer.PlayerReplicationInfo.Team != None)
+    GameEvent("TeamChange",""$NewPlayer.PlayerReplicationInfo.Team.TeamIndex,NewPlayer.PlayerReplicationInfo);
+
+  if (NewPlayer != None && Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == NewPlayer)
+    NewPlayer.InitializeVoiceChat();
+
+  if (KFPlayerController(NewPlayer) != none)
+  {
+    for (i = 0; i < InstancedWeaponClasses.Length; i++)
+    {
+      KFPlayerController(NewPlayer).ClientWeaponSpawned(InstancedWeaponClasses[i], none);
+    }
+  }
+
+  if (NewPlayer.PlayerReplicationInfo.bOnlySpectator) // must not be a spectator
+  {
+    KFPlayerController(NewPlayer).JoinedAsSpectatorOnly();
+  }
+  else
+  {
+    NewPlayer.GotoState('PlayerWaiting');
+  }
+
+  if (KFPlayerController(NewPlayer) != None)
+    StartInitGameMusic(KFPlayerController(NewPlayer));
+
+  // if (bCustomGameLength && NewPlayer.SteamStatsAndAchievements != none)
+  // {
+  //    NewPlayer.SteamStatsAndAchievements.bUsedCheats = true;
+  // }
+}
+
+
 defaultproperties{}
