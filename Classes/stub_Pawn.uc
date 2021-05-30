@@ -321,6 +321,16 @@ static final function bool HasDualies( class<Weapon> W, Inventory InvList, optio
 }
 
 
+function AddDefaultInventory()
+{
+  CreateInventory("KFMod.Knife");
+  CreateInventory("KFMod.Single");
+  CreateInventory("KFMod.Frag");
+  CreateInventory("KFMod.Syringe");
+  CreateInventory("KFMod.Welder");
+}
+
+
 defaultproperties
 {
   DualMap[0]=(Single=class'Single',Dual=class'Dualies')
