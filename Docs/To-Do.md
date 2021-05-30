@@ -1,5 +1,15 @@
 # Intro
 
+## Priority
+
+- [ ] scrake head fix
+- [ ] dosh drop fix
+- [ ] fix fnfal sounds
+- [ ] husk animations
+- [ ] specs - alive players
+- [ ] steve multiple hit fix
+- [ ] steve collision fix
+
 ## Pat
 
 - [ ] Fix instand rockets at your face and other NOT smooth animations-actions.
