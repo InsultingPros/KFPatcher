@@ -4,13 +4,11 @@
 
 ## Priority
 
-- [ ] scrake head fix
-- [ ] dosh drop fix
-- [ ] fix fnfal sounds
-- [ ] husk animations
-- [ ] specs - alive players
-- [ ] steve multiple hit fix
-- [ ] steve collision fix
+- scrake head fix
+- fix fnfal sounds
+- husk animations
+- specs - alive players
+- steve multiple hit fix
 
 ## Pat
 

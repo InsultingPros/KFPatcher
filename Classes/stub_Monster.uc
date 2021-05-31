@@ -9,37 +9,37 @@ class stub_Monster extends KFMonster;
 // should i check it before whole function body??
 function bool FlipOver()
 {
-	if (Physics == PHYS_Falling)
+  if (Physics == PHYS_Falling)
     SetPhysics(PHYS_Walking);
 
-	bShotAnim = true;
-	SetAnimAction('KnockDown');
-	Acceleration = vect(0, 0, 0);
-	Velocity.X = 0;
-	Velocity.Y = 0;
+  bShotAnim = true;
+  SetAnimAction('KnockDown');
+  Acceleration = vect(0, 0, 0);
+  Velocity.X = 0;
+  Velocity.Y = 0;
 
   // fix!
   if (Controller != none && KFMonsterController(Controller) != none)
   {
     Controller.GoToState('WaitForAnim');
-	  KFMonsterController(Controller).bUseFreezeHack = true;
+    KFMonsterController(Controller).bUseFreezeHack = true;
   }
 
-	return true;
+  return true;
 }
 
 
 simulated function HandleBumpGlass()
 {
-	Acceleration = vect(0,0,0);
-	Velocity = vect(0,0,0);
+  Acceleration = vect(0,0,0);
+  Velocity = vect(0,0,0);
 
-	SetAnimAction(MeleeAnims[0]);
-	bShotAnim = true;
+  SetAnimAction(MeleeAnims[0]);
+  bShotAnim = true;
 
   // fix!
   if (Controller != none)
-	  controller.GotoState('WaitForAnim');
+    controller.GotoState('WaitForAnim');
 }
 
 //=============================================================================
@@ -236,29 +236,169 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
 // attempt to fix ground speed bugs
 function TakeFireDamage(int Damage,pawn Instigator)
 {
-	local Vector DummyHitLoc,DummyMomentum;
+  local Vector DummyHitLoc,DummyMomentum;
 
-	TakeDamage(Damage, BurnInstigator, DummyHitLoc, DummyMomentum, FireDamageClass);
+  TakeDamage(Damage, BurnInstigator, DummyHitLoc, DummyMomentum, FireDamageClass);
 
-	if ( BurnDown > 0 )
-	{
-		// Decrement the number of FireDamage calls left before our Zombie is extinguished :)
-		BurnDown --;
-	}
+  if ( BurnDown > 0 )
+  {
+    // Decrement the number of FireDamage calls left before our Zombie is extinguished :)
+    BurnDown --;
+  }
 
-	// Melt em' :)
-	if ( BurnDown < CrispUpThreshhold )
-	{
-		ZombieCrispUp();
-	}
+  // Melt em' :)
+  if ( BurnDown < CrispUpThreshhold )
+  {
+    ZombieCrispUp();
+  }
 
-	if ( BurnDown == 0 )
-	{
-		bBurnified = false;
-		if( !bZapped )
-		{
+  if ( BurnDown == 0 )
+  {
+    bBurnified = false;
+    if( !bZapped )
+    {
       // was `default.GroundSpeed`
       SetGroundSpeed(GetOriginalGroundSpeed());
     }
-	}
+  }
+}
+
+
+//=============================================================================
+//                      fix for zed corpse collision shit
+//=============================================================================
+
+//Stops the green shit when a player dies.
+simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
+{
+  local float frame, rate;
+  local name seq;
+  local LavaDeath LD;
+  local MiscEmmiter BE;
+
+  AmbientSound = None;
+  bCanTeleport = false; // sjs - fix karma going crazy when corpses land on teleporters
+  bReplicateMovement = false;
+  bTearOff = true;
+  bPlayedDeath = true;
+  StopBurnFX();
+
+  if (CurrentCombo != None)
+    CurrentCombo.Destroy();
+
+  HitDamageType = DamageType; // these are replicated to other clients
+  TakeHitLocation = HitLoc;
+
+  bSTUNNED = false;
+  bMovable = true;
+
+  if ( class<DamTypeBurned>(DamageType) != none || class<DamTypeFlamethrower>(DamageType) != none )
+  {
+    ZombieCrispUp();
+  }
+
+  ProcessHitFX() ;
+
+  if ( DamageType != None )
+  {
+    if ( DamageType.default.bSkeletize )
+    {
+      SetOverlayMaterial(DamageType.Default.DamageOverlayMaterial, 4.0, true);
+      if (!bSkeletized)
+      {
+        if ( (Level.NetMode != NM_DedicatedServer) && (SkeletonMesh != None) )
+        {
+          if ( DamageType.default.bLeaveBodyEffect )
+          {
+            BE = spawn(class'MiscEmmiter',self);
+            if ( BE != None )
+            {
+              BE.DamageType = DamageType;
+              BE.HitLoc = HitLoc;
+              bFrozenBody = true;
+            }
+          }
+          GetAnimParams( 0, seq, frame, rate );
+          LinkMesh(SkeletonMesh, true);
+          Skins.Length = 0;
+          PlayAnim(seq, 0, 0);
+          SetAnimFrame(frame);
+        }
+        if (Physics == PHYS_Walking)
+          Velocity = Vect(0,0,0);
+        SetTearOffMomemtum(GetTearOffMomemtum() * 0.25);
+        bSkeletized = true;
+        if ( (Level.NetMode != NM_DedicatedServer) && (DamageType == class'FellLava') )
+        {
+          LD = spawn(class'LavaDeath', , , Location + vect(0, 0, 10), Rotation );
+          if ( LD != None )
+            LD.SetBase(self);
+          //PlaySound( sound'WeaponSounds.BExplosion5', SLOT_None, 1.5*TransientSoundVolume );
+        }
+      }
+    }
+    else if ( DamageType.Default.DeathOverlayMaterial != None )
+      SetOverlayMaterial(DamageType.Default.DeathOverlayMaterial, DamageType.default.DeathOverlayTime, true);
+    else if ( (DamageType.Default.DamageOverlayMaterial != None) && (Level.DetailMode != DM_Low) && !Level.bDropDetail )
+      SetOverlayMaterial(DamageType.Default.DamageOverlayMaterial, 2*DamageType.default.DamageOverlayTime, true);
+  }
+
+  // stop shooting
+  AnimBlendParams(1, 0.0);
+  FireState = FS_None;
+
+  // Try to adjust around performance
+  //log(Level.DetailMode);
+
+  LifeSpan = RagdollLifeSpan;
+
+  GotoState('ZombieDying');
+  if ( BE != None )
+    return;
+  PlayDyingAnimation(DamageType, HitLoc);
+
+  // ADDITION for collision fix
+  bBlockActors = false;
+  bBlockPlayers = false;
+  bBlockProjectiles = false;
+  bProjTarget = false;
+  bBlockZeroExtentTraces = false;
+  bBlockNonZeroExtentTraces = false;
+  bBlockHitPointTraces = false;
+}
+
+
+state ZombieDying
+{
+  simulated function BeginState()
+  {
+    // ADDITION for collision fix
+    bBlockActors = false;
+    bBlockPlayers = false;
+    bBlockProjectiles = false;
+    bProjTarget = false;
+    bBlockZeroExtentTraces = false;
+    bBlockNonZeroExtentTraces = false;
+    bBlockHitPointTraces = false;
+
+    if (bDestroyNextTick)
+    {
+      // If we've flagged this character to be destroyed next tick, handle that
+      if (TimeSetDestroyNextTickTime < Level.TimeSeconds)
+        Destroy();
+      else
+        SetTimer(0.01, false);
+    }
+    else
+    {
+      if (bTearOff && (Level.NetMode == NM_DedicatedServer) || class'GameInfo'.static.UseLowGore())
+        LifeSpan = 1.0;
+      else
+        SetTimer(2.0, false);
+    }
+
+    SetPhysics(PHYS_Falling);
+    if (Controller != None)
+      Controller.Destroy();
+  }
 }
