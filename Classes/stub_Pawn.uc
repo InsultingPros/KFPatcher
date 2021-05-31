@@ -10,6 +10,7 @@ var array<FDualList> DualMap;
 var int OtherPrice;
 var class<KFWeapon> SecType;
 
+
 var transient float cashtimer;
 var transient byte CashCount;
 
@@ -62,25 +63,19 @@ exec function TossCash(int Amount)
   local Vector TossVel;
   local Actor A;
 
-  // NEW check!
-  if (PlayerReplicationInfo == none)
-    return;
-  // why it is defined as float in a first place?
-  PlayerReplicationInfo.Score = int(PlayerReplicationInfo.Score);
-  if (PlayerReplicationInfo.Score <= 0) // Controller.
-    return;
-
-  // 0.3 sec delay between throws
-  if (Level.TimeSeconds < class'stub_Pawn'.default.cashtimer)
+  // NEW check! and 0.3 sec delay between throws
+  if (Level.TimeSeconds < class'stub_Pawn'.default.cashtimer || PlayerReplicationInfo == none)
     return;
   class'stub_Pawn'.default.cashtimer = Level.TimeSeconds + 0.3f;
 
-  
-  // set minimal throw cash = 30
-  if (Amount < 30)
-    Amount = clamp(Amount, 30, int(Controller.PlayerReplicationInfo.Score));
+  // 30 dosh at min
+  Amount = clamp(Amount, 30, int(Controller.PlayerReplicationInfo.Score));
+  // if (Amount<=0)
+  //   Amount = 50;
 
-  // and check if we have THAT much dosh to throw or not
+  Controller.PlayerReplicationInfo.Score = int(Controller.PlayerReplicationInfo.Score); // To fix issue with throwing 0 pounds.
+  if (Controller.PlayerReplicationInfo.Score<=0 || Amount<=0)
+    return;
   Amount = Min(Amount, int(Controller.PlayerReplicationInfo.Score));
 
   GetAxes(Rotation,X,Y,Z);
