@@ -7,7 +7,6 @@
 - scrake head fix
 - fix fnfal sounds
 - husk animations
-- steve multiple hit fix
 
 ## Pat
 

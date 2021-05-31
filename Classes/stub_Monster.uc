@@ -1,6 +1,9 @@
 class stub_Monster extends KFMonster;
 
 
+var transient float fLastAttackTime;
+
+
 //=============================================================================
 //                            controller == none fix
 //=============================================================================
@@ -401,4 +404,100 @@ state ZombieDying
     if (Controller != None)
       Controller.Destroy();
   }
+}
+
+
+//=============================================================================
+//                    lets limit some zeds attack abilities
+//=============================================================================
+
+function bool MeleeDamageTarget(int hitdamage, vector pushdir)
+{
+  local vector HitLocation, HitNormal;
+  local actor HitActor;
+  local Name TearBone;
+  local float dummy;
+  local Emitter BloodHit;
+  // local vector TraceDir;
+
+  // Never should be done on client.
+  if (Level.NetMode == NM_Client || Controller == None)
+    return false;
+  
+  // try to limit some zeds
+  if ((ClassIsChildOf(self.class, class'ZombieCrawler') || ClassIsChildOf(self.class, class'ZombieFleshpound')) && (Level.TimeSeconds < class'stub_Monster'.default.fLastAttackTime))
+    return false;
+
+  // ATTENTION!!! is 0.3 secs ok?
+  class'stub_Monster'.default.fLastAttackTime = Level.TimeSeconds + 0.3f;
+
+  if (Controller.Target!=none && Controller.Target.IsA('KFDoorMover'))
+  {
+    Controller.Target.TakeDamage(hitdamage, self ,HitLocation,pushdir, CurrentDamType);
+    return true;
+  }
+
+  // need to uncomment this and check :D
+  // ClearStayingDebugLines();
+  // TraceDir = Normal(Controller.Target.Location - Location);
+  // DrawStayingDebugLine(Location, Location + (TraceDir * (MeleeRange * 1.4 + Controller.Target.CollisionRadius + CollisionRadius)) , 255,255,0);
+
+  // check if still in melee range
+  if ( (Controller.target != None) && (bSTUNNED == false) && (DECAP == false) && (VSize(Controller.Target.Location - Location) <= MeleeRange * 1.4 + Controller.Target.CollisionRadius + CollisionRadius)
+    && ((Physics == PHYS_Flying) || (Physics == PHYS_Swimming) || (Abs(Location.Z - Controller.Target.Location.Z)
+      <= FMax(CollisionHeight, Controller.Target.CollisionHeight) + 0.5 * FMin(CollisionHeight, Controller.Target.CollisionHeight))) )
+  {
+    // See if a trace would hit a pawn (Have to turn of hit point collision so trace doesn't hit the Human Pawn's bullet whiz cylinder)
+    bBlockHitPointTraces = false;
+    HitActor = Trace(HitLocation, HitNormal, Controller.Target.Location , Location + EyePosition(), true);
+    bBlockHitPointTraces = true;
+
+    // If the trace wouldn't hit a pawn, do the old thing of just checking if there is something blocking the trace
+    if (Pawn(HitActor) == none)
+    {
+      // Have to turn of hit point collision so trace doesn't hit the Human Pawn's bullet whiz cylinder
+      bBlockHitPointTraces = false;
+      HitActor = Trace(HitLocation, HitNormal, Controller.Target.Location, Location, false);
+      bBlockHitPointTraces = true;
+
+      if (HitActor != none)
+        return false;
+    }
+
+    if (KFHumanPawn(Controller.Target) != none)
+    {
+      //TODO - line below was KFPawn. Does this whole block need to be KFPawn, or is it OK as KFHumanPawn?
+      KFHumanPawn(Controller.Target).TakeDamage(hitdamage, Instigator ,HitLocation,pushdir, CurrentDamType); //class 'KFmod.ZombieMeleeDamage');
+
+      if (KFHumanPawn(Controller.Target).Health <=0)
+      {
+        if (!class'GameInfo'.static.UseLowGore())
+        {
+          BloodHit = Spawn(class'KFMod.FeedingSpray',self,,Controller.Target.Location,rotator(pushdir));	 //
+          KFHumanPawn(Controller.Target).SpawnGibs(rotator(pushdir), 1);
+          TearBone=KFPawn(Controller.Target).GetClosestBone(HitLocation,Velocity,dummy);
+          KFHumanPawn(Controller.Target).HideBone(TearBone);
+        }
+
+        // Give us some Health back
+        if (Health <= (1.0-FeedThreshold)*HealthMax)
+        {
+          Health += FeedThreshold*HealthMax * Health/HealthMax;
+        }
+      }
+
+    }
+    else if (Controller.target != None)
+    {
+      // Do more damage if you are attacking another zed so that zeds don't just stand there whacking each other forever! - Ramm
+      if (KFMonster(Controller.Target) != none)
+        hitdamage *= DamageToMonsterScale;
+
+      Controller.Target.TakeDamage(hitdamage, self ,HitLocation,pushdir, CurrentDamType); //class 'KFmod.ZombieMeleeDamage');
+    }
+
+    return true;
+  }
+
+  return false;
 }
