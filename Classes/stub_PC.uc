@@ -157,6 +157,7 @@ function JoinedAsSpectatorOnly()
   PlayerReplicationInfo.Team = none;
   ServerSpectate();
 
+  ClientBecameSpectator();
   // let's fix blank messages
   // this 'xPlayer' float is not being used anywhere so let's use it
   MinAdrenalineCost = Level.TimeSeconds + 10.0f;
@@ -171,8 +172,6 @@ function JoinedAsSpectatorOnly()
       break;
     }
   }
-
-  ClientBecameSpectator();
 }
 
 
@@ -181,7 +180,7 @@ function BecomeSpectator()
   if (Role < ROLE_Authority)
     return;
 
-  if (Level.Game.BecomeSpectator(self))
+  if (!Level.Game.BecomeSpectator(self))
     return;
 
   if (Pawn != none)
