@@ -4,7 +4,7 @@
 
 This is an attempt to fix most game breaking bugs and log spam in **Killing Floor 1**. And some additional features to make some utility mutators 'OBSOLOTE' :innocent:
 
-You can check the [To-Do](Docs/To-Do.md) for more details.
+You can check the [To-Do](Docs/To-Do.md) and [Feature List](Docs/Feature&#32;List.md) for more details.
 
 ## Internals
 
