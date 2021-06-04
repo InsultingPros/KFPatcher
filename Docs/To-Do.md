@@ -4,6 +4,7 @@
 
 ## Priority
 
+- dosh sound spam
 - scrake head fix
 - fix fnfal sounds
 - husk animations
