@@ -7,13 +7,12 @@ function SpawnTwoShots()
   local rotator FireRotation;
   local KFMonsterController KFMonstControl;
 
-  // if this works for all cases, im an idiot...
-  if (Controller == none || IsInState('ZombieDying'))
+  if (Controller == none || IsInState('ZombieDying') || IsInState('GettingOutOfTheWayOfShot') || Physics == PHYS_Falling)
     return;
 
   if (KFDoorMover(Controller.Target) != none)
   {
-    Controller.Target.TakeDamage(22,Self,Location,vect(0,0,0),Class'DamTypeVomit');
+    Controller.Target.TakeDamage(22, Self, Location,vect(0,0,0), Class'DamTypeVomit');
     return;
   }
 
