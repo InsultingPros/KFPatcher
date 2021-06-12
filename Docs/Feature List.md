@@ -55,6 +55,8 @@
 - Husks: doesnt spam `toggleaux ctrl none` anymore.
 - Husks: do NOT move zeds that they can NOT see physically.
 - Husks: do NOT move FP's. Finally!
+- Husks: do NOT start to shoot when other Husk moves him with projectile.
+- Husks: do NOT start to shoot while in falling `Physics` mode.
 - Sirens: do NOT damage players with no head / after death.
 - Sirens: shit tons of `takedamage instigator none` log spam fixes.
 - FP: now they do not spin. At all.
