@@ -23,10 +23,15 @@ event PreBeginPlay()
 }
 
 
-final function ReplaceFunctions()
+// 127kb ~80 array items
+// server first run - 85ms
+// map switch - 45ms 
+final private function ReplaceFunctions()
 {
   local uFunction A, B;
   local int i;
+
+  // stopwatch(false);
 
   for (i = 0; i < List.Length; i++)
   {
@@ -48,8 +53,13 @@ final function ReplaceFunctions()
     }
 
     A.Script = B.Script;
-    log("> Processing: " $ List[i].Replace $ "    ---->    " $ List[i].With);
+    // ~45-55 ms 
+    log("> Replacing: " $ List[i].Replace);
+    log("          -> " $ List[i].With);
+    // TODO: выровнять
   }
+
+  // stopwatch(true);
 }
 
 
