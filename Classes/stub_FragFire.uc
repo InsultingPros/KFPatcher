@@ -14,7 +14,7 @@ function DoFireEffect()
   local int Hand;
 
   // added working ammo check
-  Weapon.GetAmmoCount(MaxAmmo,CurAmmo);
+  Weapon.GetAmmoCount(MaxAmmo, CurAmmo);
   if (CurAmmo == 0 && class'stub_FragFire'.default.PrevAmmo == 0)
     return;
   class'stub_FragFire'.default.PrevAmmo = CurAmmo;

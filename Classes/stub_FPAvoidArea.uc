@@ -15,6 +15,6 @@ function bool RelevantTo(Pawn P)
   if (KFMonster(p) != none && KFMonster(p).default.Health >= 1500) //  || KFMonster(p).IsInState('')) )
     return false;
 
-  return ( KFMonst != none && VSizeSquared(KFMonst.Velocity) >= 75 && super(AvoidMarker).RelevantTo(P)
+  return (KFMonst != none && VSizeSquared(KFMonst.Velocity) >= 75 && super(AvoidMarker).RelevantTo(P)
      && KFMonst.Velocity dot (P.Location - KFMonst.Location) > 0  );
 }

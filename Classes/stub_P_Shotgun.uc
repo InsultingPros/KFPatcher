@@ -4,7 +4,7 @@ class stub_P_Shotgun extends ShotgunBullet;
 var Pawn Victim;
 
 
-simulated function ProcessTouch (Actor Other, vector HitLocation)
+simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
   local vector X;
 	local Vector TempHitLocation, HitNormal;
