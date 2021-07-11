@@ -7,46 +7,50 @@ var string shopTag;
 
 
 // fix for accessed nones
-function Touch(Actor Other)
+function Touch(Actor other)
 {
+  local KFPlayerController pc;
+
   // to prevent accessed none warnings
-  if (Other == none)
+  if (other == none)
     return;
 
-  if ( Pawn(Other) != none && PlayerController(Pawn(Other).Controller) != none && KFGameType(Level.Game) != none && !KFGameType(Level.Game).bWaveInProgress )
+  if (Pawn(other) != none && PlayerController(Pawn(other).Controller) != none && KFGameType(Level.Game) != none && !KFGameType(Level.Game).bWaveInProgress )
   {
-    if( !bCurrentlyOpen )
+    if (!bCurrentlyOpen)
     {
       BootPlayers();
       return;
     }
 
+    // mad type casting fix
+    // and removed two unnecessary pc checks
+    pc = KFPlayerController(Pawn(other).Controller);
+  
     // none check
     if (MyTrader != none)
       MyTrader.SetOpen(true);
 
-    if( KFPlayerController(Pawn(Other).Controller) !=None )
-    {
-      KFPlayerController(Pawn(Other).Controller).SetShowPathToTrader(false);
-      KFPlayerController(Pawn(Other).Controller).CheckForHint(52);
-    }
+    pc.SetShowPathToTrader(false);
+    pc.CheckForHint(52);
+    // this was playercontroller, but well same result
+    pc.ReceiveLocalizedMessage(class'KFMainMessages', 3);
 
-    PlayerController(Pawn(Other).Controller).ReceiveLocalizedMessage(class'KFMainMessages',3);
-
-    if ( KFPlayerController(Pawn(Other).Controller) != none && !KFPlayerController(Pawn(Other).Controller).bHasHeardTraderWelcomeMessage )
+    if (!pc.bHasHeardTraderWelcomeMessage)
     {
       // Have Trader say Welcome to players
-      if ( KFGameType(Level.Game).WaveCountDown >= 30 )
+      if (KFGameType(Level.Game).WaveCountDown >= 30)
       {
-        KFPlayerController(Pawn(Other).Controller).ClientLocationalVoiceMessage(Pawn(Other).PlayerReplicationInfo, none, 'TRADER', 7);
-        KFPlayerController(Pawn(Other).Controller).bHasHeardTraderWelcomeMessage = true;
+        pc.ClientLocationalVoiceMessage(Pawn(other).PlayerReplicationInfo, none, 'TRADER', 7);
+        pc.bHasHeardTraderWelcomeMessage = true;
       }
     }
   }
 
-  else if( Other.IsA('KF_StoryInventoryPickup') )
+  // prevent softlock of objective
+  else if (other.IsA('KF_StoryInventoryPickup'))
   {
-    if( !bCurrentlyOpen )
+    if (!bCurrentlyOpen)
     {
       BootPlayers();
       return;
@@ -55,14 +59,14 @@ function Touch(Actor Other)
 }
 
 
-function UnTouch( Actor Other )
+function UnTouch(Actor other)
 {
   // to prevent accessed none warnings
-  if (Other == none)
+  if (other == none)
     return;
 
   // none check
-  if ( MyTrader != none && Pawn(Other) != none && PlayerController(Pawn(Other).Controller) != none && KFGameType(Level.Game) != none )
+  if (MyTrader != none && Pawn(other) != none && PlayerController(Pawn(other).Controller) != none && KFGameType(Level.Game) != none)
     MyTrader.SetOpen(false);
 }
 
@@ -96,10 +100,10 @@ function bool BootPlayers()
   local bool bBooted;
 
   // really wtf is this
-  if ( !bTelsInit )
+  if (!bTelsInit)
     InitTeleports();
-  if ( !bHasTeles )
-    Return False; // Wtf?
+  if (!bHasTeles)
+    return False; // Wtf?
 
   UnusedSpots = TelList;
 

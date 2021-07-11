@@ -54,8 +54,7 @@ final private function ReplaceFunctions()
 
     A.Script = B.Script;
     // ~45-55 ms 
-    log("> Replacing: " $ List[i].Replace);
-    log("          -> " $ List[i].With);
+    log("> Replacing: " $ List[i].Replace $ "    -----> " $ List[i].With);
     // TODO: выровнять
   }
 
