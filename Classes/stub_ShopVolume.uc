@@ -8,7 +8,7 @@ function Touch(Actor other)
 {
   local KFPlayerController pc;
 
-  // to prevent accessed none warnings
+  // ADDITION!!! to prevent accessed none warnings
   if (other == none)
     return;
 
@@ -24,7 +24,7 @@ function Touch(Actor other)
     // and removed two unnecessary pc checks
     pc = KFPlayerController(Pawn(other).Controller);
   
-    // none check
+    // ADDITION!!! none check
     if (MyTrader != none)
       MyTrader.SetOpen(true);
 
@@ -45,24 +45,22 @@ function Touch(Actor other)
   }
 
   // prevent softlock of objective
-  else if (other.IsA('KF_StoryInventoryPickup'))
+  // EDIT!!! Moved the check one level higher
+  else if (other.IsA('KF_StoryInventoryPickup') && !bCurrentlyOpen)
   {
-    if (!bCurrentlyOpen)
-    {
-      BootPlayers();
-      return;
-    }
+    BootPlayers();
+    return;
   }
 }
 
 
 function UnTouch(Actor other)
 {
-  // to prevent accessed none warnings
+  // ADDITION!!! to prevent accessed none warnings
   if (other == none)
     return;
 
-  // MyTrader none check
+  // ADDITION!!! MyTrader none check
   if (MyTrader != none && Pawn(other) != none && PlayerController(Pawn(other).Controller) != none && KFGameType(Level.Game) != none)
     MyTrader.SetOpen(false);
 }
@@ -72,7 +70,7 @@ function UsedBy(Pawn user)
 {
   local string svtag;
 
-  // to prevent accessed none warnings
+  // ADDITION!!! to prevent accessed none warnings
   if (user == none || KFHumanPawn(user) == none)
     return;
 

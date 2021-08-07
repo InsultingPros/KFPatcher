@@ -14,7 +14,7 @@ function TallyVotes(bool bForceMapSwitch)
   Level.Game.NumPlayers = 0;
 
   // count real players to prevent fakes from or specs from preventing map switching
-  for (c=level.ControllerList; c!=none; c=c.nextController)
+  for (c = level.ControllerList; c != none; c = c.nextController)
   {
     if (c.bIsPlayer && c.PlayerReplicationInfo != none && !c.PlayerReplicationInfo.bOnlySpectator)
       Level.Game.NumPlayers++;
@@ -33,11 +33,18 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
   local int Index, VoteCount, PrevMapVote, PrevGameVote;
   local MapHistoryInfo MapInfo;
   local bool bAdminForce;
+  // ADDITION!!! prevent shit typecasting
+  local PlayerController loc_pc;
+  local PlayerReplicationInfo loc_PRI;
 
   if (bLevelSwitchPending)
     return;
 
-  Index = GetMVRIIndex(PlayerController(Voter));
+  // ADDITION!!!
+  loc_pc = PlayerController(Voter);
+  loc_PRI = loc_pc.PlayerReplicationInfo;
+  Index = GetMVRIIndex(loc_pc);
+
   if (GameIndex < 0)
   {
     bAdminForce = true;
@@ -51,7 +58,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     return;
 
   // Administrator Vote
-  if (bAdminForce && (PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin))
+  if (bAdminForce && (loc_PRI.bAdmin || loc_PRI.bSilentAdmin))
   {
     TextMessage = lmsgAdminMapChange;
     TextMessage = Repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")");
@@ -74,10 +81,10 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     return;
   }
 
-  if (PlayerController(Voter).PlayerReplicationInfo.bOnlySpectator)
+  if (loc_PRI.bOnlySpectator)
   {
     // Spectators cant vote
-    PlayerController(Voter).ClientMessage(lmsgSpectatorsCantVote);
+    loc_pc.ClientMessage(lmsgSpectatorsCantVote);
     return;
   }
 
@@ -86,7 +93,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         !MapList[MapIndex].bEnabled)
         return;
 
-  log("___" $ Index $ " - " $ PlayerController(Voter).PlayerReplicationInfo.PlayerName $ " voted for " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")",'MapVote');
+  log("___" $ Index $ " - " $ loc_PRI.PlayerName $ " voted for " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")",'MapVote');
 
   PrevMapVote = MVRI[Index].MapVote;
   PrevGameVote = MVRI[Index].GameVote;
@@ -97,18 +104,18 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
   {
     if (bScoreMode)
     {
-      VoteCount = GetAccVote(PlayerController(Voter)) + int(GetPlayerScore(PlayerController(Voter)));
+      VoteCount = GetAccVote(loc_pc) + int(GetPlayerScore(loc_pc));
       TextMessage = lmsgMapVotedForWithCount;
-      TextMessage = repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName );
+      TextMessage = repl(TextMessage, "%playername%", loc_PRI.PlayerName );
       TextMessage = repl(TextMessage, "%votecount%", string(VoteCount) );
       TextMessage = repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")" );
       Level.Game.Broadcast(self,TextMessage);
     }
     else
     {
-      VoteCount = GetAccVote(PlayerController(Voter)) + 1;
+      VoteCount = GetAccVote(loc_pc) + 1;
       TextMessage = lmsgMapVotedForWithCount;
-      TextMessage = repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName );
+      TextMessage = repl(TextMessage, "%playername%", loc_PRI.PlayerName );
       TextMessage = repl(TextMessage, "%votecount%", string(VoteCount) );
       TextMessage = repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")" );
       Level.Game.Broadcast(self,TextMessage);
@@ -118,20 +125,20 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
   {
     if (bScoreMode)
     {
-      VoteCount = int(GetPlayerScore(PlayerController(Voter)));
+      VoteCount = int(GetPlayerScore(loc_pc));
       TextMessage = lmsgMapVotedForWithCount;
-      TextMessage = repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName );
+      TextMessage = repl(TextMessage, "%playername%", loc_PRI.PlayerName );
       TextMessage = repl(TextMessage, "%votecount%", string(VoteCount) );
       TextMessage = repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")" );
-      Level.Game.Broadcast(self,TextMessage);
+      Level.Game.Broadcast(self, TextMessage);
     }
     else
     {
       VoteCount =  1;
       TextMessage = lmsgMapVotedFor;
-      TextMessage = repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName );
+      TextMessage = repl(TextMessage, "%playername%", loc_PRI.PlayerName );
       TextMessage = repl(TextMessage, "%mapname%", MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")" );
-      Level.Game.Broadcast(self,TextMessage);
+      Level.Game.Broadcast(self, TextMessage);
     }
   }
   UpdateVoteCount(MapIndex, GameIndex, VoteCount);
