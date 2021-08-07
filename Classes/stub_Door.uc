@@ -21,4 +21,47 @@ function Tick(float Delta)
 }
 
 
+// Breaks all doors with the same use trigger. Fixes the single welded door exploit.
+simulated function GoBang(pawn instigatedBy, vector hitlocation,Vector momentum, class<DamageType> damageType)
+{
+    local int i;
+    local KFDoorMover kfdm;
+
+    for(i = 0; i < myTrigger.doorOwners.length; i++)
+    {
+        kfdm = myTrigger.doorOwners[i];
+        if(kfdm == None)
+        {
+            continue;
+        }
+
+        // The usual GoBang() code.
+        kfdm.SetCollision(false,false,false);
+        kfdm.bHidden = true;
+        kfdm.bDoorIsDead = true;
+        kfdm.NetUpdateTime = level.timeSeconds - 1;
+
+        if(level.netMode != NM_DedicatedServer)
+        {
+            if(kfdm.surfaceType == EST_Metal)
+            {
+                if((level.timeSeconds - kfdm.lastRenderTime) < 5)
+                {
+                    Spawn(kfdm.metalDoorExplodeEffectClass,,, kfdm.location, Rotator(vect(0,0,1)));
+                }
+                PlaySound(kfdm.metalBreakSound, SLOT_None, 2.0, false, 5000,,false);
+            }
+            else
+            {
+                if((level.timeSeconds - kfdm.lastRenderTime) < 5)
+                {
+                    Spawn(kfdm.woodDoorExplodeEffectClass,,, kfdm.location, Rotator(vect(0,0,1)));
+                }
+                PlaySound(kfdm.woodBreakSound, SLOT_None, 2.0, false, 5000,,false);
+            }
+        }
+    }
+}
+
+
 defaultproperties{}
