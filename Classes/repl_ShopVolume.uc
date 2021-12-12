@@ -1,45 +1,46 @@
 // imagine almost all functions of this class are bugged
-// amazing, i cummed twice
-class  repl_ShopVolume extends KFShopVolume_Story;
+class repl_ShopVolume extends KFShopVolume_Story;
+
+
+// used to replace broken trader tags in UsedBy()
+var string TraderTag;
 
 
 // fix for accessed nones
+// KFMod.ShopVolume
 function Touch(Actor other)
 {
-  local KFPlayerController pc;
+  // NOTE!!! local variables CRASH here!!!
 
   // ADDITION!!! to prevent accessed none warnings
   if (other == none)
     return;
 
-  if (Pawn(other) != none && PlayerController(Pawn(other).Controller) != none && KFGameType(Level.Game) != none && !KFGameType(Level.Game).bWaveInProgress )
+  if (Pawn(other) != none && PlayerController(Pawn(other).Controller) != none && KFGameType(Level.Game) != none && !KFGameType(Level.Game).bWaveInProgress)
   {
     if (!bCurrentlyOpen)
     {
       BootPlayers();
       return;
     }
-
-    // mad type casting fix
-    // and removed two unnecessary pc checks
-    pc = KFPlayerController(Pawn(other).Controller);
   
     // ADDITION!!! none check
     if (MyTrader != none)
       MyTrader.SetOpen(true);
 
-    pc.SetShowPathToTrader(false);
-    pc.CheckForHint(52);
+    // NOTE!!! removed all KFPC checks, coz we check it at the very start
+    KFPlayerController(Pawn(other).Controller).SetShowPathToTrader(false);
+    KFPlayerController(Pawn(other).Controller).CheckForHint(52);
     // this was playercontroller, but well same result
-    pc.ReceiveLocalizedMessage(class'KFMainMessages', 3);
+    PlayerController(Pawn(other).Controller).ReceiveLocalizedMessage(class'KFMainMessages', 3);
 
-    if (!pc.bHasHeardTraderWelcomeMessage)
+    if (!KFPlayerController(Pawn(Other).Controller).bHasHeardTraderWelcomeMessage)
     {
       // Have Trader say Welcome to players
       if (KFGameType(Level.Game).WaveCountDown >= 30)
       {
-        pc.ClientLocationalVoiceMessage(Pawn(other).PlayerReplicationInfo, none, 'TRADER', 7);
-        pc.bHasHeardTraderWelcomeMessage = true;
+        KFPlayerController(Pawn(Other).Controller).ClientLocationalVoiceMessage(Pawn(other).PlayerReplicationInfo, none, 'TRADER', 7);
+        KFPlayerController(Pawn(Other).Controller).bHasHeardTraderWelcomeMessage = true;
       }
     }
   }
@@ -54,6 +55,7 @@ function Touch(Actor other)
 }
 
 
+// KFMod.ShopVolume
 function UnTouch(Actor other)
 {
   // ADDITION!!! to prevent accessed none warnings
@@ -66,9 +68,10 @@ function UnTouch(Actor other)
 }
 
 
+// KFMod.ShopVolume
 function UsedBy(Pawn user)
 {
-  local string svtag;
+  // NOTE!!! local variables CRASH here!!!
 
   // ADDITION!!! to prevent accessed none warnings
   if (user == none || KFHumanPawn(user) == none)
@@ -82,17 +85,22 @@ function UsedBy(Pawn user)
     svtag = string(MyTrader.Tag);
 
   if (KFPlayerController(user.Controller) != none && KFGameType(Level.Game) != none && !KFGameType(Level.Game).bWaveInProgress)
-    KFPlayerController(user.Controller).ShowBuyMenu(svtag, KFHumanPawn(user).MaxCarryWeight);
+  {
+    if (MyTrader != none)
+      class'repl_ShopVolume'.default.TraderTag = MyTrader.Tag;
+    KFPlayerController(user.Controller).ShowBuyMenu(class'repl_ShopVolume'.default.TraderTag, KFHumanPawn(user).MaxCarryWeight);
+  }
 }
 
 
 // touching out of bounds fix
+// KFMod.ShopVolume
 function bool BootPlayers()
 {
   local KFHumanPawn Bootee;
-  local int i,idx;
+  local int i, idx;
   local bool bResult;
-  local int NumTouching,NumBooted;
+  local int NumTouching, NumBooted;
   local array<Teleporter> UnusedSpots;
   local bool bBooted;
 
@@ -100,13 +108,14 @@ function bool BootPlayers()
   if (!bTelsInit)
     InitTeleports();
   if (!bHasTeles)
-    return false; // Wtf?
+    return false; // Wtf?!!
 
   UnusedSpots = TelList;
 
+  // NOTE!!! made this human readable
   for (idx = 0; idx < Touching.Length; idx++)
   {
-    // none check so we wont go out of bounds
+    // ADDITION!!! none check so we wont go out of bounds
     if (Touching[idx] == none)
       continue;
 

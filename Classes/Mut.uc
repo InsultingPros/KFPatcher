@@ -15,7 +15,7 @@ event PreBeginPlay()
 {
   super.PreBeginPlay();
 
-  // temp hack fix for tosscahs!
+  // TMP!!! hack fix for tosscahs!
   class'repl_Pawn'.default.cashtimer = 0.0f;
 
   // replacing vanilla functions with ours
