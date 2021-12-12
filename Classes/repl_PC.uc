@@ -9,8 +9,10 @@ var byte MaxVoiceMsgIn10s, contsMaxMsg;
 //=============================================================================
 
 // all 3 functions are from ScrN
+// KFMod.KFPlayerController
 simulated function ClientEnterZedTime()
 {
+  // ADDITION!!!
   // this 'xPlayer' bool is not being used anywhere so let's use it
   // we need this bool for voice messages
   autozoom = true;
@@ -24,8 +26,10 @@ simulated function ClientEnterZedTime()
 }
 
 
+// KFMod.KFPlayerController
 simulated function ClientExitZedTime()
 {
+  // ADDITION!!!
   // this 'xPlayer' bool is not being used anywhere so let's use it
   // we need this bool for voice messages
   autozoom = false;
@@ -37,20 +41,17 @@ simulated function ClientExitZedTime()
 }
 
 
+// Engine.PlayerController
 function bool AllowVoiceMessage(name MessageType)
 {
-  local float TimeSinceLastMsg;
-
   if (Level.NetMode == NM_Standalone || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     return true;
 
-  TimeSinceLastMsg = Level.TimeSeconds - OldMessageTime;
-
-  if (TimeSinceLastMsg < 3)
+  if (Level.TimeSeconds - OldMessageTime < 3)
   {
     if (MessageType == 'TAUNT' || MessageType == 'AUTOTAUNT')
       return false;
-    if (TimeSinceLastMsg < 1 )
+    if (Level.TimeSeconds - OldMessageTime < 1 )
       return false;
   }
 
@@ -58,13 +59,13 @@ function bool AllowVoiceMessage(name MessageType)
   if (!autozoom && MessageType != 'TRADER' && MessageType != 'AUTO')
   {
     OldMessageTime = Level.TimeSeconds;
-    if (TimeSinceLastMsg < 10)
+    if (Level.TimeSeconds - OldMessageTime < 10)
     {
       if (class'repl_PC'.default.MaxVoiceMsgIn10s > 0)
         class'repl_PC'.default.MaxVoiceMsgIn10s--;
       else
       {
-        ClientMessage("Keep quiet for " $ ceil(10 - TimeSinceLastMsg) $"s");
+        ClientMessage("Keep quiet for " $ ceil(10 - Level.TimeSeconds - OldMessageTime) $"s");
         return false;
       }
     }
@@ -79,6 +80,7 @@ function bool AllowVoiceMessage(name MessageType)
 //                        no delay suicide
 //=============================================================================
 
+// Engine.PlayerController
 exec function Suicide()
 {
   if (Pawn != none)
@@ -93,22 +95,18 @@ exec function Suicide()
 // simulated SendSelectedVeterancyToServer() -> to this
 // no more "you will become %perk" spam when you join midgame
 // can change perk unlimited amount of times
+// KFMod.KFPlayerController
 function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceChange)
 {
-  local KFPlayerReplicationInfo kfpri;
-  local KFSteamStatsAndAchievements kfstats;
+  // NOTE!!! local variables CRASH here!!!
 
-  // ADDITION!!! fucking twi typecasting at every step
-  kfpri = KFPlayerReplicationInfo(PlayerReplicationInfo);
-  kfstats = KFSteamStatsAndAchievements(SteamStatsAndAchievements);
-
-  if (VetSkill == none || kfpri == none || kfstats == none)
+  if (VetSkill == none || KFPlayerReplicationInfo(PlayerReplicationInfo) == none || KFSteamStatsAndAchievements(SteamStatsAndAchievements) == none)
     return;
 
   // sets proper 'BuyMenuFilterIndex'
   SetSelectedVeterancy(VetSkill);
 
-  if (KFGameReplicationInfo(GameReplicationInfo).bWaveInProgress && VetSkill != kfpri.ClientVeteranSkill)
+  if (KFGameReplicationInfo(GameReplicationInfo).bWaveInProgress && VetSkill != KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill)
   {
     // FIX!
     // this 'xPlayer' float is not being used anywhere so let's use it
@@ -126,14 +124,14 @@ function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceC
 
   else // if (!bChangedVeterancyThisWave || bForceChange)
   {
-      if (VetSkill != kfpri.ClientVeteranSkill)
+      if (VetSkill != KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill)
         ClientMessage(Repl(YouAreNowPerkString, "%Perk%", VetSkill.default.VeterancyName));
 
       // if (GameReplicationInfo.bMatchHasBegun)
       //   bChangedVeterancyThisWave = true;
 
-    kfpri.ClientVeteranSkill = VetSkill;
-    kfpri.ClientVeteranSkillLevel = kfstats.PerkHighestLevelAvailable(VetSkill.default.PerkIndex);
+    KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill = VetSkill;
+    KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkillLevel = KFSteamStatsAndAchievements(SteamStatsAndAchievements).PerkHighestLevelAvailable(VetSkill.default.PerkIndex);
 
     // recalcs weight and ammo
     if (KFHumanPawn(Pawn) != none)
@@ -151,6 +149,7 @@ function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceC
 
 // worst case since repInfo creates after this function call
 // should I check its existance for other parts of this function???
+// KFMod.KFPlayerController
 function JoinedAsSpectatorOnly()
 {
   if (Pawn != none)
@@ -180,6 +179,7 @@ function JoinedAsSpectatorOnly()
 }
 
 
+// KFMod.KFPlayerController
 function BecomeSpectator()
 {
   if (Role < ROLE_Authority)

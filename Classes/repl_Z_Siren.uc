@@ -21,7 +21,7 @@ simulated function SpawnTwoShots()
 }
 
 
-simulated function HurtRadius( float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation )
+simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
   local actor Victims;
   local float damageScale, dist;
@@ -36,7 +36,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
   {
     // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
     // Or Karma actors in this case. self inflicted Death due to flying chairs is uncool for a zombie of your stature.
-    if ( (Victims != self) && !Victims.IsA('FluidSurfaceInfo') && !Victims.IsA('KFMonster') && !Victims.IsA('ExtendedZCollision') )
+    if ((Victims != self) && !Victims.IsA('FluidSurfaceInfo') && !Victims.IsA('KFMonster') && !Victims.IsA('ExtendedZCollision'))
     {
       Momentum = ScreamForce; // bugfix, when pull wasn't applied always  -- PooSH
       dir = Victims.Location - HitLocation;

@@ -117,7 +117,7 @@ simulated function float GetOriginalGroundSpeed()
       return OriginalGroundSpeed;
   }
 
-  if( bZedUnderControl )
+  if (bZedUnderControl)
   {
     return OriginalGroundSpeed * 1.25;
   }
