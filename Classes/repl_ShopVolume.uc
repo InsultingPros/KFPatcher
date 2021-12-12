@@ -80,12 +80,9 @@ function UsedBy(Pawn user)
   // Set the pawn to an idle anim so he wont keep making footsteps
   User.SetAnimAction(User.IdleWeaponAnim);
 
-  // MyTrader none check
-  if (MyTrader != none)
-    svtag = string(MyTrader.Tag);
-
   if (KFPlayerController(user.Controller) != none && KFGameType(Level.Game) != none && !KFGameType(Level.Game).bWaveInProgress)
   {
+    // ADDITION!!! MyTrader none check
     if (MyTrader != none)
       class'repl_ShopVolume'.default.TraderTag = MyTrader.Tag;
     KFPlayerController(user.Controller).ShowBuyMenu(class'repl_ShopVolume'.default.TraderTag, KFHumanPawn(user).MaxCarryWeight);
