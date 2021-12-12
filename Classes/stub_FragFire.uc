@@ -25,7 +25,7 @@ function DoFireEffect()
   StartTrace = Instigator.Location + Instigator.EyePosition();// + X*Instigator.CollisionRadius;
   StartProj = StartTrace + X*ProjSpawnOffset.X;
 
-  if( PlayerController(Instigator.Controller)!=None )
+  if( PlayerController(Instigator.Controller)!=none )
   { // We must do this as server dosen't get a chance to set weapon handedness.
     Hand = int(PlayerController(Instigator.Controller).Handedness);
     if( Hand==-1 || Hand==1 )
@@ -34,7 +34,7 @@ function DoFireEffect()
 
   // check if projectile would spawn through a wall and adjust start location accordingly
   Other = Weapon.Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-  if (Other != None)
+  if (Other != none)
     StartProj = HitLocation;
 
   Aim = AdjustAim(StartProj, AimError);

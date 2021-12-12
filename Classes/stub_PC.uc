@@ -95,48 +95,53 @@ exec function Suicide()
 // can change perk unlimited amount of times
 function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceChange)
 {
-  if (VetSkill == none || KFPlayerReplicationInfo(PlayerReplicationInfo) == none)
+  local KFPlayerReplicationInfo kfpri;
+  local KFSteamStatsAndAchievements kfstats;
+
+  // ADDITION!!! fucking twi typecasting at every step
+  kfpri = KFPlayerReplicationInfo(PlayerReplicationInfo);
+  kfstats = KFSteamStatsAndAchievements(SteamStatsAndAchievements);
+
+  if (VetSkill == none || kfpri == none || kfstats == none)
     return;
 
-  if (KFSteamStatsAndAchievements(SteamStatsAndAchievements) != none)
+  // sets proper 'BuyMenuFilterIndex'
+  SetSelectedVeterancy(VetSkill);
+
+  if (KFGameReplicationInfo(GameReplicationInfo).bWaveInProgress && VetSkill != kfpri.ClientVeteranSkill)
   {
-    // sets proper 'BuyMenuFilterIndex'
-    SetSelectedVeterancy(VetSkill);
-
-    if (KFGameReplicationInfo(GameReplicationInfo).bWaveInProgress && VetSkill != KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill)
+    // FIX!
+    // this 'xPlayer' float is not being used anywhere so let's use it
+    // wait 2 seconds for ClientVeteranSkill replication
+    if (Level.TimeSeconds > MinAdrenalineCost)
     {
-      // FIX!
-      // this 'xPlayer' float is not being used anywhere so let's use it
-      // wait 2 seconds for ClientVeteranSkill replication
-      if (Level.TimeSeconds > MinAdrenalineCost)
-      {
-        // moved this aswell so message and perk switch will happen at the same time
-        // bChangedVeterancyThisWave = false;
-        ClientMessage(Repl(YouWillBecomePerkString, "%Perk%", VetSkill.Default.VeterancyName));
-      }
-
-      MinAdrenalineCost = Level.TimeSeconds + 2.0f;
+      // moved this aswell so message and perk switch will happen at the same time
+      // and let perks be switched without limits
+      // bChangedVeterancyThisWave = false;
+      ClientMessage(Repl(YouWillBecomePerkString, "%Perk%", VetSkill.default.VeterancyName));
     }
 
-    else // if (!bChangedVeterancyThisWave || bForceChange)
-    {
-      if (VetSkill != KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill)
-        ClientMessage(Repl(YouAreNowPerkString, "%Perk%", VetSkill.Default.VeterancyName));
+    MinAdrenalineCost = Level.TimeSeconds + 2.0f;
+  }
+
+  else // if (!bChangedVeterancyThisWave || bForceChange)
+  {
+      if (VetSkill != kfpri.ClientVeteranSkill)
+        ClientMessage(Repl(YouAreNowPerkString, "%Perk%", VetSkill.default.VeterancyName));
 
       // if (GameReplicationInfo.bMatchHasBegun)
       //   bChangedVeterancyThisWave = true;
 
-      KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill = VetSkill;
-      KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkillLevel = KFSteamStatsAndAchievements(SteamStatsAndAchievements).PerkHighestLevelAvailable(VetSkill.default.PerkIndex);
+    kfpri.ClientVeteranSkill = VetSkill;
+    kfpri.ClientVeteranSkillLevel = kfstats.PerkHighestLevelAvailable(VetSkill.default.PerkIndex);
 
-      // recalcs weight and ammo
-      if (KFHumanPawn(Pawn) != none)
-        KFHumanPawn(Pawn).VeterancyChanged();
-    }
-
-    // else
-    //   ClientMessage(PerkChangeOncePerWaveString);
+    // recalcs weight and ammo
+    if (KFHumanPawn(Pawn) != none)
+      KFHumanPawn(Pawn).VeterancyChanged();
   }
+
+  // else
+  //   ClientMessage(PerkChangeOncePerWaveString);
 }
 
 

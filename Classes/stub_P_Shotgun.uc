@@ -7,18 +7,18 @@ var Pawn Victim;
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
   local vector X;
-	local Vector TempHitLocation, HitNormal;
-	local array<int>	HitPoints;
+  local Vector TempHitLocation, HitNormal;
+  local array<int>  HitPoints;
   local KFPawn HitPawn;
 
 
-	if ( Other == none || Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces  )
-		return;
+  if ( Other == none || Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces  )
+    return;
 
   X = Vector(Rotation);
 
- 	if ( Instigator != none && ROBulletWhipAttachment(Other) != none )
-	{
+   if ( Instigator != none && ROBulletWhipAttachment(Other) != none )
+  {
     // we touched player's auxilary collision cylinder, not let's trace to the player himself
     // Other.Base = KFPawn
     if( Other.Base == none || Other.Base.bDeleteMe )
@@ -27,10 +27,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (200 * X), HitPoints, HitLocation,, 1);
 
     // bullet didn't hit a pawn
-		if( Other == none || HitPoints.Length == 0 || Other.bDeleteMe)
-			return;
+    if( Other == none || HitPoints.Length == 0 || Other.bDeleteMe)
+      return;
 
-		HitPawn = KFPawn(Other);
+    HitPawn = KFPawn(Other);
     if ( HitPawn != none )
     {
       class'stub_P_Shotgun'.default.Victim = HitPawn;
@@ -53,11 +53,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
   if ( Instigator != none && KFPlayerReplicationInfo(Instigator.PlayerReplicationInfo) != none && KFPlayerReplicationInfo(Instigator.PlayerReplicationInfo).ClientVeteranSkill != none )
   {
-   	PenDamageReduction = KFPlayerReplicationInfo(Instigator.PlayerReplicationInfo).ClientVeteranSkill.static.GetShotgunPenetrationDamageMulti(KFPlayerReplicationInfo(Instigator.PlayerReplicationInfo),default.PenDamageReduction);
-	}
-	else
-	{
-   	PenDamageReduction = default.PenDamageReduction;
+     PenDamageReduction = KFPlayerReplicationInfo(Instigator.PlayerReplicationInfo).ClientVeteranSkill.static.GetShotgunPenetrationDamageMulti(KFPlayerReplicationInfo(Instigator.PlayerReplicationInfo),default.PenDamageReduction);
+  }
+  else
+  {
+     PenDamageReduction = default.PenDamageReduction;
   }
 
   // dead bodies reduce damage less

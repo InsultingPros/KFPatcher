@@ -3,9 +3,9 @@ class stub_Z_Scrake_Ctrl extends SawZombieController;
 
 function EndState()
 {
-  if (Pawn != None)
+  if (Pawn != none)
   {
-    Pawn.AccelRate = Pawn.Default.AccelRate;
+    Pawn.AccelRate = Pawn.default.AccelRate;
     Pawn.GroundSpeed = ZombieScrake(Pawn).GetOriginalGroundSpeed();
   }
 }

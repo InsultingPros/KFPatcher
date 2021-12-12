@@ -8,33 +8,33 @@ var class<KFWeapon> SingleClass;
 
 function DropFrom(vector StartLocation)
 {
-	local int m;
-	local Pickup Pickup;
-	// local Inventory I;
-	local int AmmoThrown, OtherAmmo;
+  local int m;
+  local Pickup Pickup;
+  // local Inventory I;
+  local int AmmoThrown, OtherAmmo;
 
-	if (!bCanThrow)
-		return;
+  if (!bCanThrow)
+    return;
 
-	AmmoThrown = AmmoAmount(0);
-	ClientWeaponThrown();
+  AmmoThrown = AmmoAmount(0);
+  ClientWeaponThrown();
 
-	for (m = 0; m < NUM_FIRE_MODES; m++)
-	{
-		if (FireMode[m].bIsFiring)
-			StopFire(m);
-	}
+  for (m = 0; m < NUM_FIRE_MODES; m++)
+  {
+    if (FireMode[m].bIsFiring)
+      StopFire(m);
+  }
 
-	if (Instigator != none)
-		DetachFromPawn(Instigator);
+  if (Instigator != none)
+    DetachFromPawn(Instigator);
 
-	if (Instigator.Health > 0)
-	{
-		OtherAmmo = AmmoThrown / 2;
-		AmmoThrown -= OtherAmmo;
+  if (Instigator.Health > 0)
+  {
+    OtherAmmo = AmmoThrown / 2;
+    AmmoThrown -= OtherAmmo;
     // CHANGED HERE
     class'stub_DualPistol'.default.SingleKFW = Instigator.spawn(class'stub_DualPistol'.static.GetSingleWC(self));
-		if (class'stub_DualPistol'.default.SingleKFW != none)
+    if (class'stub_DualPistol'.default.SingleKFW != none)
     {
       class'stub_DualPistol'.default.SingleKFW.GiveTo(Instigator);
       class'stub_DualPistol'.default.SingleKFW.Ammo[0].AmmoAmount = OtherAmmo;
@@ -47,39 +47,39 @@ function DropFrom(vector StartLocation)
     // I = spawn(class'stub_DualPistol'.static.GetSingleWC(self));
     // if (I == none)
     //   log("ALERT!! NO INVENTORY!!!");
-		// I.GiveTo(Instigator);
+    // I.GiveTo(Instigator);
     // if (Weapon(I) == none)
     //   log("ALERT!! NO Weapon(I)!!!");
-		// Weapon(I).Ammo[0].AmmoAmount = OtherAmmo;
+    // Weapon(I).Ammo[0].AmmoAmount = OtherAmmo;
     // CHANGED HERE
-		// OLD: Deagle(I).MagAmmoRemaining = MagAmmoRemaining / 2;
+    // OLD: Deagle(I).MagAmmoRemaining = MagAmmoRemaining / 2;
     // if (KFWeapon(I) == none)
     //   log("ALERT!! NO KFWeapon(I)!!!");
     // KFWeapon(I).MagAmmoRemaining = MagAmmoRemaining / 2;
     // CHANGED HERE
-		// OLD: MagAmmoRemaining = Max(MagAmmoRemaining - Deagle(I).MagAmmoRemaining, 0);
+    // OLD: MagAmmoRemaining = Max(MagAmmoRemaining - Deagle(I).MagAmmoRemaining, 0);
     // MagAmmoRemaining = Max(MagAmmoRemaining - KFWeapon(I).MagAmmoRemaining, 0);
-	}
+  }
 
   // CHANGE HERE
   // OLD: Pickup = spawn(class'DeaglePickup',,, StartLocation);
-	Pickup = spawn(class'stub_DualPistol'.default.SingleKFW.default.PickupClass,,, StartLocation);
+  Pickup = spawn(class'stub_DualPistol'.default.SingleKFW.default.PickupClass,,, StartLocation);
 
-	if (Pickup != none)
-	{
-		Pickup.InitDroppedPickupFor(self);
-		Pickup.Velocity = Velocity;
-		WeaponPickup(Pickup).AmmoAmount[0] = AmmoThrown;
-		if (KFWeaponPickup(Pickup) != none)
-			KFWeaponPickup(Pickup).MagAmmoRemaining = MagAmmoRemaining;
-		if (Instigator.Health > 0)
-			WeaponPickup(Pickup).bThrown = true;
-	}
+  if (Pickup != none)
+  {
+    Pickup.InitDroppedPickupFor(self);
+    Pickup.Velocity = Velocity;
+    WeaponPickup(Pickup).AmmoAmount[0] = AmmoThrown;
+    if (KFWeaponPickup(Pickup) != none)
+      KFWeaponPickup(Pickup).MagAmmoRemaining = MagAmmoRemaining;
+    if (Instigator.Health > 0)
+      WeaponPickup(Pickup).bThrown = true;
+  }
 
   class'stub_DualPistol'.default.SingleKFW = none;
   // class'stub_DualPistol'.default.SingleKFW.Destroy();
   Destroyed();
-	Destroy();
+  Destroy();
 }
 
 

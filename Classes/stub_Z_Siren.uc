@@ -14,7 +14,7 @@ simulated function SpawnTwoShots()
   if (Level.NetMode != NM_Client)
   {
     if (Controller != none && KFDoorMover(Controller.Target) != none)
-      Controller.Target.TakeDamage(ScreamDamage*0.6,Self,Location,vect(0,0,0),ScreamDamageType);
+      Controller.Target.TakeDamage(ScreamDamage*0.6,self,Location,vect(0,0,0),ScreamDamageType);
     else
       HurtRadius(ScreamDamage ,ScreamRadius, ScreamDamageType, ScreamForce, Location);
   }
@@ -35,7 +35,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
   foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
   {
     // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
-    // Or Karma actors in this case. Self inflicted Death due to flying chairs is uncool for a zombie of your stature.
+    // Or Karma actors in this case. self inflicted Death due to flying chairs is uncool for a zombie of your stature.
     if ( (Victims != self) && !Victims.IsA('FluidSurfaceInfo') && !Victims.IsA('KFMonster') && !Victims.IsA('ExtendedZCollision') )
     {
       Momentum = ScreamForce; // bugfix, when pull wasn't applied always  -- PooSH
@@ -59,7 +59,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
       // fixed instigator not set to self!
       Victims.TakeDamage(damageScale * UsedDamageAmount, self, Victims.Location - 0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * dir,(damageScale * Momentum * dir),DamageType);
 
-      if (Instigator != None && Vehicle(Victims) != None && Vehicle(Victims).Health > 0)
+      if (Instigator != none && Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
         Vehicle(Victims).DriverRadiusDamage(UsedDamageAmount, DamageRadius, Instigator.Controller, DamageType, Momentum, HitLocation);
     }
   }

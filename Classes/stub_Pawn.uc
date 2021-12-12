@@ -3,7 +3,7 @@ class stub_Pawn extends KFHumanPawn_Story;
 
 struct FDualList
 {
-	var class<KFWeapon> Single,Dual;
+  var class<KFWeapon> Single,Dual;
 };
 var array<FDualList> DualMap;
 
@@ -21,17 +21,17 @@ var transient byte CashCount;
 
 function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
 {
-	local float InvisTime;
+  local float InvisTime;
 
-	if (bInvis)
-	{
-	  if ( (OldWeapon != none) && (OldWeapon.OverlayMaterial == InvisMaterial) )
-		  InvisTime = OldWeapon.ClientOverlayCounter;
-	  else
-		  InvisTime = 20000;
-	}
+  if (bInvis)
+  {
+    if ( (OldWeapon != none) && (OldWeapon.OverlayMaterial == InvisMaterial) )
+      InvisTime = OldWeapon.ClientOverlayCounter;
+    else
+      InvisTime = 20000;
+  }
   if (HasUDamage() || bInvis)
-    SetWeaponOverlay(None, 0.f, true);
+    SetWeaponOverlay(none, 0.f, true);
 
   super(Pawn).ServerChangedWeapon(OldWeapon, NewWeapon);
 
@@ -47,7 +47,7 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
   if (bBerserk)
     Weapon.StartBerserk();
   else if ( Weapon.bBerserk )
-		Weapon.StopBerserk();
+    Weapon.StopBerserk();
 }
 
 
@@ -93,7 +93,7 @@ exec function TossCash(int Amount)
     CashPickup.RespawnTime = 0;   // Dropped cash doesnt respawn. For obvious reasons.
     CashPickup.Velocity = TossVel;
     CashPickup.DroppedBy = Controller;
-    CashPickup.InitDroppedPickupFor(None);
+    CashPickup.InitDroppedPickupFor(none);
     Controller.PlayerReplicationInfo.Score -= Amount;
 
     if ( Level.Game.NumPlayers > 1 && Level.TimeSeconds - LastDropCashMessageTime > DropCashMessageDelay )
@@ -132,7 +132,7 @@ function Sound GetSound(xPawnSoundGroup.ESoundType soundType)
 
   if( soundType == EST_Land || soundType == EST_Jump )
   {
-    if ( (Base!=None) && (!Base.IsA('LevelInfo')) && (Base.SurfaceType!=0) )
+    if ( (Base!=none) && (!Base.IsA('LevelInfo')) && (Base.SurfaceType!=0) )
     {
       SurfaceTypeID = Base.SurfaceType;
     }
@@ -141,7 +141,7 @@ function Sound GetSound(xPawnSoundGroup.ESoundType soundType)
       Start = Location - Vect(0,0,1)*CollisionHeight;
       End = Start - Vect(0,0,16);
       A = Trace(hl,hn,End,Start,false,,FloorMat);
-      if (FloorMat !=None)
+      if (FloorMat !=none)
         SurfaceTypeID = FloorMat.SurfaceType;
     }
   }
@@ -174,7 +174,7 @@ function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
   local Inventory I, J;
   local float Price;
 
-  if ( !CanBuyNow() || class<KFWeapon>(WClass) == none || class<KFWeaponPickup>(WClass.Default.PickupClass) == none || class'stub_Pawn'.static.HasWeaponClass(WClass) )
+  if ( !CanBuyNow() || class<KFWeapon>(WClass) == none || class<KFWeaponPickup>(WClass.default.PickupClass) == none || class'stub_Pawn'.static.HasWeaponClass(WClass) )
   {
     return;
   }
@@ -182,28 +182,28 @@ function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
   Price = class<KFWeaponPickup>(WClass.default.PickupClass).default.Cost;
 
   if ( KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill != none )
-    Price *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), WClass.Default.PickupClass);
+    Price *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), WClass.default.PickupClass);
 
   // N.B. addition !
   // ItemWeight = class<KFWeapon>(WClass).default.Weight;
 
   if ( class'stub_Pawn'.static.IsDualWeapon(WClass,SecType) )
-	{
-		if ( WClass != class'Dualies' && class'stub_Pawn'.static.HasWeaponClass(class'stub_Pawn'.default.SecType, J) )
-		{
-			// ItemWeight -= class'stub_Pawn'.default.SecType.default.Weight;
-			Price *= 0.5f;
-			class'stub_Pawn'.default.OtherPrice = KFWeapon(J).SellValue;
-			if ( class'stub_Pawn'.default.OtherPrice == -1 )
-			{
-				class'stub_Pawn'.default.OtherPrice = class<KFWeaponPickup>(class'stub_Pawn'.default.SecType.Default.PickupClass).Default.Cost * 0.75;
-				if ( KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill != none )
-					class'stub_Pawn'.default.OtherPrice *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), SecType.Default.PickupClass);
-			}
-		}
-	}
-	else if ( class'stub_Pawn'.static.HasDualies(WClass,Inventory) )
-		return;
+  {
+    if ( WClass != class'Dualies' && class'stub_Pawn'.static.HasWeaponClass(class'stub_Pawn'.default.SecType, J) )
+    {
+      // ItemWeight -= class'stub_Pawn'.default.SecType.default.Weight;
+      Price *= 0.5f;
+      class'stub_Pawn'.default.OtherPrice = KFWeapon(J).SellValue;
+      if ( class'stub_Pawn'.default.OtherPrice == -1 )
+      {
+        class'stub_Pawn'.default.OtherPrice = class<KFWeaponPickup>(class'stub_Pawn'.default.SecType.default.PickupClass).default.Cost * 0.75;
+        if ( KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill != none )
+          class'stub_Pawn'.default.OtherPrice *= KFPlayerReplicationInfo(PlayerReplicationInfo).ClientVeteranSkill.static.GetCostScaling(KFPlayerReplicationInfo(PlayerReplicationInfo), SecType.default.PickupClass);
+      }
+    }
+  }
+  else if ( class'stub_Pawn'.static.HasDualies(WClass,Inventory) )
+    return;
 
   // add
   Price = int(Price); // Truncuate price.
@@ -230,7 +230,7 @@ function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
     KFWeapon(I).FillToInitialAmmo();
     KFWeapon(I).SellValue = Price * 0.75;
     if (class'stub_Pawn'.default.OtherPrice > 0)
-			KFWeapon(I).SellValue += class'stub_Pawn'.default.OtherPrice;
+      KFWeapon(I).SellValue += class'stub_Pawn'.default.OtherPrice;
 
     I.GiveTo(self);
     PlayerReplicationInfo.Score -= Price;
@@ -245,74 +245,74 @@ function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
 
 static final function bool HasWeaponClass( class<Inventory> IC, optional out Inventory Res )
 {
-	local Inventory I;
-	
-	for ( I=default.Inventory; I!=None; I=I.default.Inventory )
+  local Inventory I;
+  
+  for ( I=default.Inventory; I!=none; I=I.default.Inventory )
   {
-    if( I.Class == IC )
-		{
-			Res = I;
-			return true;
-		}
+    if( I.class == IC )
+    {
+      Res = I;
+      return true;
+    }
   }
 
-	return false;
+  return false;
 }
 
 
 static final function bool IsDualWeapon(class<Weapon> W, optional out class<KFWeapon> SingleType )
 {
-	local int i;
-	
-	if (W.Default.DemoReplacement != none)
-	{
-		SingleType = class<KFWeapon>(W.Default.DemoReplacement);
-		return true;
-	}
-
-	for( i=(Default.DualMap.Length-1); i>=0; --i )
+  local int i;
+  
+  if (W.default.DemoReplacement != none)
   {
-    if( W==Default.DualMap[i].Dual )
-		{
-			SingleType = Default.DualMap[i].Single;
-			return true;
-		}
+    SingleType = class<KFWeapon>(W.default.DemoReplacement);
+    return true;
   }
 
-	return false;
+  for( i=(default.DualMap.Length-1); i>=0; --i )
+  {
+    if( W==default.DualMap[i].Dual )
+    {
+      SingleType = default.DualMap[i].Single;
+      return true;
+    }
+  }
+
+  return false;
 }
 
 
 static final function bool HasDualies( class<Weapon> W, Inventory InvList, optional out class<KFWeapon> DualType )
 {
-	local int i;
-	local Inventory In;
-	
-	for ( In=InvList; In!=None; In=In.Inventory )
+  local int i;
+  local Inventory In;
+  
+  for ( In=InvList; In!=none; In=In.Inventory )
   {
-    if( Weapon(In)!=None && Weapon(In).DemoReplacement==W )
-		{
-			DualType = class<KFWeapon>(In.Class);
-			return true;
-		}
+    if( Weapon(In)!=none && Weapon(In).DemoReplacement==W )
+    {
+      DualType = class<KFWeapon>(In.class);
+      return true;
+    }
   }
 
-	for ( i=(Default.DualMap.Length-1); i>=0; --i )
+  for ( i=(default.DualMap.Length-1); i>=0; --i )
   {
-    if ( W == Default.DualMap[i].Single )
-		{
-			DualType = Default.DualMap[i].Dual;
-			W = Default.DualMap[i].Dual;
-			for ( In=InvList; In!=None; In=In.Inventory )
+    if ( W == default.DualMap[i].Single )
+    {
+      DualType = default.DualMap[i].Dual;
+      W = default.DualMap[i].Dual;
+      for ( In=InvList; In!=none; In=In.Inventory )
       {
-        if (In.Class == W)
-					return true;
+        if (In.class == W)
+          return true;
       }
-			return false;
-		}
+      return false;
+    }
   }
 
-	return false;
+  return false;
 }
 
 
@@ -329,8 +329,8 @@ function AddDefaultInventory()
 defaultproperties
 {
   DualMap[0]=(Single=class'Single',Dual=class'Dualies')
-	DualMap[1]=(Single=class'Magnum44Pistol',Dual=class'Dual44Magnum')
-	DualMap[2]=(Single=class'Deagle',Dual=class'DualDeagle')
-	DualMap[3]=(Single=class'FlareRevolver',Dual=class'DualFlareRevolver')
-	DualMap[4]=(Single=class'MK23Pistol',Dual=class'DualMK23Pistol')
+  DualMap[1]=(Single=class'Magnum44Pistol',Dual=class'Dual44Magnum')
+  DualMap[2]=(Single=class'Deagle',Dual=class'DualDeagle')
+  DualMap[3]=(Single=class'FlareRevolver',Dual=class'DualFlareRevolver')
+  DualMap[4]=(Single=class'MK23Pistol',Dual=class'DualMK23Pistol')
 }

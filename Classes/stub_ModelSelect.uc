@@ -4,22 +4,22 @@ class stub_ModelSelect extends KFModelSelect;
 // // Overridden to get rid of the Race combo
 // function InitComponent(GUIController MyController, GUIComponent MyOwner)
 // {
-// 	super(LockedFloatingWindow).Initcomponent(MyController, MyOwner);
+//   super(LockedFloatingWindow).Initcomponent(MyController, MyOwner);
 
-// 	sb_Main.SetPosition(0.040000,0.075000,0.680742,0.555859);
-// 	sb_Main.RightPadding = 0.5;
-// 	sb_Main.ManageComponent(CharList);
+//   sb_Main.SetPosition(0.040000,0.075000,0.680742,0.555859);
+//   sb_Main.RightPadding = 0.5;
+//   sb_Main.ManageComponent(CharList);
 
-// 	class'xUtil'.static.GetPlayerList(PlayerList);
-// 	RefreshCharacterList("DUP");
+//   class'xUtil'.static.GetPlayerList(PlayerList);
+//   RefreshCharacterList("DUP");
 
-// 	// Spawn spinning character actor
-// 	if ( SpinnyDude == None )
-// 		SpinnyDude = PlayerOwner().spawn(class'XInterface.SpinnyWeap');
+//   // Spawn spinning character actor
+//   if ( SpinnyDude == none )
+//     SpinnyDude = PlayerOwner().spawn(class'XInterface.SpinnyWeap');
 
-// 	SpinnyDude.SetDrawType(DT_Mesh);
-// 	SpinnyDude.SetDrawScale(0.9);
-// 	SpinnyDude.SpinRate = 0;
+//   SpinnyDude.SetDrawType(DT_Mesh);
+//   SpinnyDude.SetDrawScale(0.9);
+//   SpinnyDude.SpinRate = 0;
 // }
 
 function RefreshCharacterList(string ExcludedChars, optional string Race)
@@ -28,7 +28,7 @@ function RefreshCharacterList(string ExcludedChars, optional string Race)
   local array<string> Excluded;
 
   // Prevent list from calling OnChange events
-  CharList.List.bNotify = False;
+  CharList.List.bNotify = false;
   CharList.Clear();
 
   Split(ExcludedChars, ";", Excluded);
@@ -51,16 +51,16 @@ function RefreshCharacterList(string ExcludedChars, optional string Race)
         // }
         // else if ( Playerlist[i].LockedPortrait == none )
         // {
-    // 	CharList.List.Add(Playerlist[i].Portrait, i, 1);
+    //   CharList.List.Add(Playerlist[i].Portrait, i, 1);
         // }
         // else
         // {
-        // 	CharList.List.Add(Playerlist[i].LockedPortrait, i, 1);
+        //   CharList.List.Add(Playerlist[i].LockedPortrait, i, 1);
         // }
   }
 
   CharList.List.LockedMat = LockedImage;
-  CharList.List.bNotify = True;
+  CharList.List.bNotify = true;
 }
 
 
@@ -82,56 +82,56 @@ function HandleParameters( string Who, string Team )
 // // Overridden to set Idle Animation
 // function UpdateSpinnyDude()
 // {
-// 	local int idx;
-// 	local xUtil.PlayerRecord Rec;
-// 	local Mesh PlayerMesh;
-// 	local Material BodySkin, HeadSkin;
-// 	local string BodySkinName, HeadSkinName, TeamSuffix;
+//   local int idx;
+//   local xUtil.PlayerRecord Rec;
+//   local Mesh PlayerMesh;
+//   local Material BodySkin, HeadSkin;
+//   local string BodySkinName, HeadSkinName, TeamSuffix;
 
-// 	idx = CharList.List.GetItem();
-// 	if ( idx < 0 || idx >= Playerlist.Length )
-// 		return;
+//   idx = CharList.List.GetItem();
+//   if ( idx < 0 || idx >= Playerlist.Length )
+//     return;
 
-// 	Rec = PlayerList[idx];
+//   Rec = PlayerList[idx];
 
-// 	if (Rec.Race ~= "Juggernaut" || Rec.DefaultName~="Axon" || Rec.DefaultName~="Cyclops" || Rec.DefaultName ~="Virus" )
-// 		SpinnyDudeOffset=vect(250.0,1.00,-14.00);
-// 	else
-// 	    SpinnyDudeOffset=vect(250.0,1.00,-24.00);
+//   if (Rec.Race ~= "Juggernaut" || Rec.DefaultName~="Axon" || Rec.DefaultName~="Cyclops" || Rec.DefaultName ~="Virus" )
+//     SpinnyDudeOffset=vect(250.0,1.00,-14.00);
+//   else
+//       SpinnyDudeOffset=vect(250.0,1.00,-24.00);
 
-// 	PlayerMesh = Mesh(DynamicLoadObject(Rec.MeshName, class'Mesh'));
-// 	if(PlayerMesh == None)
-// 	{
-// 		Log("Could not load mesh: "$Rec.MeshName$" For player: "$Rec.DefaultName);
-// 		return;
-// 	}
+//   PlayerMesh = Mesh(DynamicLoadObject(Rec.MeshName, class'Mesh'));
+//   if(PlayerMesh == none)
+//   {
+//     Log("Could not load mesh: "$Rec.MeshName$" For player: "$Rec.DefaultName);
+//     return;
+//   }
 
-// 	// Get the body skin
-// 	BodySkinName = Rec.BodySkinName;
+//   // Get the body skin
+//   BodySkinName = Rec.BodySkinName;
 
-// 	// Get the head skin
-// 	HeadSkinName = Rec.FaceSkinName;
-// 	if ( Rec.TeamFace )
-// 		HeadSkinName $= TeamSuffix;
+//   // Get the head skin
+//   HeadSkinName = Rec.FaceSkinName;
+//   if ( Rec.TeamFace )
+//     HeadSkinName $= TeamSuffix;
 
-// 	BodySkin = Material(DynamicLoadObject(BodySkinName, class'Material'));
-// 	if(BodySkin == None)
-// 	{
-// 		Log("Could not load body material: "$Rec.BodySkinName$" For player: "$Rec.DefaultName);
-// 		return;
-// 	}
+//   BodySkin = Material(DynamicLoadObject(BodySkinName, class'Material'));
+//   if(BodySkin == none)
+//   {
+//     Log("Could not load body material: "$Rec.BodySkinName$" For player: "$Rec.DefaultName);
+//     return;
+//   }
 
-// 	HeadSkin = Material(DynamicLoadObject(HeadSkinName, class'Material'));
-// 	if(HeadSkin == None)
-// 	{
-// 		Log("Could not load head material: "$HeadSkinName$" For player: "$Rec.DefaultName);
-// 		return;
-// 	}
+//   HeadSkin = Material(DynamicLoadObject(HeadSkinName, class'Material'));
+//   if(HeadSkin == none)
+//   {
+//     Log("Could not load head material: "$HeadSkinName$" For player: "$Rec.DefaultName);
+//     return;
+//   }
 
-// 	SpinnyDude.LinkMesh(PlayerMesh);
-// 	SpinnyDude.Skins[0] = BodySkin;
-// 	SpinnyDude.Skins[1] = HeadSkin;
-// 	SpinnyDude.LoopAnim('Profile_idle');
+//   SpinnyDude.LinkMesh(PlayerMesh);
+//   SpinnyDude.Skins[0] = BodySkin;
+//   SpinnyDude.Skins[1] = HeadSkin;
+//   SpinnyDude.LoopAnim('Profile_idle');
 // }
 
 // // Overridden to stop log spam
@@ -142,28 +142,28 @@ function HandleParameters( string Who, string Team )
 
 // function HandleLockedCharacterClicked(int NewIndex)
 // {
-// 	if ( PlayerOwner() != none && PlayerOwner().PurchaseCharacter(Playerlist[NewIndex].DefaultName) )
-// 	{
-// 		Controller.CloseMenu(true);
-// 	}
+//   if ( PlayerOwner() != none && PlayerOwner().PurchaseCharacter(Playerlist[NewIndex].DefaultName) )
+//   {
+//     Controller.CloseMenu(true);
+//   }
 // }
 
 // defaultproperties
 // {
-// 	co_Race=none
+//   co_Race=none
 
-// 	Begin Object class=KFGUIVertImageListBox name=vil_CharList
-// 		bScaleToParent=true
-// 		bBoundToParent=true
-// 		WinWidth=0.403407
-// 		WinHeight=0.658125
-// 		WinLeft=0.102888
-// 		WinTop=0.185119
-// 		CellStyle=Cell_FixedCount
-// 		NoVisibleRows=3
-// 		NoVisibleCols=4
-// 		TabOrder=0
-// 		OnChange=ListChange
-// 	End Object
-// 	CharList=vil_CharList
+//   Begin Object class=KFGUIVertImageListBox name=vil_CharList
+//     bScaleToParent=true
+//     bBoundToParent=true
+//     WinWidth=0.403407
+//     WinHeight=0.658125
+//     WinLeft=0.102888
+//     WinTop=0.185119
+//     CellStyle=Cell_FixedCount
+//     NoVisibleRows=3
+//     NoVisibleCols=4
+//     TabOrder=0
+//     OnChange=ListChange
+//   End Object
+//   CharList=vil_CharList
 // }

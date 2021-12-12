@@ -178,10 +178,10 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
       }
 
       // Award headshot here, not when zombie died.
-      if( bDecapitated && Class<KFWeaponDamageType>(damageType) != none && instigatedBy != none && KFPlayerController(instigatedBy.Controller) != none )
+      if( bDecapitated && class<KFWeaponDamageType>(damageType) != none && instigatedBy != none && KFPlayerController(instigatedBy.Controller) != none )
       {
         bLaserSightedEBRM14Headshotted = M14EBRBattleRifle(instigatedBy.Weapon) != none && M14EBRBattleRifle(instigatedBy.Weapon).bLaserActive;
-        Class<KFWeaponDamageType>(damageType).Static.ScoredHeadshot(KFSteamStatsAndAchievements(PlayerController(instigatedBy.Controller).SteamStatsAndAchievements), self.Class, bLaserSightedEBRM14Headshotted);
+        class<KFWeaponDamageType>(damageType).Static.ScoredHeadshot(KFSteamStatsAndAchievements(PlayerController(instigatedBy.Controller).SteamStatsAndAchievements), self.class, bLaserSightedEBRM14Headshotted);
       }
     }
   }
@@ -279,14 +279,14 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
   local LavaDeath LD;
   local MiscEmmiter BE;
 
-  AmbientSound = None;
+  AmbientSound = none;
   bCanTeleport = false; // sjs - fix karma going crazy when corpses land on teleporters
   bReplicateMovement = false;
   bTearOff = true;
   bPlayedDeath = true;
   StopBurnFX();
 
-  if (CurrentCombo != None)
+  if (CurrentCombo != none)
     CurrentCombo.Destroy();
 
   HitDamageType = DamageType; // these are replicated to other clients
@@ -302,19 +302,19 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 
   ProcessHitFX() ;
 
-  if ( DamageType != None )
+  if ( DamageType != none )
   {
     if ( DamageType.default.bSkeletize )
     {
-      SetOverlayMaterial(DamageType.Default.DamageOverlayMaterial, 4.0, true);
+      SetOverlayMaterial(DamageType.default.DamageOverlayMaterial, 4.0, true);
       if (!bSkeletized)
       {
-        if ( (Level.NetMode != NM_DedicatedServer) && (SkeletonMesh != None) )
+        if ( (Level.NetMode != NM_DedicatedServer) && (SkeletonMesh != none) )
         {
           if ( DamageType.default.bLeaveBodyEffect )
           {
             BE = spawn(class'MiscEmmiter',self);
-            if ( BE != None )
+            if ( BE != none )
             {
               BE.DamageType = DamageType;
               BE.HitLoc = HitLoc;
@@ -334,16 +334,16 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
         if ( (Level.NetMode != NM_DedicatedServer) && (DamageType == class'FellLava') )
         {
           LD = spawn(class'LavaDeath', , , Location + vect(0, 0, 10), Rotation );
-          if ( LD != None )
+          if ( LD != none )
             LD.SetBase(self);
           //PlaySound( sound'WeaponSounds.BExplosion5', SLOT_None, 1.5*TransientSoundVolume );
         }
       }
     }
-    else if ( DamageType.Default.DeathOverlayMaterial != None )
-      SetOverlayMaterial(DamageType.Default.DeathOverlayMaterial, DamageType.default.DeathOverlayTime, true);
-    else if ( (DamageType.Default.DamageOverlayMaterial != None) && (Level.DetailMode != DM_Low) && !Level.bDropDetail )
-      SetOverlayMaterial(DamageType.Default.DamageOverlayMaterial, 2*DamageType.default.DamageOverlayTime, true);
+    else if ( DamageType.default.DeathOverlayMaterial != none )
+      SetOverlayMaterial(DamageType.default.DeathOverlayMaterial, DamageType.default.DeathOverlayTime, true);
+    else if ( (DamageType.default.DamageOverlayMaterial != none) && (Level.DetailMode != DM_Low) && !Level.bDropDetail )
+      SetOverlayMaterial(DamageType.default.DamageOverlayMaterial, 2*DamageType.default.DamageOverlayTime, true);
   }
 
   // stop shooting
@@ -356,7 +356,7 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
   LifeSpan = RagdollLifeSpan;
 
   GotoState('ZombieDying');
-  if ( BE != None )
+  if ( BE != none )
     return;
   PlayDyingAnimation(DamageType, HitLoc);
 
@@ -401,7 +401,7 @@ state ZombieDying
     }
 
     SetPhysics(PHYS_Falling);
-    if (Controller != None)
+    if (Controller != none)
       Controller.Destroy();
   }
 }
@@ -421,7 +421,7 @@ function bool MeleeDamageTarget(int hitdamage, vector pushdir)
   // local vector TraceDir;
 
   // Never should be done on client.
-  if (Level.NetMode == NM_Client || Controller == None)
+  if (Level.NetMode == NM_Client || Controller == none)
     return false;
   
   // try to limit some zeds
@@ -443,7 +443,7 @@ function bool MeleeDamageTarget(int hitdamage, vector pushdir)
   // DrawStayingDebugLine(Location, Location + (TraceDir * (MeleeRange * 1.4 + Controller.Target.CollisionRadius + CollisionRadius)) , 255,255,0);
 
   // check if still in melee range
-  if ( (Controller.target != None) && (bSTUNNED == false) && (DECAP == false) && (VSize(Controller.Target.Location - Location) <= MeleeRange * 1.4 + Controller.Target.CollisionRadius + CollisionRadius)
+  if ( (Controller.target != none) && (bSTUNNED == false) && (DECAP == false) && (VSize(Controller.Target.Location - Location) <= MeleeRange * 1.4 + Controller.Target.CollisionRadius + CollisionRadius)
     && ((Physics == PHYS_Flying) || (Physics == PHYS_Swimming) || (Abs(Location.Z - Controller.Target.Location.Z)
       <= FMax(CollisionHeight, Controller.Target.CollisionHeight) + 0.5 * FMin(CollisionHeight, Controller.Target.CollisionHeight))) )
   {
@@ -473,7 +473,7 @@ function bool MeleeDamageTarget(int hitdamage, vector pushdir)
       {
         if (!class'GameInfo'.static.UseLowGore())
         {
-          BloodHit = Spawn(class'KFMod.FeedingSpray',self,,Controller.Target.Location,rotator(pushdir));	 //
+          BloodHit = Spawn(class'KFMod.FeedingSpray',self,,Controller.Target.Location,rotator(pushdir));   //
           KFHumanPawn(Controller.Target).SpawnGibs(rotator(pushdir), 1);
           TearBone=KFPawn(Controller.Target).GetClosestBone(HitLocation,Velocity,dummy);
           KFHumanPawn(Controller.Target).HideBone(TearBone);
@@ -487,7 +487,7 @@ function bool MeleeDamageTarget(int hitdamage, vector pushdir)
       }
 
     }
-    else if (Controller.target != None)
+    else if (Controller.target != none)
     {
       // Do more damage if you are attacking another zed so that zeds don't just stand there whacking each other forever! - Ramm
       if (KFMonster(Controller.Target) != none)

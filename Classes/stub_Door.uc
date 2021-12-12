@@ -30,7 +30,7 @@ simulated function GoBang(pawn instigatedBy, vector hitlocation,Vector momentum,
     for(i = 0; i < myTrigger.doorOwners.length; i++)
     {
         kfdm = myTrigger.doorOwners[i];
-        if(kfdm == None)
+        if(kfdm == none)
         {
             continue;
         }

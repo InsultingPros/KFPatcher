@@ -33,8 +33,8 @@ function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector M
          InstigatedBy.PlayerReplicationInfo != none &&
          InstigatedBy.PlayerReplicationInfo.Team != none &&
          InstigatedBy.PlayerReplicationInfo.Team.TeamIndex == PlacedTeam &&
-         Class<KFWeaponDamageType>(damageType) != none &&
-         (Class<KFWeaponDamageType>(damageType).default.bIsExplosive ||
+         class<KFWeaponDamageType>(damageType) != none &&
+         (class<KFWeaponDamageType>(damageType).default.bIsExplosive ||
          InstigatedBy != Instigator) )
   {
     return;
@@ -181,18 +181,18 @@ simulated function Explode(vector HitLocation, vector HitNormal)
   for( i=Rand(6); i<10; i++ )
   {
     P = Spawn(ShrapnelClass,,,,RotRand(true));
-    if( P!=None )
+    if( P!=none )
       P.RemoteRole = ROLE_None;
   }
   if ( EffectIsRelevant(Location,false) )
   {
-    Spawn(Class'KFMod.KFNadeLExplosion',,, HitLocation, rotator(vect(0,0,1)));
+    Spawn(class'KFMod.KFNadeLExplosion',,, HitLocation, rotator(vect(0,0,1)));
     Spawn(ExplosionDecal,self,,HitLocation, rotator(-HitNormal));
   }
 
   // Shake nearby players screens
   LocalPlayer = Level.GetLocalPlayerController();
-  if ( (LocalPlayer != None) && (VSize(Location - LocalPlayer.ViewTarget.Location) < (DamageRadius * 1.5)) )
+  if ( (LocalPlayer != none) && (VSize(Location - LocalPlayer.ViewTarget.Location) < (DamageRadius * 1.5)) )
     LocalPlayer.ShakeView(RotMag, RotRate, RotTime, OffsetMag, OffsetRate, OffsetTime);
 
   if( Role < ROLE_Authority )

@@ -1,6 +1,6 @@
 // imagine almost all functions of this class are bugged
 // amazing, i cummed twice
-class	stub_ShopVolume extends KFShopVolume_Story;
+class  stub_ShopVolume extends KFShopVolume_Story;
 
 
 // fix for accessed nones
@@ -100,7 +100,7 @@ function bool BootPlayers()
   if (!bTelsInit)
     InitTeleports();
   if (!bHasTeles)
-    return False; // Wtf?
+    return false; // Wtf?
 
   UnusedSpots = TelList;
 

@@ -10,9 +10,9 @@ function DoTrace(Vector Start, Rotator Dir)
   local Actor Other;
   local byte HitCount,HCounter;
   local float HitDamage;
-  local array<int>	HitPoints;
+  local array<int>  HitPoints;
   local KFPawn HitPawn;
-  local array<Actor>	IgnoreActors;
+  local array<Actor>  IgnoreActors;
   local Actor DamageActor;
   local int i;
 
@@ -45,7 +45,7 @@ function DoTrace(Vector Start, Rotator Dir)
     DamageActor = none;
 
     Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 1);
-    if( Other==None )
+    if( Other==none )
     {
       break;
     }
@@ -57,7 +57,7 @@ function DoTrace(Vector Start, Rotator Dir)
       continue;
     }
 
-    if( ExtendedZCollision(Other)!=None && Other.Owner!=None )
+    if( ExtendedZCollision(Other)!=none && Other.Owner!=none )
     {
       IgnoreActors[IgnoreActors.Length] = Other;
       IgnoreActors[IgnoreActors.Length] = Other.Owner;
@@ -91,7 +91,7 @@ function DoTrace(Vector Start, Rotator Dir)
       }
       else
       {
-        if ( KFMonster(Other)!=None )
+        if ( KFMonster(Other)!=none )
         {
           IgnoreActors[IgnoreActors.Length] = Other;
           Other.SetCollision(false);
@@ -103,14 +103,14 @@ function DoTrace(Vector Start, Rotator Dir)
         }
         Other.TakeDamage(int(HitDamage), Instigator, HitLocation, Momentum*X, DamageType);
       }
-      if ( (HCounter++) >= 4 || Pawn(DamageActor) == None )
+      if ( (HCounter++) >= 4 || Pawn(DamageActor) == none )
       {
         break;
       }
       HitDamage/=2;
       Start = HitLocation;
     }
-    else if ( HitScanBlockingVolume(Other) == None )
+    else if ( HitScanBlockingVolume(Other) == none )
     {
       if ( KFWeaponAttachment(Weapon.ThirdPersonActor) != none )
         KFWeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other,HitLocation,HitNormal);

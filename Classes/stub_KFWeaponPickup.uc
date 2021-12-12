@@ -5,7 +5,7 @@ class stub_KFWeaponPickup extends KFWeaponPickup;
 function Destroyed()
 {
   if (bDropped && Inventory != none && KFGameType(Level.Game) != none)
-    KFGameType(Level.Game).WeaponDestroyed(class<Weapon>(Inventory.Class));
+    KFGameType(Level.Game).WeaponDestroyed(class<Weapon>(Inventory.class));
 
   super(WeaponPickup).Destroyed();
 }

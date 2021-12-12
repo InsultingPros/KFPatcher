@@ -12,7 +12,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
   local Projectile P;
   local byte i;
 
-  bHasExploded = True;
+  bHasExploded = true;
   BlowUp(HitLocation);
 
   // null reference fix
@@ -22,7 +22,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
   // Shrapnel
   for (i = Rand(6); i < 10; i++)
   {
-    P = Spawn(ShrapnelClass,,,,RotRand(True));
+    P = Spawn(ShrapnelClass,,,,RotRand(true));
     if (P != none)
       P.RemoteRole = ROLE_None;
   }
@@ -35,7 +35,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
   // Shake nearby players screens
   LocalPlayer = Level.GetLocalPlayerController();
-  if ( (LocalPlayer != None) && (VSize(Location - LocalPlayer.ViewTarget.Location) < (DamageRadius * 1.5)) )
+  if ( (LocalPlayer != none) && (VSize(Location - LocalPlayer.ViewTarget.Location) < (DamageRadius * 1.5)) )
     LocalPlayer.ShakeView(RotMag, RotRate, RotTime, OffsetMag, OffsetRate, OffsetTime);
 
   Destroy();

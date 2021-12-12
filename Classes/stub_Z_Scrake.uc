@@ -12,7 +12,7 @@ function bool IsHeadShot(vector HitLoc, vector ray, float AdditionalScale)
   local coords C;
   // we are not gonna use some local vars, sooo... lets hope it wont crash
   local vector HeadLoc, diff; // B, M, not using these two
-	// local float t, DotMM, Distance;
+  // local float t, DotMM, Distance;
   local int look;
   local bool bUseAltHeadShotLocation;
   local bool bWasAnimating;
@@ -132,11 +132,11 @@ simulated function float GetOriginalGroundSpeed()
 function EndState()
 {
   log("FUCK YEA!");
-	if( !bZapped )
-	{
+  if( !bZapped )
+  {
     SetGroundSpeed(GetOriginalGroundSpeed());
   }
-	bCharging = False;
-	if( Level.NetMode!=NM_DedicatedServer )
-		PostNetReceive();
+  bCharging = false;
+  if( Level.NetMode!=NM_DedicatedServer )
+    PostNetReceive();
 }

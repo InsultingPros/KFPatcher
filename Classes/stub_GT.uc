@@ -227,7 +227,7 @@ state MatchInProgress
     local Controller C;
     local Pickup Pickup;
 
-    bTradingDoorsOpen = False;
+    bTradingDoorsOpen = false;
     for( i=0; i<ShopList.Length; i++ )
     {
       if( ShopList[i].bCurrentlyOpen )
@@ -371,13 +371,13 @@ state MatchInProgress
     {
       class'stub_GT'.default.bBossView = false;
 
-      for ( C = Level.ControllerList; C != None; C = C.NextController )
+      for ( C = Level.ControllerList; C != none; C = C.NextController )
       {
-        if( PlayerController(C)!=None )
+        if( PlayerController(C)!=none )
         {
-          if ( C.Pawn == None && !C.PlayerReplicationInfo.bOnlySpectator && bRespawnOnBoss )
+          if ( C.Pawn == none && !C.PlayerReplicationInfo.bOnlySpectator && bRespawnOnBoss )
             C.ServerReStartPlayer();
-          if ( C.Pawn != None )
+          if ( C.Pawn != none )
           {
             PlayerController(C).SetViewTarget(C.Pawn);
             PlayerController(C).ClientSetViewTarget(C.Pawn);
@@ -387,8 +387,8 @@ state MatchInProgress
             PlayerController(C).SetViewTarget(C);
             PlayerController(C).ClientSetViewTarget(C);
           }
-          PlayerController(C).bBehindView = False;
-          PlayerController(C).ClientSetBehindView(False);
+          PlayerController(C).bBehindView = false;
+          PlayerController(C).ClientSetBehindView(false);
         }
       }
     }
@@ -641,32 +641,32 @@ state MatchInProgress
 // Called when we should refresh the game state
 // event Refresh()
 // {
-// 	if ( (!bInitialStateCached) || ( Level.TimeSeconds > CacheRefreshTime )  )
-// 	{
-// 		Level.Game.GetServerInfo(FullCachedServerState);
-// 		Level.Game.GetServerDetails(FullCachedServerState);
+//   if ( (!bInitialStateCached) || ( Level.TimeSeconds > CacheRefreshTime )  )
+//   {
+//     Level.Game.GetServerInfo(FullCachedServerState);
+//     Level.Game.GetServerDetails(FullCachedServerState);
 
-// 		CachedServerState = FullCachedServerState;
+//     CachedServerState = FullCachedServerState;
 
-// 		Level.Game.GetServerPlayers(FullCachedServerState);
+//     Level.Game.GetServerPlayers(FullCachedServerState);
 
-// 		ServerState 		= FullCachedServerState;
-// 		CacheRefreshTime 	= Level.TimeSeconds + 60;
-// 		bInitialStateCached = false;
-// 	}
-// 	else if (Level.Game.NumPlayers != CachePlayerCount)
-// 	{
-// 		ServerState = CachedServerState;
+//     ServerState     = FullCachedServerState;
+//     CacheRefreshTime   = Level.TimeSeconds + 60;
+//     bInitialStateCached = false;
+//   }
+//   else if (Level.Game.NumPlayers != CachePlayerCount)
+//   {
+//     ServerState = CachedServerState;
 
-// 		Level.Game.GetServerPlayers(ServerState);
+//     Level.Game.GetServerPlayers(ServerState);
 
-// 		FullCachedServerState = ServerState;
+//     FullCachedServerState = ServerState;
 
-// 	}
-// 	else
-// 		ServerState = FullCachedServerState;
+//   }
+//   else
+//     ServerState = FullCachedServerState;
 
-// 	CachePlayerCount = Level.Game.NumPlayers;
+//   CachePlayerCount = Level.Game.NumPlayers;
 // }
 
 
@@ -754,23 +754,23 @@ function GetServerDetails( out ServerResponseLine ServerState )
 
   // invasion
   AddServerDetail( ServerState, "InitialWave", InitialWave );
-	AddServerDetail( ServerState, "FinalWave", FinalWave );
+  AddServerDetail( ServerState, "FinalWave", FinalWave );
 
   // teamgame
   AddServerDetail( ServerState, "BalanceTeams",  bBalanceTeams);
-	AddServerDetail( ServerState, "PlayersBalanceTeams",  bPlayersBalanceTeams);
-	AddServerDetail( ServerState, "FriendlyFireScale", int(FriendlyFireScale*100) $ "%" );
+  AddServerDetail( ServerState, "PlayersBalanceTeams",  bPlayersBalanceTeams);
+  AddServerDetail( ServerState, "FriendlyFireScale", int(FriendlyFireScale*100) $ "%" );
 
   // deathmatch
   AddServerDetail( ServerState, "GoalScore", GoalScore );
-	AddServerDetail( ServerState, "TimeLimit", TimeLimit );
-	AddServerDetail( ServerState, "Translocator", bAllowTrans );
-	AddServerDetail( ServerState, "WeaponStay", bWeaponStay );
-	AddServerDetail( ServerState, "ForceRespawn", bForceRespawn );
+  AddServerDetail( ServerState, "TimeLimit", TimeLimit );
+  AddServerDetail( ServerState, "Translocator", bAllowTrans );
+  AddServerDetail( ServerState, "WeaponStay", bWeaponStay );
+  AddServerDetail( ServerState, "ForceRespawn", bForceRespawn );
 
   // unreal mp game
   AddServerDetail( ServerState, "MinPlayers", MinPlayers );
-	AddServerDetail( ServerState, "EndTimeDelay", EndTimeDelay );
+  AddServerDetail( ServerState, "EndTimeDelay", EndTimeDelay );
 }
 
 
@@ -1029,7 +1029,7 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
 function DoBossDeath()
 {
   class'stub_GT'.default.bBossView = true;
-	
+  
   // global switch
   if (class'o_Settings'.default.bAllowZedTime)
   {
@@ -1229,11 +1229,11 @@ final static function MowZeds(out array<KFMonster> Monsters)
 //     }
 //   }
 
-//   if ( (Level.NetMode == NM_ListenServer) && (LocalPlayer != None) )
+//   if ( (Level.NetMode == NM_ListenServer) && (LocalPlayer != none) )
 //         Level.NextURL = Level.NextURL
 //                      $"?Team="$LocalPlayer.GetDefaultURL("Team")
 //                      $"?Name="$LocalPlayer.GetDefaultURL("Name")
-//                      $"?Class="$LocalPlayer.GetDefaultURL("Class")
+//                      $"?class="$LocalPlayer.GetDefaultURL("class")
 //                      $"?Character="$LocalPlayer.GetDefaultURL("Character");
 
 //   // Switch immediately if not networking.
@@ -1259,10 +1259,10 @@ function bool SetPause( BOOL bPause, PlayerController P )
     if (bPause)
       Level.Pauser=P.PlayerReplicationInfo;
     else
-      Level.Pauser=None;
-    return True;
+      Level.Pauser=none;
+    return true;
   }
-  else return False;
+  else return false;
 }
 
 
@@ -1300,12 +1300,12 @@ event PostLogin( PlayerController NewPlayer )
 
   super(Invasion).PostLogin(NewPlayer);
 
-  if (UnrealPlayer(NewPlayer) != None)
+  if (UnrealPlayer(NewPlayer) != none)
     UnrealPlayer(NewPlayer).ClientReceiveLoginMenu(LoginMenuClass, bAlwaysShowLoginMenu);
-  if (NewPlayer.PlayerReplicationInfo.Team != None)
+  if (NewPlayer.PlayerReplicationInfo.Team != none)
     GameEvent("TeamChange",""$NewPlayer.PlayerReplicationInfo.Team.TeamIndex,NewPlayer.PlayerReplicationInfo);
 
-  if (NewPlayer != None && Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == NewPlayer)
+  if (NewPlayer != none && Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == NewPlayer)
     NewPlayer.InitializeVoiceChat();
 
   if (KFPlayerController(NewPlayer) != none)
@@ -1325,7 +1325,7 @@ event PostLogin( PlayerController NewPlayer )
     NewPlayer.GotoState('PlayerWaiting');
   }
 
-  if (KFPlayerController(NewPlayer) != None)
+  if (KFPlayerController(NewPlayer) != none)
     StartInitGameMusic(KFPlayerController(NewPlayer));
 
   // if (bCustomGameLength && NewPlayer.SteamStatsAndAchievements != none)

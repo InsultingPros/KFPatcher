@@ -7,7 +7,7 @@ class stub_Z_Boss extends ZombieBoss;
 
 state FireMissile
 {
-  function AnimEnd( int Channel )
+  function AnimEnd(int Channel)
   {
     local vector Start;
     local Rotator R;
@@ -21,6 +21,7 @@ state FireMissile
     // fix MyAmmo none logs
     if (!SavedFireProperties.bInitialized)
     {
+      // ADDITION!!!
       SavedFireProperties.AmmoClass = class'SkaarjAmmo';
       SavedFireProperties.ProjectileClass = class'BossLAWProj';
       SavedFireProperties.WarnTargetPct = 0.15;
@@ -34,7 +35,7 @@ state FireMissile
 
     R = AdjustAim(SavedFireProperties,Start,100);
     PlaySound(RocketFireSound,SLOT_Interact,2.0,,TransientSoundRadius,,false);
-    // added projectile owner
+    // ADDITION!!! proper projectile owner...
     spawn(class'BossLAWProj',self,,Start,R);
 
     bShotAnim = true;
@@ -59,7 +60,7 @@ state FireMissile
 
 function bool MeleeDamageTarget(int hitdamage, vector pushdir)
 {
-  // added 'Controller != none' check
+  // ADDITION!!! 'Controller != none' check
   if (Controller != none && Controller.Target != none && Controller.Target.IsA('NetKActor'))
     pushdir = Normal(Controller.Target.Location-Location)*100000;
 
@@ -78,7 +79,7 @@ function ClawDamageTarget()
   local KFHumanPawn P;
   local Actor OldTarget;
 
-  // check this from the very start to prevent any log spam
+  // ADDITION!!! check this from the very start to prevent any log spam
   if (Controller == none || IsInState('ZombieDying'))
     return;
 
@@ -89,7 +90,7 @@ function ClawDamageTarget()
 
   GetAnimParams(1, Anim,frame,rate);
 
-  if (Controller != none && Controller.Target != none)
+  if (Controller.Target != none)
     PushDir = (damageForce * Normal(Controller.Target.Location - Location));
   else
     PushDir = damageForce * vector(Rotation);
