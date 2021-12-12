@@ -1,4 +1,4 @@
-class stub_KFStats extends ROEngine.KFSteamStatsAndAchievements;
+class repl_KFStats extends ROEngine.KFSteamStatsAndAchievements;
 
 
 function WonGame(string MapName, float Difficulty, bool bLong)

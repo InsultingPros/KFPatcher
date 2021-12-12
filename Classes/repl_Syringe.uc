@@ -1,4 +1,4 @@
-class stub_Syringe extends Syringe;
+class repl_Syringe extends Syringe;
 
 
 // fix syringe heal ammounts when players die

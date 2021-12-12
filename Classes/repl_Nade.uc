@@ -1,4 +1,4 @@
-class stub_Nade extends Nade;
+class repl_Nade extends Nade;
 
 
 // EXPERIMENTAL!! NOT IN A USE!!!

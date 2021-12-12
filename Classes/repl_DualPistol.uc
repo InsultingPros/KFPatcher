@@ -1,4 +1,4 @@
-class stub_DualPistol extends DualDeagle;
+class repl_DualPistol extends DualDeagle;
 
 
 var KFWeaponPickup WPickup;
@@ -33,18 +33,18 @@ function DropFrom(vector StartLocation)
     OtherAmmo = AmmoThrown / 2;
     AmmoThrown -= OtherAmmo;
     // CHANGED HERE
-    class'stub_DualPistol'.default.SingleKFW = Instigator.spawn(class'stub_DualPistol'.static.GetSingleWC(self));
-    if (class'stub_DualPistol'.default.SingleKFW != none)
+    class'repl_DualPistol'.default.SingleKFW = Instigator.spawn(class'repl_DualPistol'.static.GetSingleWC(self));
+    if (class'repl_DualPistol'.default.SingleKFW != none)
     {
-      class'stub_DualPistol'.default.SingleKFW.GiveTo(Instigator);
-      class'stub_DualPistol'.default.SingleKFW.Ammo[0].AmmoAmount = OtherAmmo;
+      class'repl_DualPistol'.default.SingleKFW.GiveTo(Instigator);
+      class'repl_DualPistol'.default.SingleKFW.Ammo[0].AmmoAmount = OtherAmmo;
       // cursed TWI does this check only for left ammo
       MagAmmoRemaining = max(MagAmmoRemaining / 2, 0);
-      class'stub_DualPistol'.default.SingleKFW.MagAmmoRemaining = MagAmmoRemaining;
+      class'repl_DualPistol'.default.SingleKFW.MagAmmoRemaining = MagAmmoRemaining;
     }
     else
       log("ALERT!!!!! WEAPON NOT SPAWNED FOR PAWN!!!");
-    // I = spawn(class'stub_DualPistol'.static.GetSingleWC(self));
+    // I = spawn(class'repl_DualPistol'.static.GetSingleWC(self));
     // if (I == none)
     //   log("ALERT!! NO INVENTORY!!!");
     // I.GiveTo(Instigator);
@@ -63,7 +63,7 @@ function DropFrom(vector StartLocation)
 
   // CHANGE HERE
   // OLD: Pickup = spawn(class'DeaglePickup',,, StartLocation);
-  Pickup = spawn(class'stub_DualPistol'.default.SingleKFW.default.PickupClass,,, StartLocation);
+  Pickup = spawn(class'repl_DualPistol'.default.SingleKFW.default.PickupClass,,, StartLocation);
 
   if (Pickup != none)
   {
@@ -76,8 +76,8 @@ function DropFrom(vector StartLocation)
       WeaponPickup(Pickup).bThrown = true;
   }
 
-  class'stub_DualPistol'.default.SingleKFW = none;
-  // class'stub_DualPistol'.default.SingleKFW.Destroy();
+  class'repl_DualPistol'.default.SingleKFW = none;
+  // class'repl_DualPistol'.default.SingleKFW.Destroy();
   Destroyed();
   Destroy();
 }

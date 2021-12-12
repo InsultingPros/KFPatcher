@@ -1,4 +1,4 @@
-class stub_GT extends KFGameType;
+class repl_GT extends KFGameType;
 
 
 var transient array<string> sCachedPlayersInfo;
@@ -158,7 +158,7 @@ event InitGame(string Options, out string Error)
   LoadUpMonsterList();
 
   // save options for debug and further use
-  class'stub_GT'.default.CmdLine = Options;
+  class'repl_GT'.default.CmdLine = Options;
 }
 
 
@@ -367,9 +367,9 @@ state MatchInProgress
 
     // set camera for midgame boss's
     // check DoBossDeath()
-    if (class'stub_GT'.default.bBossView && !bWaveBossInProgress && class'stub_GT'.default.BossViewBackTime < Level.TimeSeconds)
+    if (class'repl_GT'.default.bBossView && !bWaveBossInProgress && class'repl_GT'.default.BossViewBackTime < Level.TimeSeconds)
     {
-      class'stub_GT'.default.bBossView = false;
+      class'repl_GT'.default.bBossView = false;
 
       for ( C = Level.ControllerList; C != none; C = C.NextController )
       {
@@ -411,7 +411,7 @@ state MatchInProgress
 
         if ( ViewingBoss != none )
         {
-          class'stub_GT'.default.bBossView = true;
+          class'repl_GT'.default.bBossView = true;
           ViewingBoss.bAlwaysRelevant = true;
 
           for ( C = Level.ControllerList; C != none; C = C.NextController )
@@ -436,9 +436,9 @@ state MatchInProgress
       }
 
       // remove camera from boss
-      else if ( class'stub_GT'.default.bBossView && (ViewingBoss==none || (ViewingBoss!=none && !ViewingBoss.bShotAnim) ) )
+      else if ( class'repl_GT'.default.bBossView && (ViewingBoss==none || (ViewingBoss!=none && !ViewingBoss.bShotAnim) ) )
       {
-        class'stub_GT'.default.bBossView = false;
+        class'repl_GT'.default.bBossView = false;
         ViewingBoss = none;
 
         for ( C = Level.ControllerList; C != none; C = C.NextController )
@@ -795,19 +795,19 @@ function GetServerPlayers( out ServerResponseLine ServerState )
       ServerState.PlayerInfo[i].PlayerNum  = C.PlayerNum;
       // our new functions might be a bit heavy, so limit its execution
       // and use cached string
-      if (Level.TimeSeconds >= class'stub_GT'.default.fDelay)
+      if (Level.TimeSeconds >= class'repl_GT'.default.fDelay)
       {
-        class'stub_GT'.default.sCachedPlayersInfo[i] = class'stub_GT'.static.ParsePlayerName(PRI, C, bWaitingToStartMatch);
-        ServerState.PlayerInfo[i].PlayerName = class'stub_GT'.default.sCachedPlayersInfo[i]; // PRI.PlayerName;
-        class'stub_GT'.default.fDelay = Level.TimeSeconds + class'o_Settings'.default.fRefreshTime;
+        class'repl_GT'.default.sCachedPlayersInfo[i] = class'repl_GT'.static.ParsePlayerName(PRI, C, bWaitingToStartMatch);
+        ServerState.PlayerInfo[i].PlayerName = class'repl_GT'.default.sCachedPlayersInfo[i]; // PRI.PlayerName;
+        class'repl_GT'.default.fDelay = Level.TimeSeconds + class'o_Settings'.default.fRefreshTime;
       }
       else
-        ServerState.PlayerInfo[i].PlayerName = class'stub_GT'.default.sCachedPlayersInfo[i];
+        ServerState.PlayerInfo[i].PlayerName = class'repl_GT'.default.sCachedPlayersInfo[i];
       ServerState.PlayerInfo[i].Score      = PRI.Score;
       ServerState.PlayerInfo[i].Ping       = 4 * PRI.Ping;
       // do we need this?
       // if (bTeamGame && PRI.Team != none)
-      // ServerState.PlayerInfo[i].StatsID = class'stub_GT'.static.GetPerkInfo(PRI); // ServerState.PlayerInfo[i].StatsID | TeamFlag[PRI.Team.TeamIndex];
+      // ServerState.PlayerInfo[i].StatsID = class'repl_GT'.static.GetPerkInfo(PRI); // ServerState.PlayerInfo[i].StatsID | TeamFlag[PRI.Team.TeamIndex];
       i++;
     }
   }
@@ -1028,7 +1028,7 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
 // DO NOT Force slomo for a longer period of time when the boss dies
 function DoBossDeath()
 {
-  class'stub_GT'.default.bBossView = true;
+  class'repl_GT'.default.bBossView = true;
   
   // global switch
   if (class'o_Settings'.default.bAllowZedTime)
@@ -1039,7 +1039,7 @@ function DoBossDeath()
     CurrentZEDTimeDuration = ZEDTimeDuration*2;
     SetGameSpeed(ZedTimeSlomoScale);
 
-    class'stub_GT'.default.BossViewBackTime = Level.Timeseconds + ZEDTimeDuration*1.1;
+    class'repl_GT'.default.BossViewBackTime = Level.Timeseconds + ZEDTimeDuration*1.1;
   }
 
   // changed controller disabling to directly killing zeds
@@ -1128,11 +1128,11 @@ function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
 
       if (KFGameReplicationInfo(GameReplicationInfo).EndGameType == 1)
       {
-        foreach DynamicActors(class'ZombieBoss', class'stub_GT'.default.BossArray)
+        foreach DynamicActors(class'ZombieBoss', class'repl_GT'.default.BossArray)
         {
-          if (class'stub_GT'.default.BossArray == none || class'stub_GT'.default.BossArray.Health <= 0)
+          if (class'repl_GT'.default.BossArray == none || class'repl_GT'.default.BossArray.Health <= 0)
             continue;
-          class'o_Helper'.static.ShowPatHP(Player, class'stub_GT'.default.BossArray);
+          class'o_Helper'.static.ShowPatHP(Player, class'repl_GT'.default.BossArray);
         }
       }
     }
@@ -1172,12 +1172,12 @@ exec function KillZeds()
     if (Monster == none || Monster.Health <= 0 && Monster.bDeleteMe)
       continue;
     // fill our array
-    class'stub_GT'.default.Monsters[class'stub_GT'.default.Monsters.length] = Monster;
+    class'repl_GT'.default.Monsters[class'repl_GT'.default.Monsters.length] = Monster;
   }
 
   // and i have to do this hacky hack to avoid crashes
   // pass it to our new kill function
-  class'stub_GT'.static.MowZeds(class'stub_GT'.default.Monsters);
+  class'repl_GT'.static.MowZeds(class'repl_GT'.default.Monsters);
 }
 
 
@@ -1219,13 +1219,13 @@ final static function MowZeds(out array<KFMonster> Monsters)
 //     if ( NetConnection( P.Player) != none )
 //     {
 //       P.ClientTravel( Eval( Instr(URL,"?") > 0, Left(URL,Instr(URL,"?")), URL), TRAVEL_Relative, bItems );
-//       class'stub_GT'.static.TriggerGC(p);
+//       class'repl_GT'.static.TriggerGC(p);
 //     }
 //     else
 //     {
 //       LocalPlayer = P;
 //       P.PreClientTravel();
-//       class'stub_GT'.static.TriggerGC(p);
+//       class'repl_GT'.static.TriggerGC(p);
 //     }
 //   }
 

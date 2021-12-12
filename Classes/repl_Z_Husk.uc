@@ -1,4 +1,4 @@
-class stub_Z_Husk extends ZombieHusk_HALLOWEEN;
+class repl_Z_Husk extends ZombieHusk_HALLOWEEN;
 
 
 function SpawnTwoShots()

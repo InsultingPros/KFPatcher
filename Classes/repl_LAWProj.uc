@@ -1,4 +1,4 @@
-class stub_LAWProj extends LAWProj;
+class repl_LAWProj extends LAWProj;
 
 
 // removed SirenScream damage type check since 90% of the time they don't disentigrate anyway...

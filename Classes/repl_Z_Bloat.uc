@@ -1,4 +1,4 @@
-class stub_Z_Bloat extends ZombieBloat;
+class repl_Z_Bloat extends ZombieBloat;
 
 
 function SpawnTwoShots()

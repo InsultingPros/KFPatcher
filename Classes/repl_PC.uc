@@ -1,4 +1,4 @@
-class stub_PC extends KFPlayerController_Story;
+class repl_PC extends KFPlayerController_Story;
 
 
 var byte MaxVoiceMsgIn10s, contsMaxMsg;
@@ -60,8 +60,8 @@ function bool AllowVoiceMessage(name MessageType)
     OldMessageTime = Level.TimeSeconds;
     if (TimeSinceLastMsg < 10)
     {
-      if (class'stub_PC'.default.MaxVoiceMsgIn10s > 0)
-        class'stub_PC'.default.MaxVoiceMsgIn10s--;
+      if (class'repl_PC'.default.MaxVoiceMsgIn10s > 0)
+        class'repl_PC'.default.MaxVoiceMsgIn10s--;
       else
       {
         ClientMessage("Keep quiet for " $ ceil(10 - TimeSinceLastMsg) $"s");
@@ -69,7 +69,7 @@ function bool AllowVoiceMessage(name MessageType)
       }
     }
     else
-      class'stub_PC'.default.MaxVoiceMsgIn10s = class'stub_PC'.default.contsMaxMsg;
+      class'repl_PC'.default.MaxVoiceMsgIn10s = class'repl_PC'.default.contsMaxMsg;
   }
   return true;
 }

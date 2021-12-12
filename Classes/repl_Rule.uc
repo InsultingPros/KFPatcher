@@ -1,4 +1,4 @@
-class stub_Rule extends GameRules;
+class repl_Rule extends GameRules;
 
 
 // no map switch if we leave from lobby

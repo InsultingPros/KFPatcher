@@ -1,4 +1,4 @@
-class stub_Pipe extends PipeBombProjectile;
+class repl_Pipe extends PipeBombProjectile;
 
 
 var sound BoomSound;
@@ -175,7 +175,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     NetUpdateTime = Level.TimeSeconds - 1;
   }
 
-  PlaySound(class'stub_Pipe'.default.BoomSound,,2.0);
+  PlaySound(class'repl_Pipe'.default.BoomSound,,2.0);
 
   // Shrapnel
   for( i=Rand(6); i<10; i++ )

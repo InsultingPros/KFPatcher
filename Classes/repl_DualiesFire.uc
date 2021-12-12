@@ -1,4 +1,4 @@
-class stub_DualiesFire extends DualiesFire;
+class repl_DualiesFire extends DualiesFire;
 
 
 var int penValue;
@@ -36,11 +36,11 @@ function DoTrace(Vector Start, Rotator Dir)
   // MK23Fire, DualMK23Fire = 3
   // DeagleFire, DualDeagleFire, Magnum44Fire, Dual44MagnumFire = 10
   if (self.class.name == 'MK23Fire' || self.class.name == 'DualMK23Fire')
-    class'stub_DualiesFire'.default.penValue = 3;
+    class'repl_DualiesFire'.default.penValue = 3;
   else
-    class'stub_DualiesFire'.default.penValue = 10;
+    class'repl_DualiesFire'.default.penValue = 10;
 
-  while( (HitCount++) < class'stub_DualiesFire'.default.penValue ) // there was fixed value here per parent class
+  while( (HitCount++) < class'repl_DualiesFire'.default.penValue ) // there was fixed value here per parent class
   {
     DamageActor = none;
 

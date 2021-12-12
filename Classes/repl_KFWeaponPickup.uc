@@ -1,4 +1,4 @@
-class stub_KFWeaponPickup extends KFWeaponPickup;
+class repl_KFWeaponPickup extends KFWeaponPickup;
 
 
 // fix accessed none Inventory for destroyed weapon pickups

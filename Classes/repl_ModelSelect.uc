@@ -1,4 +1,4 @@
-class stub_ModelSelect extends KFModelSelect;
+class repl_ModelSelect extends KFModelSelect;
 
 
 // // Overridden to get rid of the Race combo

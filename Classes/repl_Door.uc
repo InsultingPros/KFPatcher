@@ -1,4 +1,4 @@
-class stub_Door extends KFDoorMover;
+class repl_Door extends KFDoorMover;
 
 
 // Forces zeds to actually ignore doors instead of just standing at them if bZombiesIgnore is true

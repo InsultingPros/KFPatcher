@@ -1,6 +1,6 @@
 // imagine almost all functions of this class are bugged
 // amazing, i cummed twice
-class  stub_ShopVolume extends KFShopVolume_Story;
+class  repl_ShopVolume extends KFShopVolume_Story;
 
 
 // fix for accessed nones
