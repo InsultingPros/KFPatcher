@@ -1335,4 +1335,9 @@ event PostLogin( PlayerController NewPlayer )
 }
 
 
-defaultproperties{}
+defaultproperties
+{
+  GameName="Dummy Floor"
+  Description="Dummy GT for dark magic."
+  Acronym="DF"
+}

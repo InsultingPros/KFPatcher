@@ -28,12 +28,22 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
   local vector dir;
   local float UsedDamageAmount;
 
+  // DEBUG!!!
+  StopWatch(false);
+
   if (bHurtEntry)
     return;
 
   bHurtEntry = true;
-  foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
+
+  // was VisibleCollidingActors
+  foreach CollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
   {
+    // some optimizations
+    // https://wiki.beyondunreal.com/Legacy:Code_Optimization#Optimize_iterator_use
+    if (Victims.bStatic || Victims.Physics == PHYS_None || !FastTrace(Victims.Location, Location) )
+        continue; // skip this actor
+
     // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
     // Or Karma actors in this case. self inflicted Death due to flying chairs is uncool for a zombie of your stature.
     if ((Victims != self) && !Victims.IsA('FluidSurfaceInfo') && !Victims.IsA('KFMonster') && !Victims.IsA('ExtendedZCollision'))
@@ -63,5 +73,8 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         Vehicle(Victims).DriverRadiusDamage(UsedDamageAmount, DamageRadius, Instigator.Controller, DamageType, Momentum, HitLocation);
     }
   }
+
   bHurtEntry = false;
+
+  StopWatch(true);
 }
