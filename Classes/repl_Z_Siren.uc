@@ -29,7 +29,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
   local float UsedDamageAmount;
 
   // DEBUG!!!
-  StopWatch(false);
+  // StopWatch(false);
 
   if (bHurtEntry)
     return;
@@ -76,5 +76,5 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
   bHurtEntry = false;
 
-  StopWatch(true);
+  // StopWatch(true);
 }
