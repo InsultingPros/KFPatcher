@@ -1,4 +1,5 @@
-class repl_Syringe extends Syringe;
+class repl_Syringe extends Syringe
+  CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus
 
 
 // fix syringe heal ammounts when players die

@@ -1,4 +1,5 @@
-class repl_DualPistol extends DualDeagle;
+class repl_DualPistol extends DualDeagle
+  CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus
 
 
 var KFWeaponPickup WPickup;
