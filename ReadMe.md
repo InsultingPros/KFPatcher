@@ -19,7 +19,7 @@ Package contains:
 
 At the moment of 29.07.2020 only from [**CoreAPI**].
 
-Use [KFCmdlet and it's batches](https://github.com/InsultingPros/KFCmdlet) for easy compilation.
+Use [KF Compile Tool](https://github.com/InsultingPros/KFCompileTool) for easy compilation.
 
 ```cpp
 EditPackages=COREAPI
