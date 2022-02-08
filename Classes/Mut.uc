@@ -23,6 +23,12 @@ event PreBeginPlay()
 }
 
 
+// function ServerTraveling(string URL, bool bItems)
+// {
+//   super.ServerTraveling(URL, bItems);
+// }
+
+
 // 127kb ~80 array items
 // server first run - 85ms
 // map switch - 45ms 

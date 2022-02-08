@@ -1,80 +1,7 @@
 class repl_PC extends KFPlayerController_Story;
 
 
-var byte MaxVoiceMsgIn10s, contsMaxMsg;
-
-
-//=============================================================================
-//                       slomo + voice messages fuckup fix
-//=============================================================================
-
-// all 3 functions are from ScrN
-// KFMod.KFPlayerController
-simulated function ClientEnterZedTime()
-{
-  // ADDITION!!!
-  // this 'xPlayer' bool is not being used anywhere so let's use it
-  // we need this bool for voice messages
-  autozoom = true;
-
-  CheckZEDMessage();
-
-  if (Pawn != none && Pawn.Weapon != none)
-    Pawn.Weapon.PlaySound(Sound'KF_PlayerGlobalSnd.Zedtime_Enter', SLOT_Talk, 2.0,false,500.0,1.1/Level.TimeDilation,false);
-  else
-    PlaySound(Sound'KF_PlayerGlobalSnd.Zedtime_Enter', SLOT_Talk, 2.0,false,500.0,1.1/Level.TimeDilation,false);
-}
-
-
-// KFMod.KFPlayerController
-simulated function ClientExitZedTime()
-{
-  // ADDITION!!!
-  // this 'xPlayer' bool is not being used anywhere so let's use it
-  // we need this bool for voice messages
-  autozoom = false;
-
-  if (Pawn != none && Pawn.Weapon != none)
-    Pawn.Weapon.PlaySound(Sound'KF_PlayerGlobalSnd.Zedtime_Exit', SLOT_Talk, 2.0,false,500.0,1.1/Level.TimeDilation,false);
-  else
-    PlaySound(Sound'KF_PlayerGlobalSnd.Zedtime_Exit', SLOT_Talk, 2.0,false,500.0,1.1/Level.TimeDilation,false);
-}
-
-
-// Engine.PlayerController
-function bool AllowVoiceMessage(name MessageType)
-{
-  if (Level.NetMode == NM_Standalone || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
-    return true;
-
-  if (Level.TimeSeconds - OldMessageTime < 3)
-  {
-    if (MessageType == 'TAUNT' || MessageType == 'AUTOTAUNT')
-      return false;
-    if (Level.TimeSeconds - OldMessageTime < 1 )
-      return false;
-  }
-
-  // zed time screws up voice messages
-  if (!autozoom && MessageType != 'TRADER' && MessageType != 'AUTO')
-  {
-    OldMessageTime = Level.TimeSeconds;
-    if (Level.TimeSeconds - OldMessageTime < 10)
-    {
-      if (class'repl_PC'.default.MaxVoiceMsgIn10s > 0)
-        class'repl_PC'.default.MaxVoiceMsgIn10s--;
-      else
-      {
-        ClientMessage("Keep quiet for " $ ceil(10 - Level.TimeSeconds - OldMessageTime) $"s");
-        return false;
-      }
-    }
-    else
-      class'repl_PC'.default.MaxVoiceMsgIn10s = class'repl_PC'.default.contsMaxMsg;
-  }
-  return true;
-}
-
+// TODO 1. fix voice messages in slomo
 
 //=============================================================================
 //                        no delay suicide
@@ -207,11 +134,4 @@ function BecomeSpectator()
 function bool IsInInventory(class<Pickup> PickupToCheck, bool bCheckForEquivalent, bool bCheckForVariant)
 {
   return false;
-}
-
-
-defaultproperties
-{
-  MaxVoiceMsgIn10s=7
-  contsMaxMsg=7
 }
