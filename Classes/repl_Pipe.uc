@@ -1,9 +1,6 @@
 class repl_Pipe extends PipeBombProjectile;
 
 
-var sound BoomSound;
-
-
 static function PreloadAssets()
 {
   UpdateDefaultStaticMesh(StaticMesh(DynamicLoadObject(default.StaticMeshRef, class'StaticMesh', true)));
@@ -175,7 +172,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     NetUpdateTime = Level.TimeSeconds - 1;
   }
 
-  PlaySound(class'repl_Pipe'.default.BoomSound,,2.0);
+  // PlaySound(class'repl_Pipe'.default.BoomSound,,2.0);
+  PlaySound(sound(DynamicLoadObject("Inf_Weapons.antitankmine_explode01", class'Sound', true)),,2.0);
 
   // Shrapnel
   for( i=Rand(6); i<10; i++ )
@@ -199,10 +197,4 @@ simulated function Explode(vector HitLocation, vector HitNormal)
   {
     Destroy();
   }
-}
-
-
-defaultproperties
-{
-  BoomSound=SoundGroup'Inf_Weapons.antitankmine.antitankmine_explode01'
 }
