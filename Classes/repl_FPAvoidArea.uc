@@ -1,20 +1,22 @@
 class repl_FPAvoidArea extends FleshPoundAvoidArea;
 
 
-// added KFMonsterController check
+// FleshPoundAvoidArea.Touch
 function Touch(actor Other)
 {
-  if ((Pawn(Other) != none) && KFMonsterController(Pawn(Other).Controller) != none && RelevantTo(Pawn(Other)))
-    KFMonsterController(Pawn(Other).Controller).AvoidThisMonster(KFMonst);
+    // added KFMonsterController check
+    if ((Pawn(Other) != none) && KFMonsterController(Pawn(Other).Controller) != none && RelevantTo(Pawn(Other)))
+        KFMonsterController(Pawn(Other).Controller).AvoidThisMonster(KFMonst);
 }
 
 
-// added health check, 1500 is FP's base health
+// FleshPoundAvoidArea.RelevantTo
 function bool RelevantTo(Pawn P)
 {
-  if (KFMonster(p) != none && KFMonster(p).default.Health >= 1500) //  || KFMonster(p).IsInState('')) )
-    return false;
+    // added health check, 1500 is FP's base health
+    if (KFMonster(p) != none && KFMonster(p).default.Health >= 1500)
+        return false;
 
-  return (KFMonst != none && VSizeSquared(KFMonst.Velocity) >= 75 && super(AvoidMarker).RelevantTo(P)
-     && KFMonst.Velocity dot (P.Location - KFMonst.Location) > 0  );
+    return (KFMonst != none && VSizeSquared(KFMonst.Velocity) >= 75 && super(AvoidMarker).RelevantTo(P)
+            && KFMonst.Velocity dot (P.Location - KFMonst.Location) > 0  );
 }
