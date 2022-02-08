@@ -1,6 +1,6 @@
 # KF Patcher Project
 
-## Goal
+[**CoreAPI**]: https://github.com/InsultingPros/CoreAPI 'jaja'
 
 This is an attempt to fix most game breaking bugs and log spam in **Killing Floor 1**. And some additional features to make some utility mutators 'OBSOLOTE' :innocent:
 
@@ -25,5 +25,3 @@ Use [KF Compile Tool](https://github.com/InsultingPros/KFCompileTool) for easy c
 EditPackages=COREAPI
 EditPackages=KFPatcher
 ```
-
-[**CoreAPI**]: https://github.com/InsultingPros/CoreAPI 'jaja'
