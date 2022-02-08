@@ -1,6 +1,7 @@
 class repl_Z_Bloat extends ZombieBloat;
 
 
+// ZombieBloat.SpawnTwoShots
 function SpawnTwoShots()
 {
   local vector X,Y,Z, FireStart;
