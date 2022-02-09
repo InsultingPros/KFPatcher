@@ -34,10 +34,26 @@ function Mutate(string MutateString, PlayerController Sender)
     // only let allowed people
     if (!bAllowExecute(Sender))
         return;
-    
-    if (MutateString ~= "")
-    {
 
+    if (MutateString ~= "zedtime" || MutateString ~= "slomo" || MutateString ~= "sm")
+    {
+        class'o_Settings'.default.bAllowZedTime = !class'o_Settings'.default.bAllowZedTime;
+        sendMsg(Sender, "Zed time status: " $ class'o_Settings'.default.bAllowZedTime);
+    }
+    else if (MutateString ~= "alltrader" || MutateString ~= "at")
+    {
+        class'o_Settings'.default.bAllTradersOpen = !class'o_Settings'.default.bAllTradersOpen;
+        sendMsg(Sender, "All traders open status: " $ class'o_Settings'.default.bAllTradersOpen);
+    }
+    else if (MutateString ~= "buyeverywhere")
+    {
+        class'o_Settings'.default.bBuyEverywhere = !class'o_Settings'.default.bBuyEverywhere;
+        sendMsg(Sender, "All traders open status: " $ class'o_Settings'.default.bBuyEverywhere);
+    }
+    else if (MutateString ~= "saveconfig")
+    {
+        class'o_Settings'.static.StaticSaveConfig();
+        sendMsg(Sender, "Config saved!");
     }
 }
 
@@ -103,6 +119,12 @@ final private function bool bAllowExecute(PlayerController Sender)
         if (AllowedSteamID[i] ~= SenderID)
             return true;
     }
+}
+
+
+final private function sendMsg(PlayerController Sender, coerce string Msg)
+{
+    Sender.TeamMessage(Sender.PlayerReplicationInfo, Msg, 'KFPatcher');
 }
 
 
