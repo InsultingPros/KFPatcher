@@ -1,5 +1,5 @@
 class o_Settings extends object
-  config(KFPatcher);
+  config(KFPatcherSettings);
 
 
 var() config bool bBuyEverywhere;
