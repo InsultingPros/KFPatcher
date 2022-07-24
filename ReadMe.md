@@ -4,22 +4,24 @@
 
 This is an attempt to fix most game breaking bugs and log spam in **Killing Floor 1**. And some additional features to make some utility mutators 'OBSOLOTE' :innocent:
 
-You can check the [To-Do](Docs/To-Do.md) and [Feature List](Docs/Feature&#32;List.md) for more details.
+You can check the [To-Do](Docs/To-Do.md) and [Feature List](Docs/Features.md) for more details.
 
 ## Internals
 
-At the moment of 29.07.2020 consists of 1 package and 1 **config** file that allows you to choose what fixes to enable.
+Config files:
 
-Package contains:
+- [KFPatcherSettings.ini](Configs/KFPatcherSettings.ini): contains few gameplay specific settings.
+- [KFPatcherFuncs.ini](Configs/KFPatcherFuncs.ini): contains all functions that we replace.
 
-- A simple *mutator* which uses [**CoreAPI**] functionality to hooks functions.
-- *stub*'s that extend the very most child class of target. E.G. *stubPC* contains fixes for controllers and it extends *KFPlayerController_Story*.
+Important classes:
 
-## Dependancies
+- A simple [mutator](Classes/Mut.uc) which uses [**CoreAPI**] functionality to hook functions.
+- `repl_` classes that extend the very most child class of our target. For example [repl_PC](Classes/repl_PC.uc) contains fixes for controllers and it extends [KFPlayerController_Story](https://github.com/InsultingPros/KillingFloor/blob/main/KFStoryGame/Classes/KFPlayerController_Story.uc).
 
-At the moment of 29.07.2020 only from [**CoreAPI**].
+## Building
 
-Use [KF Compile Tool](https://github.com/InsultingPros/KFCompileTool) for easy compilation.
+- Package depends on [**CoreAPI**].
+- Use [KFCompileTool](https://github.com/InsultingPros/KFCompileTool) for easy compilation.
 
 ```cpp
 EditPackages=COREAPI
