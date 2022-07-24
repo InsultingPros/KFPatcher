@@ -4,6 +4,7 @@ class repl_P_Shotgun extends ShotgunBullet;
 var Pawn Victim;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/ShotgunBullet.uc#L109
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
   local vector X;
@@ -43,8 +44,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
   {
     if ( Pawn(Other) != none )
       class'repl_P_Shotgun'.default.Victim = Pawn(Other);
-  
-    // fixed point blank penetration -> X vector 
+
+    // fixed point blank penetration -> X vector \
     if ( class'repl_P_Shotgun'.default.Victim != none && Victim.IsHeadShot(HitLocation, X, 1.0))
       class'repl_P_Shotgun'.default.Victim.TakeDamage(Damage * HeadShotDamageMult, Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
     else

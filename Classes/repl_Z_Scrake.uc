@@ -4,6 +4,7 @@ class repl_Z_Scrake extends ZombieScrake;
 var ZombieScrake sc;
 
 
+// EXPERIMENTAL
 // vector HeadOffset = vect(0,0,0)
 // KFMonster = M
 // Poosh (c) coz i was lazy to do lame hack
@@ -104,6 +105,7 @@ static final function bool TestHitboxSphere(vector HitLoc, vector Ray, vector Sp
 }
 
 
+// EXPERIMENTAL
 // Getter for the Original groundspeed of the zed (adjusted for difficulty, etc)
 simulated function float GetOriginalGroundSpeed()
 {
@@ -129,6 +131,7 @@ simulated function float GetOriginalGroundSpeed()
 }
 
 
+// EXPERIMENTAL
 function EndState()
 {
   log("FUCK YEA!");

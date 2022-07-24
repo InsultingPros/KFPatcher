@@ -7,6 +7,7 @@ class repl_PC extends KFPlayerController_Story;
 //                        no delay suicide
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/Engine/Classes/PlayerController.uc#L3689
 // Engine.PlayerController
 exec function Suicide()
 {
@@ -19,6 +20,7 @@ exec function Suicide()
 //                        you will become #perk spam
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFPlayerController.uc#L1405
 // simulated SendSelectedVeterancyToServer() -> to this
 // no more "you will become %perk" spam when you join midgame
 // can change perk unlimited amount of times
@@ -74,6 +76,7 @@ function SelectVeterancy(class<KFVeterancyTypes> VetSkill, optional bool bForceC
 //                    blank spectator join message fix
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFPlayerController.uc#L3004
 // worst case since repInfo creates after this function call
 // should I check its existance for other parts of this function???
 // KFMod.KFPlayerController
@@ -106,6 +109,7 @@ function JoinedAsSpectatorOnly()
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFPlayerController.uc#L928
 // KFMod.KFPlayerController
 function BecomeSpectator()
 {
@@ -131,6 +135,7 @@ function BecomeSpectator()
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFPlayerController.uc#L3080
 function bool IsInInventory(class<Pickup> PickupToCheck, bool bCheckForEquivalent, bool bCheckForVariant)
 {
   return false;

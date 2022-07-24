@@ -1,19 +1,24 @@
 class repl_Pipe extends PipeBombProjectile;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/PipeBombProjectile.uc#L46
 static function PreloadAssets()
 {
+  // remove sound ref loading from here
   UpdateDefaultStaticMesh(StaticMesh(DynamicLoadObject(default.StaticMeshRef, class'StaticMesh', true)));
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/PipeBombProjectile.uc#L53
 static function bool UnloadAssets()
 {
+  // remove sound ref assigning to none
   UpdateDefaultStaticMesh(none);
   return true;
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/PipeBombProjectile.uc#L485
 // fix insane damage while being triggered with m1 spam
 function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> damageType, optional int HitIndex)
 {
@@ -48,6 +53,7 @@ function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector M
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/PipeBombProjectile.uc#L111
 // NPC, dead players trigger fix
 function Timer()
 {
@@ -154,6 +160,7 @@ function Timer()
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/PipeBombProjectile.uc#L284
 // explode sounds none fix
 simulated function Explode(vector HitLocation, vector HitNormal)
 {

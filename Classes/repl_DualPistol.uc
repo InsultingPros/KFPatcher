@@ -7,6 +7,7 @@ var KFWeapon SingleKFW;
 var class<KFWeapon> SingleClass;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/DualDeagle.uc#L101
 function DropFrom(vector StartLocation)
 {
   local int m;

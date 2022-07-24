@@ -5,8 +5,10 @@ class repl_Z_Boss extends ZombieBoss;
 //                              ammo class == none fix
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieBoss.uc#L957
 state FireMissile
 {
+  // https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieBoss.uc#L971
   function AnimEnd(int Channel)
   {
     local vector Start;
@@ -58,6 +60,7 @@ state FireMissile
 //                              ctrl == none fixes
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieBoss.uc#L1016
 function bool MeleeDamageTarget(int hitdamage, vector pushdir)
 {
   // ADDITION!!! 'Controller != none' check
@@ -68,6 +71,7 @@ function bool MeleeDamageTarget(int hitdamage, vector pushdir)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieBoss.uc#L1768
 // non-state one
 function ClawDamageTarget()
 {
@@ -136,8 +140,10 @@ function ClawDamageTarget()
 //                   headshot fix while he is machinegunning
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieBoss.uc#L734
 state FireChaingun
 {
+  // https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieBoss.uc#L748
   function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> damageType, optional int HitIndex)
   {
     local float EnemyDistSq, DamagerDistSq;

@@ -19,6 +19,7 @@ var transient byte CashCount;
 //                             weapon == none fix
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/XGame/Classes/xPawn.uc#L1857
 function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
 {
   local float InvisTime;
@@ -55,6 +56,7 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
 //                             Dosh shit
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFPawn.uc#L2964
 // toss some of your cash away. (to help a cash-strapped ally or perhaps just to party like its 1994)
 exec function TossCash(int Amount)
 {
@@ -117,6 +119,7 @@ exec function TossCash(int Amount)
 //                             Sound none on player death
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFPawn.uc#L3985
 // fix for none soundgroup calls on death
 function Sound GetSound(xPawnSoundGroup.ESoundType soundType)
 {
@@ -150,6 +153,7 @@ function Sound GetSound(xPawnSoundGroup.ESoundType soundType)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFPawn.uc#L3087
 // allows us to buy from trader menu from anywhere
 function bool CanBuyNow()
 {
@@ -169,6 +173,8 @@ function bool CanBuyNow()
 //                             Dualies Print Fix
 //=============================================================================
 
+// EXPERIMENTAL
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFPawn.uc#L3159
 function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
 {
   local Inventory I, J;
@@ -246,7 +252,7 @@ function ServerBuyWeapon( class<Weapon> WClass, float ItemWeight )
 static final function bool HasWeaponClass( class<Inventory> IC, optional out Inventory Res )
 {
   local Inventory I;
-  
+
   for ( I=default.Inventory; I!=none; I=I.default.Inventory )
   {
     if( I.class == IC )
@@ -263,7 +269,7 @@ static final function bool HasWeaponClass( class<Inventory> IC, optional out Inv
 static final function bool IsDualWeapon(class<Weapon> W, optional out class<KFWeapon> SingleType )
 {
   local int i;
-  
+
   if (W.default.DemoReplacement != none)
   {
     SingleType = class<KFWeapon>(W.default.DemoReplacement);
@@ -287,7 +293,7 @@ static final function bool HasDualies( class<Weapon> W, Inventory InvList, optio
 {
   local int i;
   local Inventory In;
-  
+
   for ( In=InvList; In!=none; In=In.Inventory )
   {
     if( Weapon(In)!=none && Weapon(In).DemoReplacement==W )
@@ -316,6 +322,8 @@ static final function bool HasDualies( class<Weapon> W, Inventory InvList, optio
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFHumanPawn.uc#L840
+// remove perk specific weapons
 function AddDefaultInventory()
 {
   CreateInventory("KFMod.Knife");

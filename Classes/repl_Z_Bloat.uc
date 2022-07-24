@@ -1,6 +1,7 @@
 class repl_Z_Bloat extends ZombieBloat;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieBloat.uc#L207
 // ZombieBloat.SpawnTwoShots
 function SpawnTwoShots()
 {

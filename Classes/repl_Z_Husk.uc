@@ -1,6 +1,7 @@
 class repl_Z_Husk extends ZombieHusk_HALLOWEEN;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieHusk.uc#L155
 function SpawnTwoShots()
 {
   local vector X,Y,Z, FireStart;

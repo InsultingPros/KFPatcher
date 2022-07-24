@@ -21,6 +21,7 @@ var transient ZombieBoss BossArray;
 //                      GameLength / MaxPlayers Fix
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L658
 // max players limit ^, gamelenght fix, save cmdline
 event InitGame(string Options, out string Error)
 {
@@ -167,10 +168,12 @@ event InitGame(string Options, out string Error)
 //                      Player Camera Fix
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L2126
 // N.B. i edited whole timer, fixed some random fuckups
 // like last zed killing
 state MatchInProgress
 {
+  // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L2196
   function OpenShops()
   {
     local int i;
@@ -222,6 +225,7 @@ state MatchInProgress
     }
   }
 
+  // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L2250
   function CloseShops()
   {
     local int i;
@@ -274,6 +278,7 @@ state MatchInProgress
     }
   }
 
+  // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L2296
   function nTimer()
   {
     local Controller C;
@@ -671,6 +676,7 @@ state MatchInProgress
 // }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/Engine/Classes/GameInfo.uc#L515
 // show server detailed info
 function GetServerDetails( out ServerResponseLine ServerState )
 {
@@ -738,7 +744,7 @@ function GetServerDetails( out ServerResponseLine ServerState )
           ServerState.ServerInfo[i].Key = "Mutator";
           ServerState.ServerInfo[i].Value = MutatorName;
         }
-      }     
+      }
     }
   }
 
@@ -775,6 +781,7 @@ function GetServerDetails( out ServerResponseLine ServerState )
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/Engine/Classes/GameInfo.uc#L591
 // show perk, health in player info
 function GetServerPlayers( out ServerResponseLine ServerState )
 {
@@ -919,6 +926,7 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
 //                              Disable slomo!
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L258
 // TO-DO add a bool to controll it !
 // tick will be called constantly but now it does nothing :3
 event Tick(float DeltaTime)
@@ -964,6 +972,7 @@ event Tick(float DeltaTime)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L350
 function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTimeDuration)
 {
   local float RandChance;
@@ -1028,11 +1037,12 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L486
 // DO NOT Force slomo for a longer period of time when the boss dies
 function DoBossDeath()
 {
   class'repl_GT'.default.bBossView = true;
-  
+
   // global switch
   if (class'o_Settings'.default.bAllowZedTime)
   {
@@ -1050,6 +1060,7 @@ function DoBossDeath()
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L4489
 // remove latejoiner shit, GameInfo code
 event PreLogin( string Options, string Address, string PlayerID, out string Error, out string FailCode )
 {
@@ -1085,6 +1096,7 @@ event PreLogin( string Options, string Address, string PlayerID, out string Erro
 //                      LET SPECS TO FLY AFTER GAME ENDS
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L4678
 function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
 {
   local Controller P;
@@ -1163,6 +1175,7 @@ function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
 //                              Killzeds fix
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L429
 exec function KillZeds()
 {
   local KFMonster Monster;
@@ -1249,7 +1262,7 @@ final static function TriggerGC(PlayerController p)
 {
   if (p == none || KFPlayerController(p) == none)
     return;
-  
+
   KFPlayerController(p).ClientForceCollectGarbage();
   log("Ayyy, ClientForceCollectGarbage triggered for " $ KFPlayerController(p).PlayerOwnerName);
 }
@@ -1272,15 +1285,19 @@ function bool SetPause( BOOL bPause, PlayerController P )
 //=============================================================================
 //                    remove UpdateGameLength() / greylist
 //=============================================================================
+
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L852
 function UpdateGameLength(){}
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L1886
 exec function AddNamedBot(string botname)
 {
   super(Invasion).AddNamedBot(botname);
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L1901
 exec function AddBots(int num)
 {
   num = Clamp(num, 0, MaxPlayers - (NumPlayers + NumBots));
@@ -1294,6 +1311,7 @@ exec function AddBots(int num)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L3118
 event PostLogin( PlayerController NewPlayer )
 {
   local int i;

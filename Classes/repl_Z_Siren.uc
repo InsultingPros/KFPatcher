@@ -1,6 +1,7 @@
 class repl_Z_Siren extends ZombieSiren;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieSiren.uc#L112
 // if decapped no scream
 simulated function SpawnTwoShots()
 {
@@ -20,7 +21,7 @@ simulated function SpawnTwoShots()
   }
 }
 
-
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieSiren.uc#L178
 simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
   local actor Victims;

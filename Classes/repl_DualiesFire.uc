@@ -4,6 +4,7 @@ class repl_DualiesFire extends DualiesFire;
 var int penValue;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/DeagleFire.uc#L6
 function DoTrace(Vector Start, Rotator Dir)
 {
   local Vector X,Y,Z, End, HitLocation, HitNormal, ArcEnd;

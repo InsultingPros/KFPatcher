@@ -1,6 +1,7 @@
 class repl_Door extends KFDoorMover;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFDoorMover.uc#L286
 // Forces zeds to actually ignore doors instead of just standing at them if bZombiesIgnore is true
 function Tick(float Delta)
 {
@@ -21,6 +22,7 @@ function Tick(float Delta)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFDoorMover.uc#L234
 // Breaks all doors with the same use trigger. Fixes the single welded door exploit.
 simulated function GoBang(pawn instigatedBy, vector hitlocation,Vector momentum, class<DamageType> damageType)
 {

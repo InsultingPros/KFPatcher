@@ -1,6 +1,7 @@
 class repl_Z_Scrake_Ctrl extends SawZombieController;
 
 
+// EXPERIMENTAL
 function EndState()
 {
   if (Pawn != none)

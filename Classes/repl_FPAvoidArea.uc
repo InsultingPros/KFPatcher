@@ -1,6 +1,7 @@
 class repl_FPAvoidArea extends FleshPoundAvoidArea;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/FleshPoundAvoidArea.uc#L33
 // FleshPoundAvoidArea.Touch
 function Touch(actor Other)
 {
@@ -10,6 +11,7 @@ function Touch(actor Other)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/FleshPoundAvoidArea.uc#L41
 // FleshPoundAvoidArea.RelevantTo
 function bool RelevantTo(Pawn P)
 {

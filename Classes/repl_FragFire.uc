@@ -4,6 +4,7 @@ class repl_FragFire extends FragFire;
 var transient float PrevAmmo;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/FragFire.uc#L123
 function DoFireEffect()
 {
   local float MaxAmmo, CurAmmo;

@@ -1,11 +1,14 @@
 class repl_Nade extends Nade;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/Nade.uc#L48
 // EXPERIMENTAL!! NOT IN A USE!!!
 // fixes nade crashes, but obviously we can't use this :yoba:
 function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> damageType, optional int HitIndex){}
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/Nade.uc#L79
+// fix sound ref none log spam
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
   local PlayerController LocalPlayer;

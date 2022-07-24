@@ -8,6 +8,7 @@ var transient float fLastAttackTime;
 //                            controller == none fix
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFMonster.uc#L1242
 // when you kill zeds before they fall into stun
 // should i check it before whole function body??
 function bool FlipOver()
@@ -32,6 +33,8 @@ function bool FlipOver()
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFMonster.uc#L2527
+// fix ctrl nonelog spam
 simulated function HandleBumpGlass()
 {
   Acceleration = vect(0,0,0);
@@ -49,6 +52,7 @@ simulated function HandleBumpGlass()
 //                            instigatedBy == none fix
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFMonster.uc#L2631
 function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector momentum, class<DamageType> damageType, optional int HitIndex )
 {
   local bool bIsHeadshot;
@@ -236,6 +240,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector mo
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFMonster.uc#L3688
 // attempt to fix ground speed bugs
 function TakeFireDamage(int Damage,pawn Instigator)
 {
@@ -271,7 +276,8 @@ function TakeFireDamage(int Damage,pawn Instigator)
 //                      fix for zed corpse collision shit
 //=============================================================================
 
-//Stops the green shit when a player dies.
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFMonster.uc#L1566
+// Stops the green shit when a player dies.
 simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 {
   local float frame, rate;
@@ -371,8 +377,10 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFMonster.uc#L1656
 state ZombieDying
 {
+  // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFMonster.uc#L1716
   simulated function BeginState()
   {
     // ADDITION for collision fix
@@ -411,6 +419,7 @@ state ZombieDying
 //                    lets limit some zeds attack abilities
 //=============================================================================
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFMonster.uc#L3164
 function bool MeleeDamageTarget(int hitdamage, vector pushdir)
 {
   local vector HitLocation, HitNormal;
@@ -423,7 +432,7 @@ function bool MeleeDamageTarget(int hitdamage, vector pushdir)
   // Never should be done on client.
   if (Level.NetMode == NM_Client || Controller == none)
     return false;
-  
+
   // try to limit some zeds
   if ((ClassIsChildOf(self.class, class'ZombieCrawler') || ClassIsChildOf(self.class, class'ZombieFleshpound')) && (Level.TimeSeconds < class'repl_Monster'.default.fLastAttackTime))
     return false;

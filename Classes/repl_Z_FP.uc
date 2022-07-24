@@ -1,6 +1,7 @@
 class repl_Z_FP extends ZombieFleshpound;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieFleshPound.uc#L105
 // all this copy-paste just to fix his one hit kill ability
 // ZombieFleshpound.TakeDamage
 function TakeDamage( int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> damageType, optional int HitIndex)

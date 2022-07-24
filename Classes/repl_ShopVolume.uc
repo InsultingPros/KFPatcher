@@ -6,6 +6,7 @@ class repl_ShopVolume extends KFShopVolume_Story;
 var string TraderTag;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/ShopVolume.uc#L18
 // fix for accessed nones
 // KFMod.ShopVolume
 function Touch(Actor other)
@@ -55,6 +56,7 @@ function Touch(Actor other)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/ShopVolume.uc#L56
 // KFMod.ShopVolume
 function UnTouch(Actor other)
 {
@@ -68,6 +70,7 @@ function UnTouch(Actor other)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/ShopVolume.uc#L61
 // KFMod.ShopVolume
 function UsedBy(Pawn user)
 {
@@ -90,6 +93,7 @@ function UsedBy(Pawn user)
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/ShopVolume.uc#L96
 // touching out of bounds fix
 // KFMod.ShopVolume
 function bool BootPlayers()

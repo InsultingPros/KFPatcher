@@ -1,17 +1,18 @@
 class repl_LAWProj extends LAWProj;
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/LAWProj.uc#L218
 // removed SirenScream damage type check since 90% of the time they don't disentigrate anyway...
 // also prevents detonation from fire or other explosives
 function TakeDamage(int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> damageType, optional int HitIndex)
 {
-  if(!bDud 
+  if(!bDud
   && DamageType != class'DamTypeFlamethrower'
-  && DamageType != class'DamTypeFrag' 
-  && DamageType != class'DamTypeLaw' 
-  && DamageType != class'DamTypeM203Grenade' 
+  && DamageType != class'DamTypeFrag'
+  && DamageType != class'DamTypeLaw'
+  && DamageType != class'DamTypeM203Grenade'
   && DamageType != class'DamTypeM32Grenade'
-  && DamageType != class'DamTypeM79Grenade' 
+  && DamageType != class'DamTypeM79Grenade'
   && DamageType != class'DamTypePipeBomb'
   && DamageType != class'DamTypeSealSquealExplosion'
   && DamageType != class'DamTypeSeekerSixRocket'
@@ -24,6 +25,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, Vector Hitlocation, Vector Mo
 }
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/LAWProj.uc#L392
 // RepInfo == none fix
 simulated function ProcessTouch(Actor Other, Vector HitLocation)
 {

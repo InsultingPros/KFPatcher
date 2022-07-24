@@ -2,6 +2,7 @@ class repl_Syringe extends Syringe
   CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus
 
 
+// https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/Syringe.uc#L168
 // fix syringe heal ammounts when players die
 simulated function bool HackClientStartFire()
 {
