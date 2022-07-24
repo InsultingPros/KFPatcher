@@ -2,9 +2,7 @@
 
 [**CoreAPI**]: https://github.com/InsultingPros/CoreAPI 'jaja'
 
-This is an attempt to fix most game breaking bugs and log spam in **Killing Floor 1**. And some additional features to make some utility mutators 'OBSOLOTE' :innocent:
-
-You can check the [To-Do](Docs/To-Do.md) and [Feature List](Docs/Features.md) for more details.
+This is an attempt to fix most game breaking [bugs](https://shtoyan.github.io/KF1066/#/) and log spam in **Killing Floor 1**. And add some additional features to make several utility mutators obsolete.
 
 ## Internals
 
@@ -17,6 +15,11 @@ Important classes:
 
 - A simple [mutator](Classes/Mut.uc) which uses [**CoreAPI**] functionality to hook functions.
 - `repl_` classes that extend the very most child class of our target. For example [repl_PC](Classes/repl_PC.uc) contains fixes for controllers and it extends [KFPlayerController_Story](https://github.com/InsultingPros/KillingFloor/blob/main/KFStoryGame/Classes/KFPlayerController_Story.uc).
+
+Documentation:
+
+- [To-Do](Docs/To-Do.md).
+- [Feature List](Docs/Features.md).
 
 ## Building
 
