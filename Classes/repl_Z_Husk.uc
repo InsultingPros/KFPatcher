@@ -57,7 +57,7 @@ function SpawnTwoShots()
     if (KFMonstControl== none || !LineOfSightTo(KFMonstControl))
       continue;
 
-    if (KFMonstControl != Controller && !ClassIsChildOf(KFMonstControl, class'FleshpoundZombieController'))
+    if (KFMonstControl != Controller && !ClassIsChildOf(KFMonstControl.class, class'FleshpoundZombieController'))
     {
       if (PointDistToLine(KFMonstControl.Pawn.Location, vector(FireRotation), FireStart) < 75 )
       {

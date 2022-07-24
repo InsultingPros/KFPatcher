@@ -822,6 +822,7 @@ function GetServerPlayers( out ServerResponseLine ServerState )
 static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out Controller C, bool bWaitingToStartMatch)
 {
   local string status, perk;
+  local string sfinal;
 
   if (C == none || PRI == none || KFPlayerReplicationInfo(PRI) == none)
     return "NULL PRI";
@@ -909,7 +910,8 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
     perk = "^r[" $ perk $ "]^w";
   }
 
-  return class'o_Helper'.static.ParseTags(perk @ PRI.PlayerName @ status);
+  sfinal = perk @ PRI.PlayerName @ status;
+  return class'o_Helper'.static.ParseTags(sfinal);
 }
 
 

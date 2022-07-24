@@ -23,7 +23,7 @@ function Touch(Actor other)
       BootPlayers();
       return;
     }
-  
+
     // ADDITION!!! none check
     if (MyTrader != none)
       MyTrader.SetOpen(true);
@@ -84,7 +84,7 @@ function UsedBy(Pawn user)
   {
     // ADDITION!!! MyTrader none check
     if (MyTrader != none)
-      class'repl_ShopVolume'.default.TraderTag = MyTrader.Tag;
+      class'repl_ShopVolume'.default.TraderTag = string(MyTrader.Tag);
     KFPlayerController(user.Controller).ShowBuyMenu(class'repl_ShopVolume'.default.TraderTag, KFHumanPawn(user).MaxCarryWeight);
   }
 }
