@@ -7,126 +7,126 @@ var int penValue;
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/DeagleFire.uc#L6
 function DoTrace(Vector Start, Rotator Dir)
 {
-  local Vector X,Y,Z, End, HitLocation, HitNormal, ArcEnd;
-  local Actor Other;
-  local byte HitCount,HCounter;
-  local float HitDamage;
-  local array<int>  HitPoints;
-  local KFPawn HitPawn;
-  local array<Actor>  IgnoreActors;
-  local Actor DamageActor;
-  local int i;
+    local Vector X,Y,Z, End, HitLocation, HitNormal, ArcEnd;
+    local Actor Other;
+    local byte HitCount,HCounter;
+    local float HitDamage;
+    local array<int>  HitPoints;
+    local KFPawn HitPawn;
+    local array<Actor>  IgnoreActors;
+    local Actor DamageActor;
+    local int i;
 
-  MaxRange();
+    MaxRange();
 
-  Weapon.GetViewAxes(X, Y, Z);
-  if ( Weapon.WeaponCentered() )
-  {
-    ArcEnd = (Instigator.Location + Weapon.EffectOffset.X * X + 1.5 * Weapon.EffectOffset.Z * Z);
-  }
-  else
-  {
-    ArcEnd = (Instigator.Location + Instigator.CalcDrawOffset(Weapon) + Weapon.EffectOffset.X * X +
-    Weapon.Hand * Weapon.EffectOffset.Y * Y + Weapon.EffectOffset.Z * Z);
-  }
-
-  X = Vector(Dir);
-  End = Start + TraceRange * X;
-  HitDamage = DamageMax;
-
-  // MK23Fire, DualMK23Fire = 3
-  // DeagleFire, DualDeagleFire, Magnum44Fire, Dual44MagnumFire = 10
-  if (self.class.name == 'MK23Fire' || self.class.name == 'DualMK23Fire')
-    class'repl_DualiesFire'.default.penValue = 3;
-  else
-    class'repl_DualiesFire'.default.penValue = 10;
-
-  while( (HitCount++) < class'repl_DualiesFire'.default.penValue ) // there was fixed value here per parent class
-  {
-    DamageActor = none;
-
-    Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 1);
-    if( Other==none )
+    Weapon.GetViewAxes(X, Y, Z);
+    if ( Weapon.WeaponCentered() )
     {
-      break;
+        ArcEnd = (Instigator.Location + Weapon.EffectOffset.X * X + 1.5 * Weapon.EffectOffset.Z * Z);
     }
-    else if( Other==Instigator || Other.Base == Instigator )
+    else
     {
-      IgnoreActors[IgnoreActors.Length] = Other;
-      Other.SetCollision(false);
-      Start = HitLocation;
-      continue;
+        ArcEnd = (Instigator.Location + Instigator.CalcDrawOffset(Weapon) + Weapon.EffectOffset.X * X +
+        Weapon.Hand * Weapon.EffectOffset.Y * Y + Weapon.EffectOffset.Z * Z);
     }
 
-    if( ExtendedZCollision(Other)!=none && Other.Owner!=none )
+    X = Vector(Dir);
+    End = Start + TraceRange * X;
+    HitDamage = DamageMax;
+
+    // MK23Fire, DualMK23Fire = 3
+    // DeagleFire, DualDeagleFire, Magnum44Fire, Dual44MagnumFire = 10
+    if (self.class.name == 'MK23Fire' || self.class.name == 'DualMK23Fire')
+        class'repl_DualiesFire'.default.penValue = 3;
+    else
+        class'repl_DualiesFire'.default.penValue = 10;
+
+    while ((HitCount++) < class'repl_DualiesFire'.default.penValue) // there was fixed value here per parent class
     {
-      IgnoreActors[IgnoreActors.Length] = Other;
-      IgnoreActors[IgnoreActors.Length] = Other.Owner;
-      Other.SetCollision(false);
-      Other.Owner.SetCollision(false);
-      DamageActor = Pawn(Other.Owner);
-    }
+        DamageActor = none;
 
-    if ( !Other.bWorldGeometry && Other!=Level )
-    {
-      HitPawn = KFPawn(Other);
-
-      if ( HitPawn != none )
-      {
-        // Hit detection debugging
-        /*log("PreLaunchTrace hit "$HitPawn.PlayerReplicationInfo.PlayerName);
-         HitPawn.HitStart = Start;
-         HitPawn.HitEnd = End;*/
-        if(!HitPawn.bDeleteMe)
-          HitPawn.ProcessLocationalDamage(int(HitDamage), Instigator, HitLocation, Momentum*X,DamageType,HitPoints);
-
-        // Hit detection debugging
-        /*if( Level.NetMode == NM_Standalone)
-          HitPawn.DrawBoneLocation();*/
-
-        IgnoreActors[IgnoreActors.Length] = Other;
-        IgnoreActors[IgnoreActors.Length] = HitPawn.AuxCollisionCylinder;
-        Other.SetCollision(false);
-        HitPawn.AuxCollisionCylinder.SetCollision(false);
-        DamageActor = Other;
-      }
-      else
-      {
-        if ( KFMonster(Other)!=none )
+        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 1);
+        if (Other == none)
         {
-          IgnoreActors[IgnoreActors.Length] = Other;
-          Other.SetCollision(false);
-          DamageActor = Other;
+            break;
         }
-        else if ( DamageActor == none )
+        else if (Other==Instigator || Other.Base == Instigator)
         {
-          DamageActor = Other;
+            IgnoreActors[IgnoreActors.Length] = Other;
+            Other.SetCollision(false);
+            Start = HitLocation;
+            continue;
         }
-        Other.TakeDamage(int(HitDamage), Instigator, HitLocation, Momentum*X, DamageType);
-      }
-      if ( (HCounter++) >= 4 || Pawn(DamageActor) == none )
-      {
-        break;
-      }
-      HitDamage/=2;
-      Start = HitLocation;
+
+        if (ExtendedZCollision(Other) != none && Other.Owner != none)
+        {
+            IgnoreActors[IgnoreActors.Length] = Other;
+            IgnoreActors[IgnoreActors.Length] = Other.Owner;
+            Other.SetCollision(false);
+            Other.Owner.SetCollision(false);
+            DamageActor = Pawn(Other.Owner);
+        }
+
+        if (!Other.bWorldGeometry && Other!=Level)
+        {
+            HitPawn = KFPawn(Other);
+
+            if (HitPawn != none)
+            {
+                // Hit detection debugging
+                /*log("PreLaunchTrace hit "$HitPawn.PlayerReplicationInfo.PlayerName);
+                HitPawn.HitStart = Start;
+                HitPawn.HitEnd = End;*/
+                if (!HitPawn.bDeleteMe)
+                    HitPawn.ProcessLocationalDamage(int(HitDamage), Instigator, HitLocation, Momentum*X,DamageType,HitPoints);
+
+                // Hit detection debugging
+                /*if( Level.NetMode == NM_Standalone)
+                HitPawn.DrawBoneLocation();*/
+
+                IgnoreActors[IgnoreActors.Length] = Other;
+                IgnoreActors[IgnoreActors.Length] = HitPawn.AuxCollisionCylinder;
+                Other.SetCollision(false);
+                HitPawn.AuxCollisionCylinder.SetCollision(false);
+                DamageActor = Other;
+            }
+            else
+            {
+                if (KFMonster(Other) != none)
+                {
+                    IgnoreActors[IgnoreActors.Length] = Other;
+                    Other.SetCollision(false);
+                    DamageActor = Other;
+                }
+                else if (DamageActor == none)
+                {
+                    DamageActor = Other;
+                }
+                Other.TakeDamage(int(HitDamage), Instigator, HitLocation, Momentum*X, DamageType);
+            }
+            if ((HCounter++) >= 4 || Pawn(DamageActor) == none)
+            {
+                break;
+            }
+            HitDamage/=2;
+            Start = HitLocation;
+        }
+        else if (HitScanBlockingVolume(Other) == none)
+        {
+            if (KFWeaponAttachment(Weapon.ThirdPersonActor) != none)
+                KFWeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other,HitLocation,HitNormal);
+            Break;
+        }
     }
-    else if ( HitScanBlockingVolume(Other) == none )
+
+    // Turn the collision back on for any actors we turned it off
+    // FIXED accessed none IgnoreActors !
+    if (IgnoreActors.Length <= 0)
+        return;
+
+    for (i=0; i<IgnoreActors.Length; i++)
     {
-      if ( KFWeaponAttachment(Weapon.ThirdPersonActor) != none )
-        KFWeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other,HitLocation,HitNormal);
-      Break;
+        if (IgnoreActors[i] != none)
+            IgnoreActors[i].SetCollision(true);
     }
-  }
-
-  // Turn the collision back on for any actors we turned it off
-  // FIXED accessed none IgnoreActors !
-  if (IgnoreActors.Length <= 0)
-    return;
-
-  for (i=0; i<IgnoreActors.Length; i++)
-  {
-    if (IgnoreActors[i] != none)
-      IgnoreActors[i].SetCollision(true);
-  }
 }

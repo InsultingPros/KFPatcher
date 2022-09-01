@@ -1,5 +1,5 @@
 class repl_GT extends KFGameType
-  CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus;
+    CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus;
 
 
 var transient array<string> sCachedPlayersInfo;

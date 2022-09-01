@@ -5,20 +5,20 @@ class repl_Door extends KFDoorMover;
 // Forces zeds to actually ignore doors instead of just standing at them if bZombiesIgnore is true
 function Tick(float Delta)
 {
-  if (DoorPathNode != none && PathUdpTimer < Level.TimeSeconds)
-  {
-    PathUdpTimer = Level.TimeSeconds + 0.5;
-    DoorPathNode.ExtraCost = InitExtraCost;
-
-    if (bSealed && MyTrigger != none)
+    if (DoorPathNode != none && PathUdpTimer < Level.TimeSeconds)
     {
-      // Zeds will always ignore the path node associated with this door.
-      if (bZombiesIgnore)
-        DoorPathNode.ExtraCost = 9999999;
-      else
-        DoorPathNode.ExtraCost += 500 + MyTrigger.WeldStrength * 6;
+        PathUdpTimer = Level.TimeSeconds + 0.5;
+        DoorPathNode.ExtraCost = InitExtraCost;
+
+        if (bSealed && MyTrigger != none)
+        {
+            // Zeds will always ignore the path node associated with this door.
+            if (bZombiesIgnore)
+                DoorPathNode.ExtraCost = 9999999;
+            else
+                DoorPathNode.ExtraCost += 500 + MyTrigger.WeldStrength * 6;
+        }
     }
-  }
 }
 
 
@@ -29,25 +29,25 @@ simulated function GoBang(pawn instigatedBy, vector hitlocation,Vector momentum,
     local int i;
     local KFDoorMover kfdm;
 
-    for(i = 0; i < myTrigger.doorOwners.length; i++)
+    for (i = 0; i < myTrigger.doorOwners.length; i++)
     {
         kfdm = myTrigger.doorOwners[i];
-        if(kfdm == none)
+        if (kfdm == none)
         {
             continue;
         }
 
         // The usual GoBang() code.
-        kfdm.SetCollision(false,false,false);
+        kfdm.SetCollision(false, false, false);
         kfdm.bHidden = true;
         kfdm.bDoorIsDead = true;
         kfdm.NetUpdateTime = level.timeSeconds - 1;
 
-        if(level.netMode != NM_DedicatedServer)
+        if (level.netMode != NM_DedicatedServer)
         {
-            if(kfdm.surfaceType == EST_Metal)
+            if (kfdm.surfaceType == EST_Metal)
             {
-                if((level.timeSeconds - kfdm.lastRenderTime) < 5)
+                if ((level.timeSeconds - kfdm.lastRenderTime) < 5)
                 {
                     Spawn(kfdm.metalDoorExplodeEffectClass,,, kfdm.location, Rotator(vect(0,0,1)));
                 }
@@ -55,7 +55,7 @@ simulated function GoBang(pawn instigatedBy, vector hitlocation,Vector momentum,
             }
             else
             {
-                if((level.timeSeconds - kfdm.lastRenderTime) < 5)
+                if ((level.timeSeconds - kfdm.lastRenderTime) < 5)
                 {
                     Spawn(kfdm.woodDoorExplodeEffectClass,,, kfdm.location, Rotator(vect(0,0,1)));
                 }

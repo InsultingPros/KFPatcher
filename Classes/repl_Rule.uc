@@ -6,11 +6,11 @@ class repl_Rule extends GameRules;
 // GameRules.CheckEndGame
 function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
 {
-  if (Level.Game.IsInState('PendingMatch'))
-    return false;
+    if (Level.Game.IsInState('PendingMatch'))
+        return false;
 
-  if (NextGameRules != none)
-    return NextGameRules.CheckEndGame(Winner, Reason);
+    if (NextGameRules != none)
+        return NextGameRules.CheckEndGame(Winner, Reason);
 
-  return true;
+    return true;
 }
