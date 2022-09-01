@@ -1,4 +1,4 @@
-class repl_Z_Scrake extends ZombieScrake;
+class hookZ_Scrake extends ZombieScrake;
 
 
 var ZombieScrake sc;
@@ -79,7 +79,7 @@ function bool IsHeadShot(vector HitLoc, vector ray, float AdditionalScale)
         HeadLoc = C.Origin + (HeadHeight * HeadScale * AdditionalScale * C.XAxis) + diff.X * C.XAxis + diff.Y * C.YAxis + diff.Z * C.ZAxis;
     }
 
-    return class'repl_Z_Scrake'.static.TestHitboxSphere(HitLoc, Ray, HeadLoc, HeadRadius * HeadScale * AdditionalScale);
+    return class'hookZ_Scrake'.static.TestHitboxSphere(HitLoc, Ray, HeadLoc, HeadRadius * HeadScale * AdditionalScale);
 }
 
 

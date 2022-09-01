@@ -1,4 +1,4 @@
-class repl_Z_Scrake_Ctrl extends SawZombieController;
+class hookZ_Scrake_Ctrl extends SawZombieController;
 
 
 // EXPERIMENTAL

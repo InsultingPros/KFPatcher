@@ -1,4 +1,4 @@
-class repl_Z_Boss extends ZombieBoss;
+class hookZ_Boss extends ZombieBoss;
 
 
 //=============================================================================

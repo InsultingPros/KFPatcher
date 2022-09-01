@@ -1,4 +1,4 @@
-class repl_FPAvoidArea extends FleshPoundAvoidArea;
+class hookFPAvoidArea extends FleshPoundAvoidArea;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/FleshPoundAvoidArea.uc#L33

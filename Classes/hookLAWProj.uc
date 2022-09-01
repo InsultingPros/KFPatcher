@@ -1,4 +1,4 @@
-class repl_LAWProj extends LAWProj;
+class hookLAWProj extends LAWProj;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/LAWProj.uc#L218

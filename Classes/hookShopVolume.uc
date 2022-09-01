@@ -1,5 +1,5 @@
 // imagine almost all functions of this class are bugged
-class repl_ShopVolume extends KFShopVolume_Story;
+class hookShopVolume extends KFShopVolume_Story;
 
 
 // used to replace broken trader tags in UsedBy()
@@ -87,8 +87,8 @@ function UsedBy(Pawn user)
     {
         // ADDITION!!! MyTrader none check
         if (MyTrader != none)
-            class'repl_ShopVolume'.default.TraderTag = string(MyTrader.Tag);
-        KFPlayerController(user.Controller).ShowBuyMenu(class'repl_ShopVolume'.default.TraderTag, KFHumanPawn(user).MaxCarryWeight);
+            class'hookShopVolume'.default.TraderTag = string(MyTrader.Tag);
+        KFPlayerController(user.Controller).ShowBuyMenu(class'hookShopVolume'.default.TraderTag, KFHumanPawn(user).MaxCarryWeight);
     }
 }
 

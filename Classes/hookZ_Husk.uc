@@ -1,4 +1,4 @@
-class repl_Z_Husk extends ZombieHusk_HALLOWEEN;
+class hookZ_Husk extends ZombieHusk_HALLOWEEN;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieHusk.uc#L155

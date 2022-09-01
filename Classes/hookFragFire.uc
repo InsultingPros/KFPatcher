@@ -1,4 +1,4 @@
-class repl_FragFire extends FragFire;
+class hookFragFire extends FragFire;
 
 
 var transient float PrevAmmo;
@@ -16,9 +16,9 @@ function DoFireEffect()
 
     // added working ammo check
     Weapon.GetAmmoCount(MaxAmmo, CurAmmo);
-    if (CurAmmo == 0 && class'repl_FragFire'.default.PrevAmmo == 0)
+    if (CurAmmo == 0 && class'hookFragFire'.default.PrevAmmo == 0)
         return;
-    class'repl_FragFire'.default.PrevAmmo = CurAmmo;
+    class'hookFragFire'.default.PrevAmmo = CurAmmo;
 
     Instigator.MakeNoise(1.0);
     Weapon.GetViewAxes(X,Y,Z);

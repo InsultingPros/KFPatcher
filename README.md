@@ -14,7 +14,7 @@ Config files:
 Important classes:
 
 - A simple [mutator](Classes/Mut.uc) which uses [**CoreAPI**] functionality to hook functions.
-- `repl_` classes that extend the very most child class of our target. For example [repl_PC](Classes/repl_PC.uc) contains fixes for controllers and it extends [KFPlayerController_Story](https://github.com/InsultingPros/KillingFloor/blob/main/KFStoryGame/Classes/KFPlayerController_Story.uc).
+- `hook` classes that extend the very most child class of our target. For example [hookPC](Classes/hookPC.uc) contains fixes for controllers and it extends [KFPlayerController_Story](https://github.com/InsultingPros/KillingFloor/blob/main/KFStoryGame/Classes/KFPlayerController_Story.uc).
 
 Documentation:
 

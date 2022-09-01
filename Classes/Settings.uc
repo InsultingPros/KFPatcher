@@ -1,4 +1,4 @@
-class o_Settings extends object
+class Settings extends object
     config(KFPatcherSettings);
 
 

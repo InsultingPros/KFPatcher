@@ -1,4 +1,4 @@
-class repl_KFWeaponPickup extends KFWeaponPickup;
+class hookKFWeaponPickup extends KFWeaponPickup;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFWeaponPickup.uc#L412

@@ -1,4 +1,4 @@
-class repl_P_Shotgun extends ShotgunBullet;
+class hookP_Shotgun extends ShotgunBullet;
 
 
 var Pawn Victim;
@@ -34,7 +34,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     HitPawn = KFPawn(Other);
     if ( HitPawn != none )
     {
-      class'repl_P_Shotgun'.default.Victim = HitPawn;
+      class'hookP_Shotgun'.default.Victim = HitPawn;
       // fixed point blank penetration -> X vector
       HitPawn.ProcessLocationalDamage(Damage, Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType,HitPoints);
     }
@@ -43,11 +43,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
   else
   {
     if ( Pawn(Other) != none )
-      class'repl_P_Shotgun'.default.Victim = Pawn(Other);
+      class'hookP_Shotgun'.default.Victim = Pawn(Other);
 
     // fixed point blank penetration -> X vector \
-    if ( class'repl_P_Shotgun'.default.Victim != none && Victim.IsHeadShot(HitLocation, X, 1.0))
-      class'repl_P_Shotgun'.default.Victim.TakeDamage(Damage * HeadShotDamageMult, Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+    if ( class'hookP_Shotgun'.default.Victim != none && Victim.IsHeadShot(HitLocation, X, 1.0))
+      class'hookP_Shotgun'.default.Victim.TakeDamage(Damage * HeadShotDamageMult, Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
     else
       Other.TakeDamage(Damage, Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
   }
@@ -62,7 +62,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
   }
 
   // dead bodies reduce damage less
-  if ( class'repl_P_Shotgun'.default.Victim != none && class'repl_P_Shotgun'.default.Victim.Health <= 0 )
+  if ( class'hookP_Shotgun'.default.Victim != none && class'hookP_Shotgun'.default.Victim.Health <= 0 )
   {
     PenDamageReduction += (1.0 - PenDamageReduction) * 0.5;
   }

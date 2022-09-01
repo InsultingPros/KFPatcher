@@ -1,4 +1,4 @@
-class repl_Monster extends KFMonster;
+class hookMonster extends KFMonster;
 
 
 var transient float fLastAttackTime;
@@ -434,11 +434,11 @@ function bool MeleeDamageTarget(int hitdamage, vector pushdir)
     return false;
 
   // try to limit some zeds
-  if ((ClassIsChildOf(self.class, class'ZombieCrawler') || ClassIsChildOf(self.class, class'ZombieFleshpound')) && (Level.TimeSeconds < class'repl_Monster'.default.fLastAttackTime))
+  if ((ClassIsChildOf(self.class, class'ZombieCrawler') || ClassIsChildOf(self.class, class'ZombieFleshpound')) && (Level.TimeSeconds < class'hookMonster'.default.fLastAttackTime))
     return false;
 
   // ATTENTION!!! is 0.3 secs ok?
-  class'repl_Monster'.default.fLastAttackTime = Level.TimeSeconds + 0.3f;
+  class'hookMonster'.default.fLastAttackTime = Level.TimeSeconds + 0.3f;
 
   if (Controller.Target!=none && Controller.Target.IsA('KFDoorMover'))
   {

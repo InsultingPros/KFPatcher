@@ -1,4 +1,4 @@
-class repl_Z_Siren extends ZombieSiren;
+class hookZ_Siren extends ZombieSiren;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieSiren.uc#L112

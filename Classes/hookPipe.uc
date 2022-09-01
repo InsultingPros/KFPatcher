@@ -1,4 +1,4 @@
-class repl_Pipe extends PipeBombProjectile;
+class hookPipe extends PipeBombProjectile;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/PipeBombProjectile.uc#L46
@@ -179,7 +179,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         NetUpdateTime = Level.TimeSeconds - 1;
     }
 
-    // PlaySound(class'repl_Pipe'.default.BoomSound,,2.0);
+    // PlaySound(class'hookPipe'.default.BoomSound,,2.0);
     PlaySound(sound(DynamicLoadObject("Inf_Weapons.antitankmine_explode01", class'Sound', true)),,2.0);
 
     // Shrapnel

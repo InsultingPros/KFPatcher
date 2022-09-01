@@ -1,4 +1,4 @@
-class repl_Z_FP extends ZombieFleshpound;
+class hookZ_FP extends ZombieFleshpound;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFChar/Classes/ZombieFleshPound.uc#L105

@@ -1,4 +1,4 @@
-class repl_Door extends KFDoorMover;
+class hookDoor extends KFDoorMover;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFDoorMover.uc#L286

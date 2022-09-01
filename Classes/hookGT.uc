@@ -1,4 +1,4 @@
-class repl_GT extends KFGameType
+class hookGT extends KFGameType
     CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus;
 
 
@@ -51,7 +51,7 @@ event InitGame(string Options, out string Error)
       continue;
 
     // open everything
-    if (class'o_Settings'.default.bAllTradersOpen)
+    if (class'Settings'.default.bAllTradersOpen)
     {
       SH.bAlwaysClosed = false;
       SH.bAlwaysEnabled = true;
@@ -64,7 +64,7 @@ event InitGame(string Options, out string Error)
     }
   }
 
-  if (class'o_Settings'.default.bAllTradersOpen)
+  if (class'Settings'.default.bAllTradersOpen)
     log("> bAllTradersOpen = true. All traders will be open!");
 
   foreach DynamicActors(class'ZombieVolume', ZZ)
@@ -160,7 +160,7 @@ event InitGame(string Options, out string Error)
   LoadUpMonsterList();
 
   // save options for debug and further use
-  class'repl_GT'.default.CmdLine = Options;
+  class'hookGT'.default.CmdLine = Options;
 }
 
 
@@ -214,8 +214,8 @@ state MatchInProgress
             KFPlayerController(C).ClientLocationalVoiceMessage(C.PlayerReplicationInfo, none, 'TRADER', 3);
 
           // send message if eveything is open
-          if (class'o_Settings'.default.bAllTradersOpen)
-            class'o_Helper'.static.SendMessage(PlayerController(C), class'o_Settings'.default.bAllTradersMessage, false);
+          if (class'Settings'.default.bAllTradersOpen)
+            class'Utility'.static.SendMessage(PlayerController(C), class'Settings'.default.bAllTradersMessage, false);
 
           // Hints
           KFPlayerController(C).CheckForHint(31);
@@ -373,9 +373,9 @@ state MatchInProgress
 
     // set camera for midgame boss's
     // check DoBossDeath()
-    if (class'repl_GT'.default.bBossView && !bWaveBossInProgress && class'repl_GT'.default.BossViewBackTime < Level.TimeSeconds)
+    if (class'hookGT'.default.bBossView && !bWaveBossInProgress && class'hookGT'.default.BossViewBackTime < Level.TimeSeconds)
     {
-      class'repl_GT'.default.bBossView = false;
+      class'hookGT'.default.bBossView = false;
 
       for ( C = Level.ControllerList; C != none; C = C.NextController )
       {
@@ -417,7 +417,7 @@ state MatchInProgress
 
         if ( ViewingBoss != none )
         {
-          class'repl_GT'.default.bBossView = true;
+          class'hookGT'.default.bBossView = true;
           ViewingBoss.bAlwaysRelevant = true;
 
           for ( C = Level.ControllerList; C != none; C = C.NextController )
@@ -442,9 +442,9 @@ state MatchInProgress
       }
 
       // remove camera from boss
-      else if ( class'repl_GT'.default.bBossView && (ViewingBoss==none || (ViewingBoss!=none && !ViewingBoss.bShotAnim) ) )
+      else if ( class'hookGT'.default.bBossView && (ViewingBoss==none || (ViewingBoss!=none && !ViewingBoss.bShotAnim) ) )
       {
-        class'repl_GT'.default.bBossView = false;
+        class'hookGT'.default.bBossView = false;
         ViewingBoss = none;
 
         for ( C = Level.ControllerList; C != none; C = C.NextController )
@@ -803,19 +803,19 @@ function GetServerPlayers( out ServerResponseLine ServerState )
       ServerState.PlayerInfo[i].PlayerNum  = C.PlayerNum;
       // our new functions might be a bit heavy, so limit its execution
       // and use cached string
-      if (Level.TimeSeconds >= class'repl_GT'.default.fDelay)
+      if (Level.TimeSeconds >= class'hookGT'.default.fDelay)
       {
-        class'repl_GT'.default.sCachedPlayersInfo[i] = class'repl_GT'.static.ParsePlayerName(PRI, C, bWaitingToStartMatch);
-        ServerState.PlayerInfo[i].PlayerName = class'repl_GT'.default.sCachedPlayersInfo[i]; // PRI.PlayerName;
-        class'repl_GT'.default.fDelay = Level.TimeSeconds + class'o_Settings'.default.fRefreshTime;
+        class'hookGT'.default.sCachedPlayersInfo[i] = class'hookGT'.static.ParsePlayerName(PRI, C, bWaitingToStartMatch);
+        ServerState.PlayerInfo[i].PlayerName = class'hookGT'.default.sCachedPlayersInfo[i]; // PRI.PlayerName;
+        class'hookGT'.default.fDelay = Level.TimeSeconds + class'Settings'.default.fRefreshTime;
       }
       else
-        ServerState.PlayerInfo[i].PlayerName = class'repl_GT'.default.sCachedPlayersInfo[i];
+        ServerState.PlayerInfo[i].PlayerName = class'hookGT'.default.sCachedPlayersInfo[i];
       ServerState.PlayerInfo[i].Score      = PRI.Score;
       ServerState.PlayerInfo[i].Ping       = 4 * PRI.Ping;
       // do we need this?
       // if (bTeamGame && PRI.Team != none)
-      // ServerState.PlayerInfo[i].StatsID = class'repl_GT'.static.GetPerkInfo(PRI); // ServerState.PlayerInfo[i].StatsID | TeamFlag[PRI.Team.TeamIndex];
+      // ServerState.PlayerInfo[i].StatsID = class'hookGT'.static.GetPerkInfo(PRI); // ServerState.PlayerInfo[i].StatsID | TeamFlag[PRI.Team.TeamIndex];
       i++;
     }
   }
@@ -840,34 +840,34 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
     if (bWaitingToStartMatch)
     {
       if(PRI.bReadyToPlay)
-        status = class'o_Settings'.default.sReady;
+        status = class'Settings'.default.sReady;
       else
-        status = class'o_Settings'.default.sNotReady;
+        status = class'Settings'.default.sNotReady;
     }
     else
-      status = class'o_Settings'.default.sAwaiting;
+      status = class'Settings'.default.sAwaiting;
   }
 
   // if we are spectator, do not check perk, kills, etc
   else if (PRI.bOnlySpectator)
   {
-    return class'o_Helper'.static.StripTags(PRI.PlayerName) @ class'o_Helper'.static.ParseTags(class'o_Settings'.default.sSpectator);
+    return class'Utility'.static.StripTags(PRI.PlayerName) @ class'Utility'.static.ParseTags(class'Settings'.default.sSpectator);
   }
 
   else if (PRI.bOutOfLives && !PRI.bOnlySpectator)
-    status = class'o_Settings'.default.sDead;
+    status = class'Settings'.default.sDead;
 
   // else we are alive and need more info
   else
-    status = class'o_Settings'.default.sAlive;
+    status = class'Settings'.default.sAlive;
 
   // parse kills, health
-  status = repl(status, class'o_Settings'.default.sTagHP, KFPlayerReplicationInfo(PRI).PlayerHealth);
-  status = repl(status, class'o_Settings'.default.sTagKills, PRI.Kills);
+  status = repl(status, class'Settings'.default.sTagHP, KFPlayerReplicationInfo(PRI).PlayerHealth);
+  status = repl(status, class'Settings'.default.sTagKills, PRI.Kills);
   // status ready !
 
   // parse perk if we want it
-  if (class'o_Settings'.default.bShowPerk)
+  if (class'Settings'.default.bShowPerk)
   {
     switch (string(KFPlayerReplicationInfo(PRI).ClientVeteranSkill))
     {
@@ -918,7 +918,7 @@ static final function string ParsePlayerName(out PlayerReplicationInfo PRI, out 
   }
 
   sfinal = perk @ PRI.PlayerName @ status;
-  return class'o_Helper'.static.ParseTags(sfinal);
+  return class'Utility'.static.ParseTags(sfinal);
 }
 
 
@@ -935,7 +935,7 @@ event Tick(float DeltaTime)
   local Controller C;
 
   // global switch
-  if (!class'o_Settings'.default.bAllowZedTime)
+  if (!class'Settings'.default.bAllowZedTime)
     return;
 
   if ( bZEDTimeActive )
@@ -980,7 +980,7 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
   local Controller C;
 
   // global switch
-  if (!class'o_Settings'.default.bAllowZedTime)
+  if (!class'Settings'.default.bAllowZedTime)
     return;
 
   TimeSinceLastEvent = Level.TimeSeconds - LastZedTimeEvent;
@@ -1041,10 +1041,10 @@ function DramaticEvent(float BaseZedTimePossibility, optional float DesiredZedTi
 // DO NOT Force slomo for a longer period of time when the boss dies
 function DoBossDeath()
 {
-  class'repl_GT'.default.bBossView = true;
+  class'hookGT'.default.bBossView = true;
 
   // global switch
-  if (class'o_Settings'.default.bAllowZedTime)
+  if (class'Settings'.default.bAllowZedTime)
   {
     bZEDTimeActive =  true;
     bSpeedingBackUp = false;
@@ -1052,7 +1052,7 @@ function DoBossDeath()
     CurrentZEDTimeDuration = ZEDTimeDuration*2;
     SetGameSpeed(ZedTimeSlomoScale);
 
-    class'repl_GT'.default.BossViewBackTime = Level.Timeseconds + ZEDTimeDuration*1.1;
+    class'hookGT'.default.BossViewBackTime = Level.Timeseconds + ZEDTimeDuration*1.1;
   }
 
   // changed controller disabling to directly killing zeds
@@ -1143,11 +1143,11 @@ function bool CheckEndGame(PlayerReplicationInfo Winner, string Reason)
 
       if (KFGameReplicationInfo(GameReplicationInfo).EndGameType == 1)
       {
-        foreach DynamicActors(class'ZombieBoss', class'repl_GT'.default.BossArray)
+        foreach DynamicActors(class'ZombieBoss', class'hookGT'.default.BossArray)
         {
-          if (class'repl_GT'.default.BossArray == none || class'repl_GT'.default.BossArray.Health <= 0)
+          if (class'hookGT'.default.BossArray == none || class'hookGT'.default.BossArray.Health <= 0)
             continue;
-          class'o_Helper'.static.ShowPatHP(Player, class'repl_GT'.default.BossArray);
+          class'Utility'.static.ShowPatHP(Player, class'hookGT'.default.BossArray);
         }
       }
     }
@@ -1188,12 +1188,12 @@ exec function KillZeds()
     if (Monster == none || Monster.Health <= 0 && Monster.bDeleteMe)
       continue;
     // fill our array
-    class'repl_GT'.default.Monsters[class'repl_GT'.default.Monsters.length] = Monster;
+    class'hookGT'.default.Monsters[class'hookGT'.default.Monsters.length] = Monster;
   }
 
   // and i have to do this hacky hack to avoid crashes
   // pass it to our new kill function
-  class'repl_GT'.static.MowZeds(class'repl_GT'.default.Monsters);
+  class'hookGT'.static.MowZeds(class'hookGT'.default.Monsters);
 }
 
 
@@ -1235,13 +1235,13 @@ final static function MowZeds(out array<KFMonster> Monsters)
 //     if ( NetConnection( P.Player) != none )
 //     {
 //       P.ClientTravel( Eval( Instr(URL,"?") > 0, Left(URL,Instr(URL,"?")), URL), TRAVEL_Relative, bItems );
-//       class'repl_GT'.static.TriggerGC(p);
+//       class'hookGT'.static.TriggerGC(p);
 //     }
 //     else
 //     {
 //       LocalPlayer = P;
 //       P.PreClientTravel();
-//       class'repl_GT'.static.TriggerGC(p);
+//       class'hookGT'.static.TriggerGC(p);
 //     }
 //   }
 

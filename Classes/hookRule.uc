@@ -1,4 +1,4 @@
-class repl_Rule extends GameRules;
+class hookRule extends GameRules;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/Engine/Classes/GameRules.uc#L61

@@ -1,4 +1,4 @@
-class repl_VotingHandler extends xVotingHandler;
+class hookVotingHandler extends xVotingHandler;
 
 
 // only REAL players are counted. FUCKING IGNORES SPECS AND FAKES. FINALLY!!!!!!

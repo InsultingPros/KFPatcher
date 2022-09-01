@@ -15,7 +15,7 @@ event PreBeginPlay()
     super.PreBeginPlay();
 
     // TMP!!! hack fix for tosscahs!
-    class'repl_Pawn'.default.cashtimer = 0.0f;
+    class'hookPawn'.default.cashtimer = 0.0f;
 
     // replacing vanilla functions with ours
     class'CoreAPI'.static.replaceFunctionArray(self, List);
@@ -33,22 +33,22 @@ function Mutate(string MutateString, PlayerController Sender)
 
     if (MutateString ~= "zedtime" || MutateString ~= "slomo" || MutateString ~= "sm")
     {
-        class'o_Settings'.default.bAllowZedTime = !class'o_Settings'.default.bAllowZedTime;
-        sendMsg(Sender, "Zed time status: " $ class'o_Settings'.default.bAllowZedTime);
+        class'Settings'.default.bAllowZedTime = !class'Settings'.default.bAllowZedTime;
+        sendMsg(Sender, "Zed time status: " $ class'Settings'.default.bAllowZedTime);
     }
     else if (MutateString ~= "alltrader" || MutateString ~= "at")
     {
-        class'o_Settings'.default.bAllTradersOpen = !class'o_Settings'.default.bAllTradersOpen;
-        sendMsg(Sender, "All traders open status: " $ class'o_Settings'.default.bAllTradersOpen);
+        class'Settings'.default.bAllTradersOpen = !class'Settings'.default.bAllTradersOpen;
+        sendMsg(Sender, "All traders open status: " $ class'Settings'.default.bAllTradersOpen);
     }
     else if (MutateString ~= "buyeverywhere")
     {
-        class'o_Settings'.default.bBuyEverywhere = !class'o_Settings'.default.bBuyEverywhere;
-        sendMsg(Sender, "All traders open status: " $ class'o_Settings'.default.bBuyEverywhere);
+        class'Settings'.default.bBuyEverywhere = !class'Settings'.default.bBuyEverywhere;
+        sendMsg(Sender, "All traders open status: " $ class'Settings'.default.bBuyEverywhere);
     }
     else if (MutateString ~= "saveconfig")
     {
-        class'o_Settings'.static.StaticSaveConfig();
+        class'Settings'.static.StaticSaveConfig();
         sendMsg(Sender, "Config saved!");
     }
 }

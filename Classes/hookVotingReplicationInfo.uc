@@ -1,4 +1,4 @@
-class repl_VotingReplicationInfo extends VotingReplicationInfo;
+class hookVotingReplicationInfo extends VotingReplicationInfo;
 
 
 function SendMapVote(int MapIndex, int p_GameIndex)

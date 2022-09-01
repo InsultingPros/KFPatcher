@@ -1,4 +1,4 @@
-class repl_DualPistol extends DualDeagle
+class hookDualPistol extends DualDeagle
     CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus
 
 
@@ -35,18 +35,18 @@ function DropFrom(vector StartLocation)
         OtherAmmo = AmmoThrown / 2;
         AmmoThrown -= OtherAmmo;
         // CHANGED HERE
-        class'repl_DualPistol'.default.SingleKFW = Instigator.spawn(class'repl_DualPistol'.static.GetSingleWC(self));
-        if (class'repl_DualPistol'.default.SingleKFW != none)
+        class'hookDualPistol'.default.SingleKFW = Instigator.spawn(class'hookDualPistol'.static.GetSingleWC(self));
+        if (class'hookDualPistol'.default.SingleKFW != none)
         {
-            class'repl_DualPistol'.default.SingleKFW.GiveTo(Instigator);
-            class'repl_DualPistol'.default.SingleKFW.Ammo[0].AmmoAmount = OtherAmmo;
+            class'hookDualPistol'.default.SingleKFW.GiveTo(Instigator);
+            class'hookDualPistol'.default.SingleKFW.Ammo[0].AmmoAmount = OtherAmmo;
             // cursed TWI does this check only for left ammo
             MagAmmoRemaining = max(MagAmmoRemaining / 2, 0);
-            class'repl_DualPistol'.default.SingleKFW.MagAmmoRemaining = MagAmmoRemaining;
+            class'hookDualPistol'.default.SingleKFW.MagAmmoRemaining = MagAmmoRemaining;
         }
         else
             log("ALERT!!!!! WEAPON NOT SPAWNED FOR PAWN!!!");
-        // I = spawn(class'repl_DualPistol'.static.GetSingleWC(self));
+        // I = spawn(class'hookDualPistol'.static.GetSingleWC(self));
         // if (I == none)
         //   log("ALERT!! NO INVENTORY!!!");
         // I.GiveTo(Instigator);
@@ -65,7 +65,7 @@ function DropFrom(vector StartLocation)
 
     // CHANGE HERE
     // OLD: Pickup = spawn(class'DeaglePickup',,, StartLocation);
-    Pickup = spawn(class'repl_DualPistol'.default.SingleKFW.default.PickupClass,,, StartLocation);
+    Pickup = spawn(class'hookDualPistol'.default.SingleKFW.default.PickupClass,,, StartLocation);
 
     if (Pickup != none)
     {
@@ -78,8 +78,8 @@ function DropFrom(vector StartLocation)
             WeaponPickup(Pickup).bThrown = true;
     }
 
-    class'repl_DualPistol'.default.SingleKFW = none;
-    // class'repl_DualPistol'.default.SingleKFW.Destroy();
+    class'hookDualPistol'.default.SingleKFW = none;
+    // class'hookDualPistol'.default.SingleKFW.Destroy();
     Destroyed();
     Destroy();
 }

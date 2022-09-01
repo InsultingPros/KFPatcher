@@ -1,4 +1,4 @@
-class repl_Nade extends Nade;
+class hookNade extends Nade;
 
 
 // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/Nade.uc#L48

@@ -1,4 +1,4 @@
-class repl_CashPickup extends CashPickup;
+class hookCashPickup extends CashPickup;
 
 
 function GiveCashTo( Pawn Other )

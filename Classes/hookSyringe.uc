@@ -1,4 +1,4 @@
-class repl_Syringe extends Syringe
+class hookSyringe extends Syringe
     CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus
 
 
