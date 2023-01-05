@@ -2,7 +2,7 @@
 
 [**CoreAPI**]: https://github.com/InsultingPros/CoreAPI 'jaja'
 
-This is an attempt to fix most game breaking [bugs](https://shtoyan.github.io/KF1066/#/) and log spam in **Killing Floor 1**. And add some additional features to make several utility mutators obsolete.
+This is an attempt to fix most game breaking [bugs](https://insultingpros.github.io/KF1066/#/) and log spam in **Killing Floor 1**. And add some additional features to make several utility mutators obsolete.
 
 ## Internals
 
