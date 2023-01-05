@@ -11,8 +11,12 @@ class hookPC extends KFPlayerController_Story;
 // Engine.PlayerController
 exec function Suicide()
 {
-  if (Pawn != none)
-    Pawn.Suicide();
+    // keep the local variable, just in case it decides to crash...
+    local float MinSuicideInterval;
+
+    MinSuicideInterval = 0;
+    if (Pawn != none)
+      Pawn.Suicide();
 }
 
 
