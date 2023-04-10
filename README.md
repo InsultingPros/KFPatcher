@@ -99,12 +99,6 @@ Important classes:
 KFPatcher.mut
 ```
 
-## Installation
-
-```ini
-KFPatcher.mut
-```
-
 ## Building
 
 Use [KFCompileTool](https://github.com/InsultingPros/KFCompileTool) for easy compilation.
