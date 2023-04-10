@@ -1,3 +1,8 @@
+/*
+ * Author       : Shtoyan
+ * Home Repo    : https://github.com/InsultingPros/KFPatcher
+ * License      : https://www.gnu.org/licenses/gpl-3.0.en.html
+*/
 class hookSyringe extends Syringe
     CacheExempt;  // do NOT include me in UCL and do NOT be discoverable in menus
 

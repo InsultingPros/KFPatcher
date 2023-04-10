@@ -1,4 +1,9 @@
-// imagine almost all functions of this class are bugged
+/*
+ * imagine almost all functions of this class are bugged
+ * Author       : Shtoyan
+ * Home Repo    : https://github.com/InsultingPros/KFPatcher
+ * License      : https://www.gnu.org/licenses/gpl-3.0.en.html
+*/
 class hookShopVolume extends KFShopVolume_Story;
 
 
