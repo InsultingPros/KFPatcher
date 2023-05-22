@@ -101,9 +101,10 @@ KFPatcher.mut
 
 ## Building
 
-Use [KFCompileTool](https://github.com/InsultingPros/KFCompileTool) for easy compilation.
+KFPatcher depends on [**Unflect**]! Use [KFCompileTool](https://github.com/InsultingPros/KFCompileTool) for easy compilation.
 
-```cpp
+```ini
+EditPackages=Unflect
 EditPackages=KFPatcher
 ```
 
