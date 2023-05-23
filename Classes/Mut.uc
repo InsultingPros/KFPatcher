@@ -28,10 +28,22 @@ struct sFunctionBackup {
 };
 var private transient array<sFunctionBackup> ProcessedFunctions;
 
+function Mutate(string MutateString, PlayerController Sender)
+{
+    if (MutateString ~= "zzz") {
+        class'TestCast'.static.TestNativeCasts(XLevel);
+    } else if (MutateString ~= "packagemap") {
+        class'TestCast'.static.GetPackageMapInfo(XLevel);
+    }
+    super.Mutate(MutateString, Sender);
+}
+
 //=============================================================================
 event PreBeginPlay() {
     super.PreBeginPlay();
 
+    warn("testing a bullshit!");
+    // class'TestCast'.static.TestNativeCasts(XLevel);
     // TMP!!! hack fix for tosscash!
     class'hookPawn'.default.cashtimer = 0.0f;
 
