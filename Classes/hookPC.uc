@@ -149,3 +149,81 @@ function bool IsInInventory(class<Pickup> PickupToCheck, bool bCheckForEquivalen
 {
   return false;
 }
+
+// Prevent clients IP address leak.
+//
+// Target: `XGame.xPlayer.ServerRequestPlayerInfo`
+// Original code: https://github.com/InsultingPros/KillingFloor/blob/main/XGame/Classes/xPlayer.uc#L870-L885
+function ServerRequestPlayerInfo() {
+    local Controller C;
+    local xPlayer xPC;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController) {
+        xPC = XPlayer(C);
+        if (xPC != none) {
+            // REMOVE `GetPlayerNetworkAddress()`
+            ClientReceiveRule(
+                xPC.PlayerReplicationInfo.PlayerName $
+                chr(27) $
+                xPC.GetPlayerIDHash() $
+                chr(27) $
+                "NONE"
+            );
+        } else {
+            // REMOVE `GetPlayerNetworkAddress()`
+            ClientReceiveRule(
+                C.PlayerReplicationInfo.PlayerName $
+                chr(27) $
+                "AI Controlled" $
+                chr(27) $
+                "BOT"
+            );
+        }
+    }
+    ClientReceiveRule("Done");
+}
+
+// Prevent clients IP address leak.
+//
+// Target: `XGame.xPlayer.ServerRequestBanInfo`
+// Original code: https://github.com/InsultingPros/KillingFloor/blob/main/XGame/Classes/xPlayer.uc#L925-L948
+function ServerRequestBanInfo(int PlayerID) {
+    local array<PlayerController> CArr;
+    local int i;
+
+    if (Level != none && Level.Game != none) {
+        Level.Game.GetPlayerControllerList(CArr);
+        for (i = 0; i < CArr.Length; i++) {
+            if (CArr[i] == self) {
+                continue;
+            }
+            if (PlayerID == -1 || CArr[i].PlayerReplicationInfo.PlayerID == PlayerID) {
+                // REMOVE `GetPlayerNetworkAddress()`
+                log(
+                    Name @
+                    "Sending BanInfo To Client PlayerID:" $
+                    CArr[i].PlayerReplicationInfo.PlayerID @
+                    "Hash:" $
+                    CArr[i].GetPlayerIDHash() @
+                    "Address:" $
+                    "NONE",
+                    'ChatManager'
+                );
+                // REMOVE `GetPlayerNetworkAddress()`
+                ChatManager.TrackNewPlayer(
+                    CArr[i].PlayerReplicationInfo.PlayerID,
+                    CArr[i].GetPlayerIDHash(),
+                    "NONE"
+                );
+                // REMOVE `GetPlayerNetworkAddress()`
+                ClientReceiveBan(
+                    CArr[i].PlayerReplicationInfo.PlayerID $
+                    chr(27) $
+                    CArr[i].GetPlayerIDHash() $
+                    chr(27) $
+                    "NONE"
+                );
+            }
+        }
+    }
+}
