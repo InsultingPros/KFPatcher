@@ -6,11 +6,6 @@
 
 This is an attempt to fix most game breaking [bugs](https://insultingpros.github.io/KF1066/#/) and log spam in **Killing Floor 1**. And add some additional features to make several utility mutators obsolete.
 
-Important classes:
-
-- A simple [mutator](Classes/Mut.uc) which uses [**Unflect**] functionality to hook functions (check the complete [list](Configs/KFPatcherFuncs.ini)).
-- `hook` classes that extend the very most child class of our target. For example [hookPC](Classes/hookPC.uc) contains fixes for controllers and it extends [KFPlayerController_Story](https://github.com/InsultingPros/KillingFloor/blob/main/KFStoryGame/Classes/KFPlayerController_Story.uc).
-
 ## Implemented Features and Fixes
 
 ### KFGameType
@@ -111,4 +106,4 @@ EditPackages=KFPatcher
 ## Credits
 
 - Alice - thanks for original native type cast hack.
-- [Eliot](https://github.com/EliotVU) - thanks for making [**Unflect**] public, now I can freely share xD
+- [Eliot](https://github.com/EliotVU) - thanks for making [**Unflect**] public, now I can freely share xD And check his [Elite Patch](https://github.com/EliteTrials/ElitePatch) for ut2k4.
