@@ -1,6 +1,6 @@
-[**Unflect**]: https://github.com/EliotVU/UnrealScript-Unflect 'jaja'
-
 # KF Patcher Project
+
+[**KFUnflect**]: https://github.com/InsultingPros/KFUnflect 'jaja'
 
 [![GitHub all releases](https://img.shields.io/github/downloads/InsultingPros/KFPatcher/total)](https://github.com/InsultingPros/KFPatcher/releases)
 
@@ -9,6 +9,9 @@ This is an attempt to fix most game breaking [bugs](https://insultingpros.github
 ## Implemented Features and Fixes
 
 ### KFGameType
+
+> [!WARNING]
+> If you use Gametype related patches - enable KFPatcher as a ServerActor, not as a usual mutator. Else you will get weird crashes and segfaults.
 
 - Print **Pat** health after a team wipe.
 - Allow players move after team wipe / win.
@@ -96,14 +99,14 @@ KFPatcher.mut
 
 ## Building
 
-KFPatcher depends on [**Unflect**]! Use [KFCompileTool](https://github.com/InsultingPros/KFCompileTool) for easy compilation.
+KFPatcher depends on [**KFUnflect**]! Use [KFCompileTool](https://github.com/InsultingPros/KFCompileTool) for easy compilation.
 
 ```ini
-EditPackages=Unflect
+EditPackages=KFUnflect
 EditPackages=KFPatcher
 ```
 
 ## Credits
 
 - Alice - thanks for original native type cast hack.
-- [Eliot](https://github.com/EliotVU) - thanks for making [**Unflect**] public, now I can freely share xD And check his [Elite Patch](https://github.com/EliteTrials/ElitePatch) for ut2k4.
+- [Eliot](https://github.com/EliotVU) - thanks for making **Unflect** public, now I can freely share xD And check his [Elite Patch](https://github.com/EliteTrials/ElitePatch) for ut2k4.
