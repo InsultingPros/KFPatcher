@@ -21,6 +21,10 @@ var bool bBossView;
 var float BossViewBackTime;
 var transient ZombieBoss BossArray;
 
+// all traders open fix
+// only applied once during the server's lifespan
+var bool bAllTradersOpenFixApplied;
+
 
 //=============================================================================
 //                      GameLength / MaxPlayers Fix
@@ -290,6 +294,10 @@ state MatchInProgress
     local bool bOneMessage;
     local Bot B;
 
+		local ShopVolume SH;
+		local bool bSVExists;
+		local int i;
+
     Global.Timer();
 
     if ( Level.TimeSeconds > HintTime_1 && bTradingDoorsOpen && bShowHint_2 )
@@ -526,6 +534,35 @@ state MatchInProgress
 
     else if ( NumMonsters <= 0 )
     {
+      // apply the 'All Traders Open' fix only during the initial wave, if enabled
+      if ( WaveNum == InitialWave && !class'hookGT'.default.bAllTradersOpenFixApplied && class'Settings'.default.bAllTradersOpen ) 
+      {
+        class'hookGT'.default.bAllTradersOpenFixApplied = true;
+
+				foreach AllActors(class'ShopVolume', SH)
+				{
+					if (SH == none)
+						continue;
+		
+					SH.bAlwaysClosed = false;
+					SH.bAlwaysEnabled = true;
+
+					if ( !SH.bObjectiveModeOnly || bUsingObjectiveMode ) 
+					{
+						bSVExists = false;
+
+						for( i=0; i<ShopList.Length; i++ )
+						{
+							if( ShopList[i].URL == SH.URL )
+								bSVExists = true;
+						}
+
+						if ( !bSVExists ) 
+							ShopList[ShopList.Length] = SH;
+					}
+				}
+      }
+
       if ( WaveNum == FinalWave && !bUseEndGameBoss )
       {
         if( bDebugMoney )
