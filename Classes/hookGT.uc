@@ -294,9 +294,9 @@ state MatchInProgress
     local bool bOneMessage;
     local Bot B;
 
-		local ShopVolume SH;
-		local bool bSVExists;
-		local int i;
+    local ShopVolume SH;
+    local bool bSVExists;
+    local int i;
 
     Global.Timer();
 
@@ -539,28 +539,28 @@ state MatchInProgress
       {
         class'hookGT'.default.bAllTradersOpenFixApplied = true;
 
-				foreach AllActors(class'ShopVolume', SH)
-				{
-					if (SH == none)
-						continue;
-		
-					SH.bAlwaysClosed = false;
-					SH.bAlwaysEnabled = true;
+        foreach AllActors(class'ShopVolume', SH)
+        {
+          if (SH == none)
+            continue;
+    
+          SH.bAlwaysClosed = false;
+          SH.bAlwaysEnabled = true;
 
-					if ( !SH.bObjectiveModeOnly || bUsingObjectiveMode ) 
-					{
-						bSVExists = false;
+          if ( !SH.bObjectiveModeOnly || bUsingObjectiveMode ) 
+          {
+            bSVExists = false;
 
-						for( i=0; i<ShopList.Length; i++ )
-						{
-							if( ShopList[i].URL == SH.URL )
-								bSVExists = true;
-						}
+            for( i=0; i<ShopList.Length; i++ )
+            {
+              if( ShopList[i].URL == SH.URL )
+                bSVExists = true;
+            }
 
-						if ( !bSVExists ) 
-							ShopList[ShopList.Length] = SH;
-					}
-				}
+            if ( !bSVExists ) 
+              ShopList[ShopList.Length] = SH;
+          }
+        }
       }
 
       if ( WaveNum == FinalWave && !bUseEndGameBoss )
