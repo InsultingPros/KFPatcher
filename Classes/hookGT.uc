@@ -53,25 +53,8 @@ event InitGame(string Options, out string Error)
     else Warn("MULTIPLE KFLEVELRULES FOUND!!!!!");
   }
 
-  // added all traders open option
-  foreach AllActors(class'ShopVolume', SH)
-  {
-    if (SH == none)
-      continue;
-
-    // open everything
-    if (class'Settings'.default.bAllTradersOpen)
-    {
-      SH.bAlwaysClosed = false;
-      SH.bAlwaysEnabled = true;
-    }
-
-    // now fill the array ;d
-    if (!SH.bObjectiveModeOnly || bUsingObjectiveMode )
-    {
-      ShopList[ShopList.Length] = SH;
-    }
-  }
+  // add traders
+  class'Utility'.static.RegisterAllTraders(self, ShopList, bUsingObjectiveMode);
 
   if (class'Settings'.default.bAllTradersOpen)
     log("> bAllTradersOpen = true. All traders will be open!");
@@ -293,10 +276,6 @@ state MatchInProgress
     local Controller C;
     local bool bOneMessage;
     local Bot B;
-
-    local ShopVolume SH;
-    local bool bSVExists;
-    local int i;
 
     Global.Timer();
 
@@ -538,29 +517,7 @@ state MatchInProgress
       if ( WaveNum == InitialWave && !class'hookGT'.default.bAllTradersOpenFixApplied && class'Settings'.default.bAllTradersOpen ) 
       {
         class'hookGT'.default.bAllTradersOpenFixApplied = true;
-
-        foreach AllActors(class'ShopVolume', SH)
-        {
-          if (SH == none)
-            continue;
-    
-          SH.bAlwaysClosed = false;
-          SH.bAlwaysEnabled = true;
-
-          if ( !SH.bObjectiveModeOnly || bUsingObjectiveMode ) 
-          {
-            bSVExists = false;
-
-            for( i=0; i<ShopList.Length; i++ )
-            {
-              if( ShopList[i].URL == SH.URL )
-                bSVExists = true;
-            }
-
-            if ( !bSVExists ) 
-              ShopList[ShopList.Length] = SH;
-          }
-        }
+        class'Utility'.static.RegisterAllTraders(self, ShopList, bUsingObjectiveMode);
       }
 
       if ( WaveNum == FinalWave && !bUseEndGameBoss )
