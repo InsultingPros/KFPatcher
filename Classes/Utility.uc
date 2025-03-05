@@ -122,43 +122,26 @@ final static function ShowPatHP(PlayerController pc, ZombieBoss pat)
 
 
 // register all available traders to the game shop list
-final static function RegisterAllTraders(Actor game, out array<ShopVolume> ShopList, bool bUsingObjectiveMode)
-{
-    local ShopVolume SV;
-    local bool bSVExists;
-    local int i;
+final static function RegisterAllTraders(Actor game, out array<ShopVolume> ShopList, bool bUsingObjectiveMode) {
+    local ShopVolume SH;
 
-    if (game == none)
-        return;
-
-    foreach game.AllActors(class'ShopVolume', SV)
-    {
-      if ( SV == none ) 
-        continue;
-
-      if ( class'Settings'.default.bAllTradersOpen )
-      {
-        SV.bAlwaysClosed = false;
-        SV.bAlwaysEnabled = true;
-      }
-  
-      // now fill the array ;d
-      if ( !SV.bObjectiveModeOnly || bUsingObjectiveMode )
-      {
-        bSVExists = false;
-
-        for ( i = 0; i < ShopList.Length; i++ )
-        {
-          if ( ShopList[i].URL == SV.URL ) 
-          {
-            bSVExists = true;
-            break;
-          }
+    foreach game.AllActors(class'ShopVolume', SH) {
+        if (SH == none) {
+            continue;
         }
+        // open everything
+        if (class'Settings'.default.bAllTradersOpen) {
+            SH.bAlwaysClosed = false;
+            SH.bAlwaysEnabled = true;
+        }
+        // now fill the array ;d
+        if (!SH.bObjectiveModeOnly || bUsingObjectiveMode) {
+            ShopList[ShopList.Length] = SH;
+        }
+    }
 
-        if ( !bSVExists ) 
-          ShopList[ShopList.Length] = SV;
-      }
+    if (class'Settings'.default.bAllTradersOpen) {
+        log("> bAllTradersOpen = true. All traders will be open!");
     }
 }
 

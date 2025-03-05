@@ -49,11 +49,7 @@ event InitGame(string Options, out string Error)
     else Warn("MULTIPLE KFLEVELRULES FOUND!!!!!");
   }
 
-  // add traders
-  class'Utility'.static.RegisterAllTraders(self, ShopList, bUsingObjectiveMode);
-
-  if (class'Settings'.default.bAllTradersOpen)
-    log("> bAllTradersOpen = true. All traders will be open!");
+  // NOTE! ShopVolume processing moved to state MatchInProgress.BeginState()
 
   foreach DynamicActors(class'ZombieVolume', ZZ)
   {
@@ -161,6 +157,21 @@ event InitGame(string Options, out string Error)
 // like last zed killing
 state MatchInProgress
 {
+    // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L3032-L3043
+    // ShopVolume processing / AllTraders feature
+    function BeginState() {
+        super(Invasion).BeginState();
+
+        WaveNum = InitialWave;
+        InvasionGameReplicationInfo(GameReplicationInfo).WaveNumber = WaveNum;
+
+        // Ten second initial countdown
+        WaveCountDown = 10;// Modify this if we want to make it take long for zeds to spawn initially
+        // ShopVolume processing
+        class'Utility'.static.RegisterAllTraders(self, ShopList, bUsingObjectiveMode);
+        SetupPickups();
+    }
+
   // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L2196
   function OpenShops()
   {
@@ -509,9 +520,6 @@ state MatchInProgress
 
     else if ( NumMonsters <= 0 )
     {
-      if ( WaveNum == InitialWave && class'Settings'.default.bAllTradersOpen ) 
-        class'Utility'.static.RegisterAllTraders(self, ShopList, bUsingObjectiveMode);
-
       if ( WaveNum == FinalWave && !bUseEndGameBoss )
       {
         if( bDebugMoney )
