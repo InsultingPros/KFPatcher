@@ -21,10 +21,6 @@ var bool bBossView;
 var float BossViewBackTime;
 var transient ZombieBoss BossArray;
 
-// all traders open fix
-// only applied once during the server's lifespan
-var bool bAllTradersOpenFixApplied;
-
 
 //=============================================================================
 //                      GameLength / MaxPlayers Fix
@@ -513,12 +509,8 @@ state MatchInProgress
 
     else if ( NumMonsters <= 0 )
     {
-      // apply the 'All Traders Open' fix only during the initial wave, if enabled
-      if ( WaveNum == InitialWave && !class'hookGT'.default.bAllTradersOpenFixApplied && class'Settings'.default.bAllTradersOpen ) 
-      {
-        class'hookGT'.default.bAllTradersOpenFixApplied = true;
+      if ( WaveNum == InitialWave && class'Settings'.default.bAllTradersOpen ) 
         class'Utility'.static.RegisterAllTraders(self, ShopList, bUsingObjectiveMode);
-      }
 
       if ( WaveNum == FinalWave && !bUseEndGameBoss )
       {
