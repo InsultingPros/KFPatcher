@@ -21,3 +21,7 @@ var() config bool bAllowZedTime;
 // all traders
 var() config bool bAllTradersOpen;
 var() config string bAllTradersMessage;
+
+// dosh
+var() config float fDoshThrowDelay;
+var() config int iDoshThrowMinAmount;

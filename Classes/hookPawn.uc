@@ -70,13 +70,13 @@ exec function TossCash(int Amount)
   local Vector TossVel;
   local Actor A;
 
-  // NEW check! and 0.3 sec delay between throws
+  // NEW check! use delay between throws
   if (Level.TimeSeconds < class'hookPawn'.default.cashtimer || PlayerReplicationInfo == none)
     return;
-  class'hookPawn'.default.cashtimer = Level.TimeSeconds + 0.3f;
+  class'hookPawn'.default.cashtimer = Level.TimeSeconds + class'Settings'.default.fDoshThrowDelay;
 
-  // 30 dosh at min
-  Amount = clamp(Amount, 30, int(Controller.PlayerReplicationInfo.Score));
+  // min dosh amount to throw
+  Amount = clamp(Amount, class'Settings'.default.iDoshThrowMinAmount, int(Controller.PlayerReplicationInfo.Score));
   // if (Amount<=0)
   //   Amount = 50;
 
