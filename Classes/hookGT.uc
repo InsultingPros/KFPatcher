@@ -49,28 +49,7 @@ event InitGame(string Options, out string Error)
     else Warn("MULTIPLE KFLEVELRULES FOUND!!!!!");
   }
 
-  // added all traders open option
-  foreach AllActors(class'ShopVolume', SH)
-  {
-    if (SH == none)
-      continue;
-
-    // open everything
-    if (class'Settings'.default.bAllTradersOpen)
-    {
-      SH.bAlwaysClosed = false;
-      SH.bAlwaysEnabled = true;
-    }
-
-    // now fill the array ;d
-    if (!SH.bObjectiveModeOnly || bUsingObjectiveMode )
-    {
-      ShopList[ShopList.Length] = SH;
-    }
-  }
-
-  if (class'Settings'.default.bAllTradersOpen)
-    log("> bAllTradersOpen = true. All traders will be open!");
+  // NOTE! ShopVolume processing moved to state MatchInProgress.BeginState()
 
   foreach DynamicActors(class'ZombieVolume', ZZ)
   {
@@ -178,6 +157,24 @@ event InitGame(string Options, out string Error)
 // like last zed killing
 state MatchInProgress
 {
+  // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L3032-L3043
+  // ShopVolume processing / AllTraders feature
+  function BeginState() 
+  {
+    super(Invasion).BeginState();
+
+    WaveNum = InitialWave;
+    InvasionGameReplicationInfo(GameReplicationInfo).WaveNumber = WaveNum;
+
+    // Ten second initial countdown
+    WaveCountDown = 10;// Modify this if we want to make it take long for zeds to spawn initially
+
+    // ShopVolume processing
+    class'Utility'.static.RegisterAllTraders(self, ShopList, bUsingObjectiveMode);
+
+    SetupPickups();
+  }
+
   // https://github.com/InsultingPros/KillingFloor/blob/main/KFMod/Classes/KFGameType.uc#L2196
   function OpenShops()
   {
